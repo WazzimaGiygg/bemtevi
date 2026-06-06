@@ -1404,25 +1404,34 @@
         };
 
         window.signIn = async function() {
-            try {
-                const result = await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-                const userDoc = await db.collection('usuarios').doc(result.user.uid).get();
-                if (!userDoc.exists) {
-                    await db.collection('usuarios').doc(result.user.uid).set({
-                        nome: result.user.displayName || result.user.email.split('@')[0],
-                        email: result.user.email,
-                        avatar: result.user.photoURL || null,
-                        dataCriacao: firebase.firestore.FieldValue.serverTimestamp(),
-                        seguidores: [],
-                        seguindo: []
-                    });
-                }
-                currentUser = result.user;
-                renderMainApp();
-            } catch (error) {
-                alert('Erro no login: ' + error.message);
-            }
-        };
+    try {
+        // Usar redirect em vez de popup
+        await auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider());
+    } catch (error) {
+        alert('Erro no login: ' + error.message);
+    }
+};
+
+// Adicionar handler para quando voltar do redirect
+auth.getRedirectResult().then(async (result) => {
+    if (result.user) {
+        currentUser = result.user;
+        const userDoc = await db.collection('usuarios').doc(result.user.uid).get();
+        if (!userDoc.exists) {
+            await db.collection('usuarios').doc(result.user.uid).set({
+                nome: result.user.displayName || result.user.email.split('@')[0],
+                email: result.user.email,
+                avatar: result.user.photoURL || null,
+                dataCriacao: firebase.firestore.FieldValue.serverTimestamp(),
+                seguidores: [],
+                seguindo: []
+            });
+        }
+        renderMainApp();
+    }
+}).catch((error) => {
+    console.error('Erro no redirect:', error);
+});
 
         window.signOut = function() {
             auth.signOut().then(() => {
