@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bemtevi - Rede Social</title>
+    <title>Bemtevi - Rede Social Beta</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" href="https://gspotfverwazzimagiygg.wazzimagiygg.com/bemtevi/Favicom.png" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
         * {
@@ -20,7 +19,7 @@
             min-height: 100vh;
         }
 
-        /* Layout Principal */
+        /* Layout */
         .app-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -31,14 +30,18 @@
             min-height: 100vh;
         }
 
-        /* Sidebar Esquerda */
-        .sidebar-left {
+        /* Sidebar */
+        .sidebar-left, .sidebar-right {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .card {
             background: white;
             border-radius: 20px;
             padding: 20px;
-            height: fit-content;
-            position: sticky;
-            top: 20px;
+            margin-bottom: 20px;
         }
 
         .logo {
@@ -50,10 +53,7 @@
             border-bottom: 2px solid #f0f0f0;
         }
 
-        .logo-icon {
-            font-size: 32px;
-        }
-
+        .logo-icon { font-size: 32px; }
         .logo-text {
             font-size: 24px;
             font-weight: 700;
@@ -61,11 +61,6 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-        }
-
-        .nav-menu {
-            list-style: none;
-            margin-bottom: 30px;
         }
 
         .nav-item {
@@ -80,80 +75,32 @@
             font-weight: 500;
         }
 
-        .nav-item:hover {
-            background: #f5f5f5;
-        }
-
+        .nav-item:hover { background: #f5f5f5; }
         .nav-item.active {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
         }
+        .nav-item.active .material-icons { color: white; }
+        .nav-item .material-icons { color: #667eea; }
 
-        .nav-item.active .material-icons {
-            color: white;
-        }
-
-        .nav-item .material-icons {
-            color: #667eea;
-        }
-
-        /* Perfil Sidebar */
-        .user-profile-mini {
-            padding-top: 20px;
-            border-top: 2px solid #f0f0f0;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-
-        .user-profile-mini:hover {
-            opacity: 0.8;
-        }
-
-        .user-avatar-mini {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 20px;
-        }
-
-        /* Feed Principal */
-        .main-feed {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-        }
-
+        /* Feed */
         .feed-header {
             padding: 20px;
             border-bottom: 1px solid #f0f0f0;
             background: white;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            border-radius: 20px 20px 0 0;
         }
 
-        .feed-title {
-            font-size: 20px;
-            font-weight: 700;
-        }
+        .feed-title { font-size: 20px; font-weight: 700; }
 
         /* Postagem */
         .post-box {
+            background: white;
             padding: 20px;
             border-bottom: 1px solid #f0f0f0;
         }
 
-        .post-input-area {
-            display: flex;
-            gap: 15px;
-        }
-
+        .post-input-area { display: flex; gap: 15px; }
         .post-avatar {
             width: 48px;
             height: 48px;
@@ -168,10 +115,7 @@
             cursor: pointer;
         }
 
-        .post-input-container {
-            flex: 1;
-        }
-
+        .post-input-container { flex: 1; }
         .post-input {
             width: 100%;
             border: 2px solid #f0f0f0;
@@ -180,13 +124,8 @@
             font-family: 'Inter', sans-serif;
             font-size: 16px;
             resize: none;
-            transition: all 0.3s;
         }
-
-        .post-input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
+        .post-input:focus { outline: none; border-color: #667eea; }
 
         .char-counter {
             text-align: right;
@@ -194,14 +133,8 @@
             margin-top: 8px;
             color: #999;
         }
-
-        .char-counter.warning {
-            color: #ff9800;
-        }
-
-        .char-counter.danger {
-            color: #f44336;
-        }
+        .char-counter.warning { color: #ff9800; }
+        .char-counter.danger { color: #f44336; }
 
         .post-actions {
             display: flex;
@@ -212,13 +145,7 @@
             gap: 10px;
         }
 
-        .post-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .post-btn {
+        .btn-primary {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
@@ -228,53 +155,28 @@
             font-weight: 600;
             transition: all 0.3s;
         }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102,126,234,0.3); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        .post-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102,126,234,0.3);
-        }
-
-        .post-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .attach-link-btn, .category-select {
+        .btn-secondary {
             background: #f0f0f0;
             border: none;
             padding: 8px 16px;
             border-radius: 50px;
             cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 14px;
-            transition: all 0.3s;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .attach-link-btn.active {
-            background: #667eea;
-            color: white;
+            font-weight: 500;
         }
 
         /* Posts */
-        .posts-container {
-            min-height: 500px;
-        }
-
+        .posts-container { background: white; border-radius: 0 0 20px 20px; }
         .post-card {
             padding: 20px;
             border-bottom: 1px solid #f0f0f0;
             transition: background 0.2s;
         }
+        .post-card:hover { background: #fafafa; }
 
-        .post-header {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
+        .post-header { display: flex; gap: 12px; margin-bottom: 12px; cursor: pointer; }
         .post-avatar-img {
             width: 48px;
             height: 48px;
@@ -286,30 +188,10 @@
             color: white;
             font-weight: 700;
             flex-shrink: 0;
-            cursor: pointer;
         }
-
-        .post-user-info {
-            flex: 1;
-            cursor: pointer;
-        }
-
-        .post-user-name {
-            font-weight: 700;
-            color: #1a1a2e;
-        }
-
-        .post-user-id {
-            font-size: 13px;
-            color: #999;
-            margin-left: 8px;
-        }
-
-        .post-time {
-            font-size: 12px;
-            color: #999;
-        }
-
+        .post-user-name { font-weight: 700; color: #1a1a2e; }
+        .post-user-id { font-size: 13px; color: #999; margin-left: 8px; }
+        .post-time { font-size: 12px; color: #999; }
         .post-content {
             margin-bottom: 12px;
             padding-left: 60px;
@@ -317,7 +199,6 @@
             line-height: 1.5;
             color: #333;
         }
-
         .post-link {
             display: inline-flex;
             align-items: center;
@@ -330,11 +211,6 @@
             color: #667eea;
             text-decoration: none;
         }
-
-        .post-link:hover {
-            background: #e8e8e8;
-        }
-
         .post-category {
             display: inline-block;
             padding: 4px 12px;
@@ -344,14 +220,12 @@
             margin-bottom: 8px;
             margin-left: 60px;
         }
-
         .post-stats {
             display: flex;
             gap: 20px;
             padding-left: 60px;
             margin-top: 12px;
         }
-
         .stat-action {
             display: inline-flex;
             align-items: center;
@@ -361,35 +235,10 @@
             cursor: pointer;
             transition: all 0.2s;
         }
+        .stat-action:hover { color: #667eea; }
+        .stat-action.liked { color: #e94560; }
 
-        .stat-action:hover {
-            color: #667eea;
-        }
-
-        .stat-action.liked {
-            color: #e94560;
-        }
-
-        /* Sidebar Direita */
-        .sidebar-right {
-            position: sticky;
-            top: 20px;
-            height: fit-content;
-        }
-
-        .trending-box, .categories-box, .suggestions-box {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .box-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-
+        /* Categorias */
         .category-chip {
             display: inline-block;
             padding: 6px 14px;
@@ -400,12 +249,7 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-
-        .category-chip:hover {
-            background: #667eea;
-            color: white;
-        }
-
+        .category-chip:hover,
         .category-chip.selected {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
@@ -424,7 +268,6 @@
             justify-content: center;
             align-items: center;
         }
-
         .modal-content {
             background: white;
             border-radius: 24px;
@@ -433,7 +276,6 @@
             max-height: 85vh;
             overflow-y: auto;
         }
-
         .modal-header {
             padding: 20px;
             border-bottom: 1px solid #f0f0f0;
@@ -444,15 +286,8 @@
             top: 0;
             background: white;
         }
-
-        .modal-body {
-            padding: 20px;
-        }
-
-        .close-modal {
-            cursor: pointer;
-            font-size: 24px;
-        }
+        .modal-body { padding: 20px; }
+        .close-modal { cursor: pointer; font-size: 24px; }
 
         /* Perfil */
         .profile-header {
@@ -463,7 +298,6 @@
             border-radius: 16px;
             margin-bottom: 20px;
         }
-
         .profile-avatar {
             width: 100px;
             height: 100px;
@@ -477,7 +311,6 @@
             font-weight: 700;
             color: #667eea;
         }
-
         .follow-btn {
             background: white;
             color: #667eea;
@@ -488,32 +321,12 @@
             font-weight: 600;
             margin-top: 10px;
         }
-
-        .follow-btn.following {
-            background: #e94560;
-            color: white;
-        }
-
-        .profile-stats {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 15px;
-        }
-
-        .stat-number {
-            font-size: 20px;
-            font-weight: 700;
-        }
+        .follow-btn.following { background: #e94560; color: white; }
+        .profile-stats { display: flex; justify-content: center; gap: 30px; margin-top: 15px; }
+        .stat-number { font-size: 20px; font-weight: 700; }
 
         /* Comentários */
-        .comment-item {
-            display: flex;
-            gap: 12px;
-            padding: 15px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
+        .comment-item { display: flex; gap: 12px; padding: 15px 0; border-bottom: 1px solid #f0f0f0; }
         .comment-avatar {
             width: 32px;
             height: 32px;
@@ -525,29 +338,11 @@
             color: white;
             font-size: 14px;
             font-weight: 700;
-            flex-shrink: 0;
         }
-
-        .comment-content {
-            flex: 1;
-        }
-
-        .comment-name {
-            font-weight: 600;
-            font-size: 13px;
-        }
-
-        .comment-text {
-            font-size: 14px;
-            margin-top: 4px;
-        }
-
-        .comment-time {
-            font-size: 10px;
-            color: #999;
-            margin-top: 4px;
-        }
-
+        .comment-content { flex: 1; }
+        .comment-name { font-weight: 600; font-size: 13px; }
+        .comment-text { font-size: 14px; margin-top: 4px; }
+        .comment-time { font-size: 10px; color: #999; margin-top: 4px; }
         .comment-input {
             width: 100%;
             border: 2px solid #f0f0f0;
@@ -559,13 +354,6 @@
             margin-top: 15px;
         }
 
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-        }
-
         /* Sugestões */
         .suggestion-user {
             display: flex;
@@ -574,14 +362,7 @@
             padding: 10px 0;
             border-bottom: 1px solid #f0f0f0;
         }
-
-        .suggestion-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-        }
-
+        .suggestion-info { display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .suggestion-avatar {
             width: 40px;
             height: 40px;
@@ -593,7 +374,6 @@
             color: white;
             font-weight: 700;
         }
-
         .follow-small-btn {
             background: #667eea;
             color: white;
@@ -604,13 +384,45 @@
             font-size: 12px;
         }
 
+        /* Loading */
+        .loading { text-align: center; padding: 40px; color: #999; }
+
+        /* Login */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .login-box {
+            background: white;
+            border-radius: 32px;
+            padding: 50px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Beta Badge */
+        .beta-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
         @media (max-width: 1024px) {
-            .app-container {
-                grid-template-columns: 1fr;
-            }
-            .sidebar-left, .sidebar-right {
-                display: none;
-            }
+            .app-container { grid-template-columns: 1fr; }
+            .sidebar-left, .sidebar-right { display: none; }
+            .beta-badge { top: 10px; right: 10px; }
         }
     </style>
 </head>
@@ -622,7 +434,9 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <script>
-        // Configuração Firebase
+        // ============================================
+        // CONFIGURAÇÃO DO FIREBASE
+        // ============================================
         const firebaseConfig = {
             apiKey: "AIzaSyB9GkSqTIZ0kbVsba_WOdQeVAETrF9qna0",
             authDomain: "wzzm-ce3fc.firebaseapp.com",
@@ -636,7 +450,9 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // Estado Global
+        // ============================================
+        // ESTADO GLOBAL
+        // ============================================
         let currentUser = null;
         let currentFeed = 'for-you';
         let lastDoc = null;
@@ -644,31 +460,38 @@
         let hasMore = true;
         let currentCategoryFilter = null;
         let currentViewingProfile = null;
+        let currentViewingPost = null;
 
-        // Categorias disponíveis
-        const categories = [
-            'Geral', 'Tecnologia', 'Ciência', 'Arte', 'Música',
-            'Esportes', 'Games', 'Educação', 'Política', 'Entretenimento'
-        ];
-
-        // Tópicos Especiais
-        const specialTopics = {
-            'AnúncioOficial': { icon: '📢', color: '#ff9800' },
-            'Urgente': { icon: '⚠️', color: '#f44336' },
-            'Comunicado': { icon: '📣', color: '#2196f3' },
-            'Dica': { icon: '💡', color: '#4caf50' }
+        // Categorias
+        const categories = ['Geral', 'Tecnologia', 'Ciência', 'Arte', 'Música', 'Esportes', 'Games', 'Educação', 'Política', 'Entretenimento'];
+        
+        // Cores das categorias
+        const categoryColors = {
+            'Geral': '#666', 'Tecnologia': '#2196f3', 'Ciência': '#4caf50',
+            'Arte': '#9c27b0', 'Música': '#f44336', 'Esportes': '#ff9800',
+            'Games': '#795548', 'Educação': '#00bcd4', 'Política': '#607d8b',
+            'Entretenimento': '#e91e63'
         };
 
-        // Palavras bloqueadas
-        const blockedTopics = ['spam', 'porn', 'violencia', 'odio', 'discriminacao', 'racismo', 'nazismo'];
-
         // ============================================
-        // FUNÇÕES DE VALIDAÇÃO
+        // FUNÇÕES AUXILIARES
         // ============================================
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            if (seconds < 60) return 'agora';
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return `${minutes}m`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours}h`;
+            const days = Math.floor(hours / 24);
+            return `${days}d`;
+        }
 
-        function containsBlockedContent(text) {
-            const lowerText = text.toLowerCase();
-            return blockedTopics.some(topic => lowerText.includes(topic));
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
         function extractLinks(text) {
@@ -682,9 +505,8 @@
         }
 
         // ============================================
-        // FUNÇÕES DE POSTAGEM
+        // CRIAÇÃO DE POST
         // ============================================
-
         async function createPost(conteudo, link = null, categoria = 'Geral') {
             if (!currentUser) {
                 alert('Faça login para postar!');
@@ -692,34 +514,17 @@
             }
 
             let postText = conteudo.trim();
-            let extractedLink = link;
-
-            if (!extractedLink) {
-                extractedLink = extractLinks(postText);
-                postText = removeLinks(postText);
-            }
+            let extractedLink = link || extractLinks(postText);
+            if (!extractedLink) postText = removeLinks(postText);
 
             if (postText.length > 127) {
-                alert('O texto da postagem deve ter no máximo 127 caracteres!');
+                alert('O texto deve ter no máximo 127 caracteres!');
                 return false;
             }
 
             if (postText.length === 0 && !extractedLink) {
                 alert('Digite algo para postar!');
                 return false;
-            }
-
-            if (containsBlockedContent(postText)) {
-                alert('⚠️ Sua postagem contém conteúdo não permitido!');
-                return false;
-            }
-
-            let topicoEspecial = null;
-            for (const [key, value] of Object.entries(specialTopics)) {
-                if (postText.toUpperCase().includes(key.toUpperCase())) {
-                    topicoEspecial = key;
-                    break;
-                }
             }
 
             try {
@@ -730,14 +535,12 @@
                     userAvatar: currentUser.photoURL || null,
                     conteudo: postText.substring(0, 127),
                     categoria: categoria,
-                    topicoEspecial: topicoEspecial,
                     link: extractedLink,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     likes: 0,
                     comentarios: 0,
                     usuariosQueCurtiram: []
                 };
-
                 await db.collection('Bemtevi').add(postData);
                 return true;
             } catch (error) {
@@ -750,7 +553,6 @@
         // ============================================
         // LIKE
         // ============================================
-
         async function likePost(postId) {
             if (!currentUser) {
                 alert('Faça login para curtir!');
@@ -772,14 +574,12 @@
                     usuariosQueCurtiram: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
                 });
             }
-
             refreshFeed();
         }
 
         // ============================================
         // COMENTÁRIOS
         // ============================================
-
         async function openComments(postId, postUserId, postUserNome) {
             currentViewingPost = { id: postId, userId: postUserId, userNome: postUserNome };
             
@@ -788,32 +588,34 @@
             container.innerHTML = '<div class="loading">Carregando comentários...</div>';
             modal.style.display = 'flex';
 
-            // Carregar comentários
-            const snapshot = await db.collection('Bemtevi').doc(postId)
-                .collection('comentarios')
-                .orderBy('createdAt', 'desc')
-                .get();
+            try {
+                const snapshot = await db.collection('Bemtevi').doc(postId)
+                    .collection('comentarios')
+                    .orderBy('createdAt', 'desc')
+                    .get();
 
-            if (snapshot.empty) {
-                container.innerHTML = '<div class="loading">Nenhum comentário ainda. Seja o primeiro!</div>';
-            } else {
-                container.innerHTML = '';
-                snapshot.forEach(doc => {
-                    const comment = doc.data();
-                    const commentDate = comment.createdAt?.toDate() || new Date();
-                    container.innerHTML += `
-                        <div class="comment-item">
-                            <div class="comment-avatar">
-                                ${comment.userNome?.charAt(0).toUpperCase() || '?'}
+                if (snapshot.empty) {
+                    container.innerHTML = '<div class="loading">Nenhum comentário ainda. Seja o primeiro!</div>';
+                } else {
+                    container.innerHTML = '';
+                    snapshot.forEach(doc => {
+                        const comment = doc.data();
+                        const commentDate = comment.createdAt?.toDate() || new Date();
+                        container.innerHTML += `
+                            <div class="comment-item">
+                                <div class="comment-avatar">${comment.userNome?.charAt(0).toUpperCase() || '?'}</div>
+                                <div class="comment-content">
+                                    <div class="comment-name">${escapeHtml(comment.userNome)}</div>
+                                    <div class="comment-text">${escapeHtml(comment.conteudo)}</div>
+                                    <div class="comment-time">${getTimeAgo(commentDate)}</div>
+                                </div>
                             </div>
-                            <div class="comment-content">
-                                <div class="comment-name">${escapeHtml(comment.userNome)}</div>
-                                <div class="comment-text">${escapeHtml(comment.conteudo)}</div>
-                                <div class="comment-time">${getTimeAgo(commentDate)}</div>
-                            </div>
-                        </div>
-                    `;
-                });
+                        `;
+                    });
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                container.innerHTML = '<div class="loading">Erro ao carregar comentários</div>';
             }
         }
 
@@ -842,7 +644,7 @@
                 });
 
                 document.getElementById('comment-input').value = '';
-                openComments(currentViewingPost.id, currentViewingPost.userId, currentViewingPost.userNome);
+                await openComments(currentViewingPost.id, currentViewingPost.userId, currentViewingPost.userNome);
                 refreshFeed();
             } catch (error) {
                 console.error('Erro ao comentar:', error);
@@ -853,116 +655,99 @@
         // ============================================
         // PERFIL E SEGUIR
         // ============================================
-
         async function openProfile(userId, userName) {
             currentViewingProfile = userId;
             
-            const userDoc = await db.collection('usuarios').doc(userId).get();
-            const userData = userDoc.exists ? userDoc.data() : { nome: userName, seguidores: [], seguindo: [] };
-            
-            // Verificar se o usuário atual segue este perfil
-            let isFollowing = false;
-            if (currentUser && userId !== currentUser.uid) {
-                const followDoc = await db.collection('usuarios').doc(currentUser.uid)
-                    .collection('seguindo').doc(userId).get();
-                isFollowing = followDoc.exists;
-            }
+            try {
+                const userDoc = await db.collection('usuarios').doc(userId).get();
+                const userData = userDoc.exists ? userDoc.data() : { nome: userName, seguidores: [], seguindo: [] };
+                
+                let isFollowing = false;
+                if (currentUser && userId !== currentUser.uid) {
+                    const followDoc = await db.collection('usuarios').doc(currentUser.uid)
+                        .collection('seguindo').doc(userId).get();
+                    isFollowing = followDoc.exists;
+                }
 
-            // Carregar posts do usuário
-            const postsSnapshot = await db.collection('Bemtevi')
-                .where('userId', '==', userId)
-                .orderBy('createdAt', 'desc')
-                .limit(10)
-                .get();
+                const postsSnapshot = await db.collection('Bemtevi')
+                    .where('userId', '==', userId)
+                    .orderBy('createdAt', 'desc')
+                    .limit(10)
+                    .get();
 
-            let postsHtml = '';
-            postsSnapshot.forEach(doc => {
-                const post = doc.data();
-                postsHtml += `
-                    <div class="post-card" style="padding:15px;">
-                        <div class="post-content" style="padding-left:0">
-                            ${escapeHtml(post.conteudo)}
-                            ${post.link ? `<a href="${post.link}" target="_blank" class="post-link" style="margin-top:8px;">🔗 ${post.link.substring(0, 40)}</a>` : ''}
+                let postsHtml = '';
+                postsSnapshot.forEach(doc => {
+                    const post = doc.data();
+                    postsHtml += `
+                        <div class="post-card" style="padding:15px;">
+                            <div class="post-content" style="padding-left:0">
+                                ${escapeHtml(post.conteudo)}
+                                ${post.link ? `<a href="${post.link}" target="_blank" class="post-link" style="margin-top:8px;">🔗 ${post.link.substring(0, 40)}</a>` : ''}
+                            </div>
+                            <div class="post-stats" style="padding-left:0">
+                                <span>❤️ ${post.likes || 0}</span>
+                                <span>💬 ${post.comentarios || 0}</span>
+                            </div>
                         </div>
-                        <div class="post-stats" style="padding-left:0">
-                            <span>❤️ ${post.likes || 0}</span>
-                            <span>💬 ${post.comentarios || 0}</span>
+                    `;
+                });
+
+                const modal = document.getElementById('profile-modal');
+                document.getElementById('profile-content').innerHTML = `
+                    <div class="profile-header">
+                        <div class="profile-avatar">${(userData.nome || userName)?.charAt(0).toUpperCase() || '?'}</div>
+                        <h3>${escapeHtml(userData.nome || userName)}</h3>
+                        <div style="opacity:0.8;">@${userId.substring(0, 8)}</div>
+                        ${currentUser && userId !== currentUser.uid ? `
+                            <button class="follow-btn ${isFollowing ? 'following' : ''}" onclick="toggleFollow('${userId}')">
+                                ${isFollowing ? '✓ Seguindo' : '+ Seguir'}
+                            </button>
+                        ` : ''}
+                        <div class="profile-stats">
+                            <div><div class="stat-number">${userData.seguidores?.length || 0}</div><div>Seguidores</div></div>
+                            <div><div class="stat-number">${userData.seguindo?.length || 0}</div><div>Seguindo</div></div>
+                            <div><div class="stat-number">${postsSnapshot.size}</div><div>Posts</div></div>
                         </div>
                     </div>
+                    <h4 style="margin: 20px 0 10px;">📝 Últimas postagens</h4>
+                    <div id="profile-posts">${postsHtml || '<div class="loading">Nenhuma postagem ainda.</div>'}</div>
                 `;
-            });
-
-            const modal = document.getElementById('profile-modal');
-            document.getElementById('profile-content').innerHTML = `
-                <div class="profile-header">
-                    <div class="profile-avatar">
-                        ${userData.nome?.charAt(0).toUpperCase() || userName?.charAt(0).toUpperCase() || '?'}
-                    </div>
-                    <h3>${escapeHtml(userData.nome || userName)}</h3>
-                    <div style="opacity:0.8;">@${userId.substring(0, 8)}</div>
-                    ${currentUser && userId !== currentUser.uid ? `
-                        <button class="follow-btn ${isFollowing ? 'following' : ''}" onclick="toggleFollow('${userId}')">
-                            ${isFollowing ? '✓ Seguindo' : '+ Seguir'}
-                        </button>
-                    ` : ''}
-                    <div class="profile-stats">
-                        <div><div class="stat-number">${userData.seguidores?.length || 0}</div><div>Seguidores</div></div>
-                        <div><div class="stat-number">${userData.seguindo?.length || 0}</div><div>Seguindo</div></div>
-                        <div><div class="stat-number">${postsSnapshot.size}</div><div>Posts</div></div>
-                    </div>
-                </div>
-                <h4 style="margin: 20px 0 10px;">📝 Últimas postagens</h4>
-                <div id="profile-posts">${postsHtml || '<div class="loading">Nenhuma postagem ainda.</div>'}</div>
-            `;
-            modal.style.display = 'flex';
+                modal.style.display = 'flex';
+            } catch (error) {
+                console.error('Erro ao abrir perfil:', error);
+                alert('Erro ao carregar perfil');
+            }
         }
 
         async function toggleFollow(userIdToFollow) {
-            if (!currentUser) {
-                alert('Faça login para seguir usuários!');
-                return;
+            if (!currentUser || userIdToFollow === currentUser.uid) return;
+
+            try {
+                const followingRef = db.collection('usuarios').doc(currentUser.uid).collection('seguindo').doc(userIdToFollow);
+                const followersRef = db.collection('usuarios').doc(userIdToFollow).collection('seguidores').doc(currentUser.uid);
+                const followingDoc = await followingRef.get();
+
+                if (followingDoc.exists) {
+                    await followingRef.delete();
+                    await followersRef.delete();
+                } else {
+                    await followingRef.set({ userId: userIdToFollow, seguidoDesde: firebase.firestore.FieldValue.serverTimestamp() });
+                    await followersRef.set({ userId: currentUser.uid, seguidoDesde: firebase.firestore.FieldValue.serverTimestamp() });
+                }
+
+                if (currentViewingProfile === userIdToFollow) {
+                    await openProfile(userIdToFollow, '');
+                }
+                loadSuggestions();
+                refreshFeed();
+            } catch (error) {
+                console.error('Erro ao seguir:', error);
             }
-
-            if (userIdToFollow === currentUser.uid) {
-                alert('Você não pode seguir a si mesmo!');
-                return;
-            }
-
-            const followingRef = db.collection('usuarios').doc(currentUser.uid)
-                .collection('seguindo').doc(userIdToFollow);
-            
-            const followersRef = db.collection('usuarios').doc(userIdToFollow)
-                .collection('seguidores').doc(currentUser.uid);
-
-            const followingDoc = await followingRef.get();
-
-            if (followingDoc.exists) {
-                await followingRef.delete();
-                await followersRef.delete();
-            } else {
-                await followingRef.set({
-                    userId: userIdToFollow,
-                    userName: (await db.collection('usuarios').doc(userIdToFollow).get()).data()?.nome || userIdToFollow,
-                    seguidoDesde: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                await followersRef.set({
-                    userId: currentUser.uid,
-                    userName: currentUser.displayName || currentUser.email.split('@')[0],
-                    seguidoDesde: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            }
-
-            if (currentViewingProfile === userIdToFollow) {
-                openProfile(userIdToFollow, '');
-            }
-            loadSuggestions();
-            refreshFeed();
         }
 
         // ============================================
-        // SUGESTÕES DE USUÁRIOS PARA SEGUIR
+        // SUGESTÕES
         // ============================================
-
         async function loadSuggestions() {
             if (!currentUser) return;
 
@@ -970,15 +755,12 @@
             if (!container) return;
 
             try {
-                // Buscar usuários que o currentUser já segue
-                const followingSnapshot = await db.collection('usuarios').doc(currentUser.uid)
-                    .collection('seguindo').get();
+                const followingSnapshot = await db.collection('usuarios').doc(currentUser.uid).collection('seguindo').get();
                 const followingIds = followingSnapshot.docs.map(doc => doc.id);
                 followingIds.push(currentUser.uid);
 
-                // Buscar outros usuários
-                const usersSnapshot = await db.collection('usuarios').limit(5).get();
-                const suggestions = usersSnapshot.docs.filter(doc => !followingIds.includes(doc.id));
+                const usersSnapshot = await db.collection('usuarios').limit(10).get();
+                const suggestions = usersSnapshot.docs.filter(doc => !followingIds.includes(doc.id)).slice(0, 5);
 
                 if (suggestions.length === 0) {
                     container.innerHTML = '<div style="text-align:center; color:#999;">Nenhuma sugestão no momento</div>';
@@ -1002,13 +784,13 @@
                 }).join('');
             } catch (error) {
                 console.error('Erro ao carregar sugestões:', error);
+                container.innerHTML = '<div style="text-align:center; color:#999;">Erro ao carregar sugestões</div>';
             }
         }
 
         // ============================================
-        // CARREGAMENTO DE POSTS
+        // CARREGAR POSTS
         // ============================================
-
         async function loadPosts(reset = false) {
             if (loading) return;
             if (reset) {
@@ -1019,40 +801,19 @@
             if (!hasMore) return;
 
             loading = true;
-            showLoading();
+            document.getElementById('loading-indicator').style.display = 'block';
 
             try {
-                let query = db.collection('Bemtevi');
+                let query = db.collection('Bemtevi').orderBy('createdAt', 'desc');
 
-                if (currentFeed === 'following' && currentUser) {
-                    const followingSnapshot = await db.collection('usuarios').doc(currentUser.uid)
-                        .collection('seguindo').get();
-                    const followingIds = followingSnapshot.docs.map(doc => doc.id);
-                    
-                    if (followingIds.length === 0) {
-                        document.getElementById('posts-container').innerHTML = '<div class="loading">Siga outros usuários para ver postagens!</div>';
-                        loading = false;
-                        hideLoading();
-                        return;
-                    }
-                    query = query.where('userId', 'in', followingIds);
-                    query = query.orderBy('createdAt', 'desc');
-                } else if (currentFeed === 'my-posts' && currentUser) {
-                    query = query.where('userId', '==', currentUser.uid);
-                    query = query.orderBy('createdAt', 'desc');
+                if (currentFeed === 'my-posts' && currentUser) {
+                    query = db.collection('Bemtevi').where('userId', '==', currentUser.uid).orderBy('createdAt', 'desc');
                 } else if (currentCategoryFilter) {
-                    query = query.where('categoria', '==', currentCategoryFilter);
-                    query = query.orderBy('createdAt', 'desc');
-                } else {
-                    query = query.orderBy('createdAt', 'desc');
+                    query = db.collection('Bemtevi').where('categoria', '==', currentCategoryFilter).orderBy('createdAt', 'desc');
                 }
 
-                if (lastDoc) {
-                    query = query.startAfter(lastDoc);
-                }
-
-                query = query.limit(20);
-                const snapshot = await query.get();
+                if (lastDoc) query = query.startAfter(lastDoc);
+                const snapshot = await query.limit(20).get();
 
                 if (snapshot.empty) {
                     hasMore = false;
@@ -1060,7 +821,7 @@
                         document.getElementById('posts-container').innerHTML = '<div class="loading">Nenhuma postagem encontrada!</div>';
                     }
                     loading = false;
-                    hideLoading();
+                    document.getElementById('loading-indicator').style.display = 'none';
                     return;
                 }
 
@@ -1069,115 +830,53 @@
 
                 snapshot.forEach(doc => {
                     const post = { id: doc.id, ...doc.data() };
-                    renderPost(post);
+                    const postDate = post.createdAt?.toDate() || new Date();
+                    const isLiked = currentUser && post.usuariosQueCurtiram?.includes(currentUser.uid);
+                    
+                    const postHtml = `
+                        <div class="post-card">
+                            <div class="post-header" onclick="openProfile('${post.userId}', '${post.userNome}')">
+                                <div class="post-avatar-img">${post.userNome?.charAt(0).toUpperCase() || '?'}</div>
+                                <div>
+                                    <span class="post-user-name">${escapeHtml(post.userNome)}</span>
+                                    <span class="post-user-id">@${post.userId?.substring(0, 8)}</span>
+                                    <span class="post-time">• ${getTimeAgo(postDate)}</span>
+                                </div>
+                            </div>
+                            <div class="post-category" style="background:${categoryColors[post.categoria] || '#666'}20; color:${categoryColors[post.categoria] || '#666'}">
+                                ${post.categoria || 'Geral'}
+                            </div>
+                            <div class="post-content">
+                                ${escapeHtml(post.conteudo)}
+                                ${post.link ? `<a href="${post.link}" target="_blank" class="post-link" onclick="event.stopPropagation()">🔗 ${post.link.substring(0, 50)}${post.link.length > 50 ? '...' : ''}</a>` : ''}
+                            </div>
+                            <div class="post-stats">
+                                <span class="stat-action ${isLiked ? 'liked' : ''}" onclick="likePost('${post.id}')">
+                                    <span class="material-icons" style="font-size:18px;">${isLiked ? 'favorite' : 'favorite_border'}</span> ${post.likes || 0}
+                                </span>
+                                <span class="stat-action" onclick="openComments('${post.id}', '${post.userId}', '${post.userNome}')">
+                                    <span class="material-icons" style="font-size:18px;">chat_bubble_outline</span> ${post.comentarios || 0}
+                                </span>
+                                <span class="stat-action" onclick="sharePost('${post.id}')">
+                                    <span class="material-icons" style="font-size:18px;">share</span>
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('posts-container').insertAdjacentHTML('beforeend', postHtml);
                 });
-
             } catch (error) {
                 console.error('Erro ao carregar posts:', error);
-                if (error.message.includes('index')) {
-                    document.getElementById('posts-container').innerHTML = `
-                        <div class="loading">⚙️ Configurando banco de dados...<br><small>Aguarde alguns instantes e recarregue.</small></div>
-                    `;
-                }
+                document.getElementById('posts-container').innerHTML = '<div class="loading">Erro ao carregar posts. Recarregue a página.</div>';
             } finally {
                 loading = false;
-                hideLoading();
+                document.getElementById('loading-indicator').style.display = 'none';
             }
         }
 
-        function renderPost(post) {
-            const container = document.getElementById('posts-container');
-            if (!container) return;
-
-            const postDate = post.createdAt?.toDate() || new Date();
-            const timeAgo = getTimeAgo(postDate);
-            const hasLink = post.link && post.link !== 'null';
-            const isLiked = currentUser && post.usuariosQueCurtiram?.includes(currentUser.uid);
-            
-            let specialStyle = '';
-            if (post.topicoEspecial && specialTopics[post.topicoEspecial]) {
-                specialStyle = `border-left: 4px solid ${specialTopics[post.topicoEspecial].color}; padding-left: 16px;`;
-            }
-
-            const postHtml = `
-                <div class="post-card" data-post-id="${post.id}">
-                    <div class="post-header">
-                        <div class="post-avatar-img" onclick="openProfile('${post.userId}', '${post.userNome}')">
-                            ${post.userAvatar ? `<img src="${post.userAvatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">` : (post.userNome?.charAt(0).toUpperCase() || '?')}
-                        </div>
-                        <div class="post-user-info" onclick="openProfile('${post.userId}', '${post.userNome}')">
-                            <span class="post-user-name">${escapeHtml(post.userNome)}</span>
-                            <span class="post-user-id">@${post.userId.substring(0, 8)}</span>
-                            <span class="post-time">• ${timeAgo}</span>
-                        </div>
-                    </div>
-                    <div class="post-category" style="background:${getCategoryColor(post.categoria)}20; color:${getCategoryColor(post.categoria)};">
-                        ${post.categoria}
-                    </div>
-                    <div class="post-content" style="${specialStyle}">
-                        ${post.topicoEspecial ? `<span style="color:${specialTopics[post.topicoEspecial]?.color};">${specialTopics[post.topicoEspecial]?.icon} ${post.topicoEspecial}</span><br>` : ''}
-                        ${escapeHtml(post.conteudo)}
-                        ${hasLink ? `<a href="${post.link}" target="_blank" class="post-link" onclick="event.stopPropagation()">
-                            <span class="material-icons" style="font-size:16px;">link</span> ${post.link.substring(0, 50)}${post.link.length > 50 ? '...' : ''}
-                        </a>` : ''}
-                    </div>
-                    <div class="post-stats">
-                        <span class="stat-action ${isLiked ? 'liked' : ''}" onclick="likePost('${post.id}')">
-                            <span class="material-icons" style="font-size:18px;">${isLiked ? 'favorite' : 'favorite_border'}</span> ${post.likes || 0}
-                        </span>
-                        <span class="stat-action" onclick="openComments('${post.id}', '${post.userId}', '${post.userNome}')">
-                            <span class="material-icons" style="font-size:18px;">chat_bubble_outline</span> ${post.comentarios || 0}
-                        </span>
-                        <span class="stat-action" onclick="sharePost('${post.id}')">
-                            <span class="material-icons" style="font-size:18px;">share</span>
-                        </span>
-                    </div>
-                </div>
-            `;
-
-            container.insertAdjacentHTML('beforeend', postHtml);
-        }
-
-        // ============================================
-        // UTILITÁRIOS
-        // ============================================
-
-        function getTimeAgo(date) {
-            const seconds = Math.floor((new Date() - date) / 1000);
-            if (seconds < 60) return 'agora';
-            const minutes = Math.floor(seconds / 60);
-            if (minutes < 60) return `${minutes}m`;
-            const hours = Math.floor(minutes / 60);
-            if (hours < 24) return `${hours}h`;
-            const days = Math.floor(hours / 24);
-            return `${days}d`;
-        }
-
-        function getCategoryColor(category) {
-            const colors = {
-                'Geral': '#666', 'Tecnologia': '#2196f3', 'Ciência': '#4caf50',
-                'Arte': '#9c27b0', 'Música': '#f44336', 'Esportes': '#ff9800',
-                'Games': '#795548', 'Educação': '#00bcd4', 'Política': '#607d8b',
-                'Entretenimento': '#e91e63'
-            };
-            return colors[category] || '#667eea';
-        }
-
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        function showLoading() {
-            const loader = document.getElementById('loading-indicator');
-            if (loader) loader.style.display = 'block';
-        }
-
-        function hideLoading() {
-            const loader = document.getElementById('loading-indicator');
-            if (loader) loader.style.display = 'none';
+        async function sharePost(postId) {
+            await navigator.clipboard.writeText(`${window.location.origin}/post/${postId}`);
+            alert('Link copiado!');
         }
 
         function refreshFeed() {
@@ -1186,182 +885,127 @@
             loadPosts(true);
         }
 
-        async function sharePost(postId) {
-            const url = `${window.location.origin}/post/${postId}`;
-            await navigator.clipboard.writeText(url);
-            alert('Link copiado!');
-        }
-
         // ============================================
         // RENDERIZAÇÃO
         // ============================================
-
         function renderMainApp() {
-            const app = document.getElementById('app');
-            app.innerHTML = `
+            document.getElementById('app').innerHTML = `
+                <div class="beta-badge">🚧 BETA</div>
                 <div class="app-container">
                     <div class="sidebar-left">
-                        <div class="logo">
-                            <span class="logo-icon">🐦</span>
-                            <span class="logo-text">Bemtevi</span>
-                        </div>
-                        <ul class="nav-menu">
-                            <li class="nav-item ${currentFeed === 'for-you' ? 'active' : ''}" onclick="changeFeed('for-you')">
-                                <span class="material-icons">home</span> Para Você
-                            </li>
-                            <li class="nav-item ${currentFeed === 'following' ? 'active' : ''}" onclick="changeFeed('following')">
-                                <span class="material-icons">people</span> Seguindo
-                            </li>
-                            <li class="nav-item ${currentFeed === 'my-posts' ? 'active' : ''}" onclick="changeFeed('my-posts')">
-                                <span class="material-icons">person</span> Minhas Postagens
-                            </li>
-                        </ul>
-                        <div class="user-profile-mini" onclick="openProfile('${currentUser.uid}', '${currentUser.displayName || currentUser.email.split('@')[0]}')">
-                            <div style="display:flex; align-items:center; gap:12px;">
-                                <div class="user-avatar-mini">
-                                    ${currentUser?.displayName?.charAt(0)?.toUpperCase() || currentUser?.email?.charAt(0)?.toUpperCase() || '?'}
-                                </div>
-                                <div>
-                                    <div style="font-weight:600;">${currentUser?.displayName || currentUser?.email?.split('@')[0]}</div>
-                                    <div style="font-size:12px; color:#999;">@${currentUser?.uid?.substring(0, 8)}</div>
-                                </div>
+                        <div class="card">
+                            <div class="logo">
+                                <span class="logo-icon">🐦</span>
+                                <span class="logo-text">Bemtevi</span>
                             </div>
-                            <button onclick="event.stopPropagation(); signOut()" style="margin-top:15px; width:100%; padding:10px; border:none; background:#f0f0f0; border-radius:12px; cursor:pointer;">
-                                Sair
-                            </button>
+                            <ul class="nav-menu">
+                                <li class="nav-item ${currentFeed === 'for-you' ? 'active' : ''}" onclick="changeFeed('for-you')">
+                                    <span class="material-icons">home</span> Para Você
+                                </li>
+                                <li class="nav-item ${currentFeed === 'my-posts' ? 'active' : ''}" onclick="changeFeed('my-posts')">
+                                    <span class="material-icons">person</span> Minhas Postagens
+                                </li>
+                            </ul>
+                            <div style="margin-top:20px; padding-top:20px; border-top:1px solid #f0f0f0; cursor:pointer;" onclick="openProfile('${currentUser.uid}', '${currentUser.displayName || currentUser.email.split('@')[0]}')">
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <div class="post-avatar" style="width:40px; height:40px;">${currentUser.displayName?.charAt(0).toUpperCase() || currentUser.email.charAt(0).toUpperCase()}</div>
+                                    <div>
+                                        <div style="font-weight:600;">${escapeHtml(currentUser.displayName || currentUser.email.split('@')[0])}</div>
+                                        <div style="font-size:12px; color:#999;">@${currentUser.uid.substring(0, 8)}</div>
+                                    </div>
+                                </div>
+                                <button onclick="event.stopPropagation(); signOut()" style="margin-top:15px; width:100%; padding:10px; border:none; background:#f0f0f0; border-radius:12px; cursor:pointer;">Sair</button>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="main-feed">
-                        <div class="feed-header">
-                            <div class="feed-title">
-                                ${currentFeed === 'for-you' ? '📱 Para Você' : currentFeed === 'following' ? '👥 Seguindo' : '✍️ Minhas Postagens'}
-                            </div>
-                        </div>
-
+                    <div>
+                        <div class="feed-header"><div class="feed-title">📱 Feed</div></div>
                         <div class="post-box">
                             <div class="post-input-area">
-                                <div class="post-avatar" onclick="openProfile('${currentUser.uid}', '${currentUser.displayName || currentUser.email.split('@')[0]}')">
-                                    ${currentUser?.displayName?.charAt(0)?.toUpperCase() || currentUser?.email?.charAt(0)?.toUpperCase() || '?'}
-                                </div>
+                                <div class="post-avatar">${currentUser.displayName?.charAt(0).toUpperCase() || currentUser.email.charAt(0).toUpperCase()}</div>
                                 <div class="post-input-container">
                                     <textarea id="postText" class="post-input" rows="3" placeholder="O que está acontecendo? (Máx. 127 caracteres)" maxlength="127"></textarea>
                                     <div id="charCounter" class="char-counter">0/127</div>
                                     <div class="post-actions">
-                                        <div class="post-buttons">
-                                            <select id="postCategory" class="category-select">
-                                                ${categories.map(cat => `<option value="${cat}">📁 ${cat}</option>`).join('')}
-                                            </select>
-                                            <input type="text" id="postLink" class="attach-link-btn" placeholder="🔗 Link (opcional)" style="width:200px;">
-                                        </div>
-                                        <button class="post-btn" onclick="submitPost()">Postar 🚀</button>
+                                        <select id="postCategory" class="btn-secondary">${categories.map(cat => `<option value="${cat}">📁 ${cat}</option>`).join('')}</select>
+                                        <input type="text" id="postLink" class="btn-secondary" placeholder="🔗 Link (opcional)" style="width:200px;">
+                                        <button class="btn-primary" onclick="submitPost()">Postar 🚀</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                         <div id="posts-container" class="posts-container"></div>
                         <div id="loading-indicator" class="loading" style="display:none;">Carregando mais posts...</div>
                     </div>
 
                     <div class="sidebar-right">
-                        <div class="categories-box">
-                            <div class="box-title">📂 Categorias</div>
-                            <div id="categories-list">
-                                ${categories.map(cat => `
-                                    <span class="category-chip ${currentCategoryFilter === cat ? 'selected' : ''}" onclick="filterByCategory('${cat}')">${cat}</span>
-                                `).join('')}
-                                <span class="category-chip ${!currentCategoryFilter ? 'selected' : ''}" onclick="clearCategoryFilter()">Todos</span>
-                            </div>
+                        <div class="card">
+                            <div class="box-title" style="font-weight:700; margin-bottom:15px;">📂 Categorias</div>
+                            ${categories.map(cat => `<span class="category-chip ${currentCategoryFilter === cat ? 'selected' : ''}" onclick="filterByCategory('${cat}')">${cat}</span>`).join('')}
+                            <span class="category-chip ${!currentCategoryFilter ? 'selected' : ''}" onclick="clearCategoryFilter()">Todos</span>
                         </div>
-                        <div class="suggestions-box">
-                            <div class="box-title">👥 Sugestões para seguir</div>
+                        <div class="card">
+                            <div class="box-title" style="font-weight:700; margin-bottom:15px;">👥 Sugestões</div>
                             <div id="suggestions-container"></div>
-                        </div>
-                        <div class="trending-box">
-                            <div class="box-title">⚡ Tópicos Especiais</div>
-                            ${Object.entries(specialTopics).map(([key, value]) => `
-                                <div style="margin-bottom:10px;">
-                                    <span style="color:${value.color};">${value.icon}</span> ${key}
-                                </div>
-                            `).join('')}
                         </div>
                     </div>
                 </div>
 
-                <!-- Modal de Comentários -->
                 <div id="comments-modal" class="modal">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h3>💬 Comentários</h3>
-                            <span class="close-modal" onclick="closeModal('comments-modal')">&times;</span>
-                        </div>
+                        <div class="modal-header"><h3>💬 Comentários</h3><span class="close-modal" onclick="closeModal('comments-modal')">&times;</span></div>
                         <div class="modal-body">
                             <div id="comments-container"></div>
                             <textarea id="comment-input" class="comment-input" rows="3" placeholder="Escreva um comentário... (máx. 280 caracteres)" maxlength="280"></textarea>
-                            <button class="post-btn" onclick="sendComment()" style="margin-top:10px; width:100%;">Enviar Comentário</button>
+                            <button class="btn-primary" onclick="sendComment()" style="margin-top:10px; width:100%;">Enviar Comentário</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Modal de Perfil -->
                 <div id="profile-modal" class="modal">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h3>👤 Perfil</h3>
-                            <span class="close-modal" onclick="closeModal('profile-modal')">&times;</span>
-                        </div>
+                        <div class="modal-header"><h3>👤 Perfil</h3><span class="close-modal" onclick="closeModal('profile-modal')">&times;</span></div>
                         <div class="modal-body" id="profile-content"></div>
                     </div>
                 </div>
             `;
 
-            const textarea = document.getElementById('postText');
-            if (textarea) {
-                textarea.addEventListener('input', function() {
-                    const counter = document.getElementById('charCounter');
-                    const length = this.value.length;
-                    counter.textContent = `${length}/127`;
-                    counter.className = length > 110 ? 'char-counter warning' : length > 120 ? 'char-counter danger' : 'char-counter';
-                });
-            }
+            document.getElementById('postText')?.addEventListener('input', function() {
+                const len = this.value.length;
+                document.getElementById('charCounter').innerHTML = `${len}/127`;
+                document.getElementById('charCounter').className = len > 110 ? 'char-counter warning' : len > 120 ? 'char-counter danger' : 'char-counter';
+            });
 
             loadPosts(true);
             loadSuggestions();
-
             window.addEventListener('scroll', () => {
-                if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
-                    loadPosts();
-                }
+                if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) loadPosts();
             });
         }
 
         function renderWelcomeScreen() {
-            const app = document.getElementById('app');
-            app.innerHTML = `
-                <div style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;">
-                    <div style="background:white; border-radius:32px; padding:50px; max-width:500px; width:100%; text-align:center;">
-                        <div style="display:flex; justify-content:center; gap:10px; margin-bottom:30px;">
-                            <span style="font-size:48px;">🐦</span>
-                            <span style="font-size:48px; font-weight:700; background:linear-gradient(135deg,#667eea,#764ba2); -webkit-background-clip:text; background-clip:text; color:transparent;">Bemtevi</span>
+            document.getElementById('app').innerHTML = `
+                <div class="beta-badge">🚧 BETA</div>
+                <div class="login-container">
+                    <div class="login-box">
+                        <div class="logo" style="justify-content:center; margin-bottom:30px;">
+                            <span class="logo-icon">🐦</span>
+                            <span class="logo-text">Bemtevi</span>
                         </div>
-                        <h2 style="margin-bottom:20px;">Bem-vindo ao Bemtevi!</h2>
+                        <h2 style="margin-bottom:20px;">Bem-vindo!</h2>
                         <p style="color:#666; margin-bottom:30px;">Uma rede social livre e colaborativa</p>
-                        <button onclick="signIn()" style="background:linear-gradient(135deg,#667eea,#764ba2); color:white; border:none; padding:12px 30px; border-radius:50px; cursor:pointer; font-weight:600; width:100%;">
-                            🔑 Entrar com Google
-                        </button>
-                        <div style="margin-top:20px; font-size:12px; color:#999;">
-                            Postagens de até 127 caracteres • Comentários • Curtidas • Seguir usuários
-                        </div>
+                        <button id="google-login-btn" class="btn-primary" style="width:100%;">🔑 Entrar com Google</button>
+                        <div style="margin-top:20px; font-size:12px; color:#999;">Postagens de até 127 caracteres • Comentários • Curtidas</div>
                     </div>
                 </div>
             `;
+            document.getElementById('google-login-btn')?.addEventListener('click', signIn);
         }
 
         // ============================================
         // FUNÇÕES GLOBAIS
         // ============================================
-
         window.changeFeed = function(feed) {
             currentFeed = feed;
             currentCategoryFilter = null;
@@ -1386,12 +1030,10 @@
         };
 
         window.submitPost = async function() {
-            const text = document.getElementById('postText').value;
-            const link = document.getElementById('postLink').value;
-            const category = document.getElementById('postCategory').value;
-            
-            const success = await createPost(text, link, category);
-            if (success) {
+            const text = document.getElementById('postText')?.value;
+            const link = document.getElementById('postLink')?.value;
+            const category = document.getElementById('postCategory')?.value || 'Geral';
+            if (await createPost(text, link, category)) {
                 document.getElementById('postText').value = '';
                 document.getElementById('postLink').value = '';
                 refreshFeed();
@@ -1400,39 +1042,33 @@
 
         window.closeModal = function(id) {
             document.getElementById(id).style.display = 'none';
-            currentViewingPost = null;
-            currentViewingProfile = null;
         };
 
         window.signIn = async function() {
-    try {
-        // Usar redirect em vez de popup
-        await auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider());
-    } catch (error) {
-        alert('Erro no login: ' + error.message);
-    }
-};
-
-// Adicionar handler para quando voltar do redirect
-auth.getRedirectResult().then(async (result) => {
-    if (result.user) {
-        currentUser = result.user;
-        const userDoc = await db.collection('usuarios').doc(result.user.uid).get();
-        if (!userDoc.exists) {
-            await db.collection('usuarios').doc(result.user.uid).set({
-                nome: result.user.displayName || result.user.email.split('@')[0],
-                email: result.user.email,
-                avatar: result.user.photoURL || null,
-                dataCriacao: firebase.firestore.FieldValue.serverTimestamp(),
-                seguidores: [],
-                seguindo: []
-            });
-        }
-        renderMainApp();
-    }
-}).catch((error) => {
-    console.error('Erro no redirect:', error);
-});
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                provider.setCustomParameters({ prompt: 'select_account' });
+                const result = await auth.signInWithPopup(provider);
+                
+                const userRef = db.collection('usuarios').doc(result.user.uid);
+                const userDoc = await userRef.get();
+                if (!userDoc.exists) {
+                    await userRef.set({
+                        nome: result.user.displayName || result.user.email.split('@')[0],
+                        email: result.user.email,
+                        avatar: result.user.photoURL || null,
+                        dataCriacao: firebase.firestore.FieldValue.serverTimestamp(),
+                        seguidores: [],
+                        seguindo: []
+                    });
+                }
+                currentUser = result.user;
+                renderMainApp();
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro no login: ' + error.message);
+            }
+        };
 
         window.signOut = function() {
             auth.signOut().then(() => {
@@ -1441,7 +1077,7 @@ auth.getRedirectResult().then(async (result) => {
             });
         };
 
-        // Expor funções globais
+        // Expor funções
         window.likePost = likePost;
         window.openComments = openComments;
         window.sendComment = sendComment;
@@ -1452,7 +1088,6 @@ auth.getRedirectResult().then(async (result) => {
         // ============================================
         // INICIALIZAÇÃO
         // ============================================
-
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 currentUser = user;
