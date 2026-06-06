@@ -721,30 +721,52 @@
         }
 
         async function toggleFollow(userIdToFollow) {
-            if (!currentUser || userIdToFollow === currentUser.uid) return;
+    if (!currentUser || userIdToFollow === currentUser.uid) return;
 
-            try {
-                const followingRef = db.collection('usuarios').doc(currentUser.uid).collection('seguindo').doc(userIdToFollow);
-                const followersRef = db.collection('usuarios').doc(userIdToFollow).collection('seguidores').doc(currentUser.uid);
-                const followingDoc = await followingRef.get();
+    try {
+        const followingRef = db.collection('usuarios').doc(currentUser.uid).collection('seguindo').doc(userIdToFollow);
+        const followersRef = db.collection('usuarios').doc(userIdToFollow).collection('seguidores').doc(currentUser.uid);
+        
+        const followingDoc = await followingRef.get();
 
-                if (followingDoc.exists) {
-                    await followingRef.delete();
-                    await followersRef.delete();
-                } else {
-                    await followingRef.set({ userId: userIdToFollow, seguidoDesde: firebase.firestore.FieldValue.serverTimestamp() });
-                    await followersRef.set({ userId: currentUser.uid, seguidoDesde: firebase.firestore.FieldValue.serverTimestamp() });
-                }
-
-                if (currentViewingProfile === userIdToFollow) {
-                    await openProfile(userIdToFollow, '');
-                }
-                loadSuggestions();
-                refreshFeed();
-            } catch (error) {
-                console.error('Erro ao seguir:', error);
-            }
+        if (followingDoc.exists) {
+            // Deixar de seguir
+            await followingRef.delete();
+            await followersRef.delete();
+            console.log('Deixou de seguir com sucesso');
+        } else {
+            // Seguir
+            await followingRef.set({
+                userId: userIdToFollow,
+                seguidoDesde: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            await followersRef.set({
+                seguidorId: currentUser.uid,
+                seguidoDesde: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            console.log('Seguiu com sucesso');
         }
+
+        // Atualizar interfaces
+        if (currentViewingProfile === userIdToFollow) {
+            await openProfile(userIdToFollow, '');
+        }
+        await loadSuggestions();
+        await refreshFeed();
+        
+    } catch (error) {
+        console.error('Erro detalhado ao seguir:', error);
+        console.log('Código do erro:', error.code);
+        console.log('Mensagem:', error.message);
+        
+        // Mensagem amigável para o usuário
+        if (error.code === 'permission-denied') {
+            alert('Erro de permissão. Por favor, recarregue a página e tente novamente.');
+        } else {
+            alert('Erro ao seguir usuário: ' + error.message);
+        }
+    }
+}
 
         // ============================================
         // SUGESTÕES
