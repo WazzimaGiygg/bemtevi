@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bemtevi - Rede Social</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" href="https://gspotfverwazzimagiygg.wazzimagiygg.com/bemtevi/Favicom.png" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
         * {
@@ -102,6 +101,11 @@
             padding-top: 20px;
             border-top: 2px solid #f0f0f0;
             margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .user-profile-mini:hover {
+            opacity: 0.8;
         }
 
         .user-avatar-mini {
@@ -160,6 +164,7 @@
             color: white;
             font-weight: 700;
             flex-shrink: 0;
+            cursor: pointer;
         }
 
         .post-input-container {
@@ -202,11 +207,14 @@
             justify-content: space-between;
             align-items: center;
             margin-top: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .post-buttons {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         .post-btn {
@@ -230,7 +238,7 @@
             cursor: not-allowed;
         }
 
-        .attach-link-btn {
+        .attach-link-btn, .category-select {
             background: #f0f0f0;
             border: none;
             padding: 8px 16px;
@@ -241,6 +249,7 @@
             gap: 5px;
             font-size: 14px;
             transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
         }
 
         .attach-link-btn.active {
@@ -257,11 +266,6 @@
             padding: 20px;
             border-bottom: 1px solid #f0f0f0;
             transition: background 0.2s;
-            cursor: pointer;
-        }
-
-        .post-card:hover {
-            background: #fafafa;
         }
 
         .post-header {
@@ -281,10 +285,12 @@
             color: white;
             font-weight: 700;
             flex-shrink: 0;
+            cursor: pointer;
         }
 
         .post-user-info {
             flex: 1;
+            cursor: pointer;
         }
 
         .post-user-name {
@@ -370,7 +376,7 @@
             height: fit-content;
         }
 
-        .trending-box, .categories-box {
+        .trending-box, .categories-box, .suggestions-box {
             background: white;
             border-radius: 20px;
             padding: 20px;
@@ -404,13 +410,6 @@
             color: white;
         }
 
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-        }
-
         /* Modal */
         .modal {
             display: none;
@@ -428,7 +427,7 @@
         .modal-content {
             background: white;
             border-radius: 24px;
-            max-width: 500px;
+            max-width: 600px;
             width: 90%;
             max-height: 85vh;
             overflow-y: auto;
@@ -440,6 +439,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            background: white;
         }
 
         .modal-body {
@@ -451,43 +453,154 @@
             font-size: 24px;
         }
 
-        /* Login */
-        .login-container {
-            min-height: 100vh;
+        /* Perfil */
+        .profile-header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            margin: 0 auto 15px;
+            font-size: 48px;
+            font-weight: 700;
+            color: #667eea;
         }
 
-        .login-box {
+        .follow-btn {
             background: white;
-            border-radius: 32px;
-            padding: 50px;
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-        }
-
-        .category-selector {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 20px 0;
-        }
-
-        .category-option {
-            padding: 10px 20px;
-            border: 2px solid #e0e0e0;
+            color: #667eea;
+            border: none;
+            padding: 10px 24px;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.2s;
+            font-weight: 600;
+            margin-top: 10px;
         }
 
-        .category-option.selected {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+        .follow-btn.following {
+            background: #e94560;
             color: white;
-            border-color: transparent;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+        }
+
+        .stat-number {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        /* Comentários */
+        .comment-item {
+            display: flex;
+            gap: 12px;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .comment-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-name {
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .comment-text {
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .comment-time {
+            font-size: 10px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .comment-input {
+            width: 100%;
+            border: 2px solid #f0f0f0;
+            border-radius: 16px;
+            padding: 10px 15px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            resize: none;
+            margin-top: 15px;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        /* Sugestões */
+        .suggestion-user {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .suggestion-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .suggestion-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .follow-small-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
         }
 
         @media (max-width: 1024px) {
@@ -524,22 +637,12 @@
 
         // Estado Global
         let currentUser = null;
-        let userInterests = [];
         let currentFeed = 'for-you';
         let lastDoc = null;
         let loading = false;
         let hasMore = true;
         let currentCategoryFilter = null;
-
-        // ============================================
-        // CONFIGURAÇÕES INICIAIS
-        // ============================================
-
-        // Palavras/Tópicos bloqueados
-        const blockedTopics = [
-            'spam', 'porn', 'violencia', 'odio', 'discriminacao', 
-            'racismo', 'nazismo', 'pedofilia', 'droga', 'crime'
-        ];
+        let currentViewingProfile = null;
 
         // Categorias disponíveis
         const categories = [
@@ -554,6 +657,9 @@
             'Comunicado': { icon: '📣', color: '#2196f3' },
             'Dica': { icon: '💡', color: '#4caf50' }
         };
+
+        // Palavras bloqueadas
+        const blockedTopics = ['spam', 'porn', 'violencia', 'odio', 'discriminacao', 'racismo', 'nazismo'];
 
         // ============================================
         // FUNÇÕES DE VALIDAÇÃO
@@ -587,13 +693,11 @@
             let postText = conteudo.trim();
             let extractedLink = link;
 
-            // Extrair link do texto se não foi fornecido separadamente
             if (!extractedLink) {
                 extractedLink = extractLinks(postText);
                 postText = removeLinks(postText);
             }
 
-            // Verificar limite de caracteres (sem contar o link)
             if (postText.length > 127) {
                 alert('O texto da postagem deve ter no máximo 127 caracteres!');
                 return false;
@@ -604,13 +708,11 @@
                 return false;
             }
 
-            // Verificar conteúdo bloqueado
             if (containsBlockedContent(postText)) {
                 alert('⚠️ Sua postagem contém conteúdo não permitido!');
                 return false;
             }
 
-            // Verificar se é tópico especial
             let topicoEspecial = null;
             for (const [key, value] of Object.entries(specialTopics)) {
                 if (postText.toUpperCase().includes(key.toUpperCase())) {
@@ -623,6 +725,7 @@
                 const postData = {
                     userId: currentUser.uid,
                     userNome: currentUser.displayName || currentUser.email.split('@')[0],
+                    userEmail: currentUser.email,
                     userAvatar: currentUser.photoURL || null,
                     conteudo: postText.substring(0, 127),
                     categoria: categoria,
@@ -630,7 +733,6 @@
                     link: extractedLink,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     likes: 0,
-                    reposts: 0,
                     comentarios: 0,
                     usuariosQueCurtiram: []
                 };
@@ -645,132 +747,7 @@
         }
 
         // ============================================
-        // CARREGAMENTO DE POSTS COM ROLAGEM INFINITA
-        // ============================================
-
-        async function loadPosts(reset = false) {
-            if (loading) return;
-            if (reset) {
-                lastDoc = null;
-                hasMore = true;
-                document.getElementById('posts-container').innerHTML = '';
-            }
-            if (!hasMore) return;
-
-            loading = true;
-            showLoading();
-
-            try {
-                let query = db.collection('Bemtevi');
-
-                // Filtro por feed
-                if (currentFeed === 'following') {
-                    const userDoc = await db.collection('usuarios').doc(currentUser?.uid).get();
-                    const following = userDoc.data()?.seguindo || [];
-                    if (following.length > 0) {
-                        query = query.where('userId', 'in', following);
-                    } else {
-                        document.getElementById('posts-container').innerHTML = '<div class="loading">Siga outros usuários para ver postagens!</div>';
-                        loading = false;
-                        return;
-                    }
-                } else if (currentFeed === 'my-posts' && currentUser) {
-                    query = query.where('userId', '==', currentUser.uid);
-                } else if (currentCategoryFilter) {
-                    query = query.where('categoria', '==', currentCategoryFilter);
-                }
-
-                query = query.orderBy('createdAt', 'desc');
-
-                if (lastDoc) {
-                    query = query.startAfter(lastDoc);
-                }
-
-                query = query.limit(20);
-
-                const snapshot = await query.get();
-
-                if (snapshot.empty) {
-                    hasMore = false;
-                    if (reset && document.getElementById('posts-container').children.length === 0) {
-                        document.getElementById('posts-container').innerHTML = '<div class="loading">Nenhuma postagem encontrada!</div>';
-                    }
-                    loading = false;
-                    hideLoading();
-                    return;
-                }
-
-                lastDoc = snapshot.docs[snapshot.docs.length - 1];
-                hasMore = snapshot.docs.length === 20;
-
-                snapshot.forEach(doc => {
-                    const post = { id: doc.id, ...doc.data() };
-                    renderPost(post);
-                });
-
-            } catch (error) {
-                console.error('Erro ao carregar posts:', error);
-            } finally {
-                loading = false;
-                hideLoading();
-            }
-        }
-
-        function renderPost(post) {
-            const container = document.getElementById('posts-container');
-            if (!container) return;
-
-            const postDate = post.createdAt?.toDate() || new Date();
-            const timeAgo = getTimeAgo(postDate);
-            const hasLink = post.link && post.link !== 'null';
-            
-            // Determinar cor do tópico especial
-            let specialStyle = '';
-            if (post.topicoEspecial && specialTopics[post.topicoEspecial]) {
-                specialStyle = `border-left: 4px solid ${specialTopics[post.topicoEspecial].color};`;
-            }
-
-            const postHtml = `
-                <div class="post-card" data-post-id="${post.id}" onclick="openPostDetail('${post.id}')">
-                    <div class="post-header">
-                        <div class="post-avatar-img">
-                            ${post.userAvatar ? `<img src="${post.userAvatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">` : post.userNome.charAt(0).toUpperCase()}
-                        </div>
-                        <div class="post-user-info">
-                            <span class="post-user-name">${escapeHtml(post.userNome)}</span>
-                            <span class="post-user-id">@${post.userId.substring(0, 8)}</span>
-                            <span class="post-time">• ${timeAgo}</span>
-                        </div>
-                    </div>
-                    <div class="post-category" style="background:${getCategoryColor(post.categoria)}20; color:${getCategoryColor(post.categoria)};">
-                        ${post.categoria}
-                    </div>
-                    <div class="post-content" style="${specialStyle} padding-left:60px; ${specialStyle ? 'padding: 8px 12px 8px 20px;' : ''}">
-                        ${post.topicoEspecial ? `<span style="color:${specialTopics[post.topicoEspecial]?.color};">${specialTopics[post.topicoEspecial]?.icon} ${post.topicoEspecial}</span><br>` : ''}
-                        ${escapeHtml(post.conteudo)}
-                        ${hasLink ? `<a href="${post.link}" target="_blank" class="post-link" onclick="event.stopPropagation()">
-                            <span class="material-icons" style="font-size:16px;">link</span> ${post.link.substring(0, 50)}${post.link.length > 50 ? '...' : ''}
-                        </a>` : ''}
-                    </div>
-                    <div class="post-stats">
-                        <span class="stat-action" onclick="event.stopPropagation(); likePost('${post.id}')">
-                            <span class="material-icons" style="font-size:18px;">favorite_border</span> ${post.likes || 0}
-                        </span>
-                        <span class="stat-action" onclick="event.stopPropagation(); openPostDetail('${post.id}')">
-                            <span class="material-icons" style="font-size:18px;">chat_bubble_outline</span> ${post.comentarios || 0}
-                        </span>
-                        <span class="stat-action" onclick="event.stopPropagation(); sharePost('${post.id}')">
-                            <span class="material-icons" style="font-size:18px;">share</span>
-                        </span>
-                    </div>
-                </div>
-            `;
-
-            container.insertAdjacentHTML('beforeend', postHtml);
-        }
-
-        // ============================================
-        // INTERAÇÕES
+        // LIKE
         // ============================================
 
         async function likePost(postId) {
@@ -795,37 +772,369 @@
                 });
             }
 
-            // Recarregar posts para atualizar
             refreshFeed();
         }
 
-        async function sharePost(postId) {
-            const postUrl = `${window.location.origin}/post/${postId}`;
-            await navigator.clipboard.writeText(postUrl);
-            alert('Link copiado para a área de transferência!');
+        // ============================================
+        // COMENTÁRIOS
+        // ============================================
+
+        async function openComments(postId, postUserId, postUserNome) {
+            currentViewingPost = { id: postId, userId: postUserId, userNome: postUserNome };
+            
+            const modal = document.getElementById('comments-modal');
+            const container = document.getElementById('comments-container');
+            container.innerHTML = '<div class="loading">Carregando comentários...</div>';
+            modal.style.display = 'flex';
+
+            // Carregar comentários
+            const snapshot = await db.collection('Bemtevi').doc(postId)
+                .collection('comentarios')
+                .orderBy('createdAt', 'desc')
+                .get();
+
+            if (snapshot.empty) {
+                container.innerHTML = '<div class="loading">Nenhum comentário ainda. Seja o primeiro!</div>';
+            } else {
+                container.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const comment = doc.data();
+                    const commentDate = comment.createdAt?.toDate() || new Date();
+                    container.innerHTML += `
+                        <div class="comment-item">
+                            <div class="comment-avatar">
+                                ${comment.userNome?.charAt(0).toUpperCase() || '?'}
+                            </div>
+                            <div class="comment-content">
+                                <div class="comment-name">${escapeHtml(comment.userNome)}</div>
+                                <div class="comment-text">${escapeHtml(comment.conteudo)}</div>
+                                <div class="comment-time">${getTimeAgo(commentDate)}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        async function sendComment() {
+            const commentText = document.getElementById('comment-input').value.trim();
+            if (!commentText) {
+                alert('Digite um comentário!');
+                return;
+            }
+
+            if (commentText.length > 280) {
+                alert('Comentário muito longo! Máximo 280 caracteres.');
+                return;
+            }
+
+            try {
+                await db.collection('Bemtevi').doc(currentViewingPost.id).collection('comentarios').add({
+                    userId: currentUser.uid,
+                    userNome: currentUser.displayName || currentUser.email.split('@')[0],
+                    conteudo: commentText,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                await db.collection('Bemtevi').doc(currentViewingPost.id).update({
+                    comentarios: firebase.firestore.FieldValue.increment(1)
+                });
+
+                document.getElementById('comment-input').value = '';
+                openComments(currentViewingPost.id, currentViewingPost.userId, currentViewingPost.userNome);
+                refreshFeed();
+            } catch (error) {
+                console.error('Erro ao comentar:', error);
+                alert('Erro ao enviar comentário.');
+            }
         }
 
         // ============================================
-        // CADASTRO DE USUÁRIO COM CATEGORIAS
+        // PERFIL E SEGUIR
         // ============================================
 
-        async function registerUserWithInterests(user, selectedCategories) {
-            try {
-                await db.collection('usuarios').doc(user.uid).set({
-                    nome: user.displayName || user.email.split('@')[0],
-                    email: user.email,
-                    avatar: user.photoURL || null,
-                    categoriasInteresse: selectedCategories,
-                    dataCriacao: firebase.firestore.FieldValue.serverTimestamp(),
-                    seguidores: [],
-                    seguindo: []
-                });
-                userInterests = selectedCategories;
-                return true;
-            } catch (error) {
-                console.error('Erro ao salvar interesses:', error);
-                return false;
+        async function openProfile(userId, userName) {
+            currentViewingProfile = userId;
+            
+            const userDoc = await db.collection('usuarios').doc(userId).get();
+            const userData = userDoc.exists ? userDoc.data() : { nome: userName, seguidores: [], seguindo: [] };
+            
+            // Verificar se o usuário atual segue este perfil
+            let isFollowing = false;
+            if (currentUser && userId !== currentUser.uid) {
+                const followDoc = await db.collection('usuarios').doc(currentUser.uid)
+                    .collection('seguindo').doc(userId).get();
+                isFollowing = followDoc.exists;
             }
+
+            // Carregar posts do usuário
+            const postsSnapshot = await db.collection('Bemtevi')
+                .where('userId', '==', userId)
+                .orderBy('createdAt', 'desc')
+                .limit(10)
+                .get();
+
+            let postsHtml = '';
+            postsSnapshot.forEach(doc => {
+                const post = doc.data();
+                postsHtml += `
+                    <div class="post-card" style="padding:15px;">
+                        <div class="post-content" style="padding-left:0">
+                            ${escapeHtml(post.conteudo)}
+                            ${post.link ? `<a href="${post.link}" target="_blank" class="post-link" style="margin-top:8px;">🔗 ${post.link.substring(0, 40)}</a>` : ''}
+                        </div>
+                        <div class="post-stats" style="padding-left:0">
+                            <span>❤️ ${post.likes || 0}</span>
+                            <span>💬 ${post.comentarios || 0}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            const modal = document.getElementById('profile-modal');
+            document.getElementById('profile-content').innerHTML = `
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        ${userData.nome?.charAt(0).toUpperCase() || userName?.charAt(0).toUpperCase() || '?'}
+                    </div>
+                    <h3>${escapeHtml(userData.nome || userName)}</h3>
+                    <div style="opacity:0.8;">@${userId.substring(0, 8)}</div>
+                    ${currentUser && userId !== currentUser.uid ? `
+                        <button class="follow-btn ${isFollowing ? 'following' : ''}" onclick="toggleFollow('${userId}')">
+                            ${isFollowing ? '✓ Seguindo' : '+ Seguir'}
+                        </button>
+                    ` : ''}
+                    <div class="profile-stats">
+                        <div><div class="stat-number">${userData.seguidores?.length || 0}</div><div>Seguidores</div></div>
+                        <div><div class="stat-number">${userData.seguindo?.length || 0}</div><div>Seguindo</div></div>
+                        <div><div class="stat-number">${postsSnapshot.size}</div><div>Posts</div></div>
+                    </div>
+                </div>
+                <h4 style="margin: 20px 0 10px;">📝 Últimas postagens</h4>
+                <div id="profile-posts">${postsHtml || '<div class="loading">Nenhuma postagem ainda.</div>'}</div>
+            `;
+            modal.style.display = 'flex';
+        }
+
+        async function toggleFollow(userIdToFollow) {
+            if (!currentUser) {
+                alert('Faça login para seguir usuários!');
+                return;
+            }
+
+            if (userIdToFollow === currentUser.uid) {
+                alert('Você não pode seguir a si mesmo!');
+                return;
+            }
+
+            const followingRef = db.collection('usuarios').doc(currentUser.uid)
+                .collection('seguindo').doc(userIdToFollow);
+            
+            const followersRef = db.collection('usuarios').doc(userIdToFollow)
+                .collection('seguidores').doc(currentUser.uid);
+
+            const followingDoc = await followingRef.get();
+
+            if (followingDoc.exists) {
+                await followingRef.delete();
+                await followersRef.delete();
+            } else {
+                await followingRef.set({
+                    userId: userIdToFollow,
+                    userName: (await db.collection('usuarios').doc(userIdToFollow).get()).data()?.nome || userIdToFollow,
+                    seguidoDesde: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                await followersRef.set({
+                    userId: currentUser.uid,
+                    userName: currentUser.displayName || currentUser.email.split('@')[0],
+                    seguidoDesde: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            }
+
+            if (currentViewingProfile === userIdToFollow) {
+                openProfile(userIdToFollow, '');
+            }
+            loadSuggestions();
+            refreshFeed();
+        }
+
+        // ============================================
+        // SUGESTÕES DE USUÁRIOS PARA SEGUIR
+        // ============================================
+
+        async function loadSuggestions() {
+            if (!currentUser) return;
+
+            const container = document.getElementById('suggestions-container');
+            if (!container) return;
+
+            try {
+                // Buscar usuários que o currentUser já segue
+                const followingSnapshot = await db.collection('usuarios').doc(currentUser.uid)
+                    .collection('seguindo').get();
+                const followingIds = followingSnapshot.docs.map(doc => doc.id);
+                followingIds.push(currentUser.uid);
+
+                // Buscar outros usuários
+                const usersSnapshot = await db.collection('usuarios').limit(5).get();
+                const suggestions = usersSnapshot.docs.filter(doc => !followingIds.includes(doc.id));
+
+                if (suggestions.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; color:#999;">Nenhuma sugestão no momento</div>';
+                    return;
+                }
+
+                container.innerHTML = suggestions.map(doc => {
+                    const userData = doc.data();
+                    return `
+                        <div class="suggestion-user">
+                            <div class="suggestion-info" onclick="openProfile('${doc.id}', '${userData.nome}')">
+                                <div class="suggestion-avatar">${userData.nome?.charAt(0).toUpperCase() || '?'}</div>
+                                <div>
+                                    <div style="font-weight:600; font-size:14px;">${escapeHtml(userData.nome || 'Usuário')}</div>
+                                    <div style="font-size:11px; color:#999;">@${doc.id.substring(0, 8)}</div>
+                                </div>
+                            </div>
+                            <button class="follow-small-btn" onclick="toggleFollow('${doc.id}')">Seguir</button>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Erro ao carregar sugestões:', error);
+            }
+        }
+
+        // ============================================
+        // CARREGAMENTO DE POSTS
+        // ============================================
+
+        async function loadPosts(reset = false) {
+            if (loading) return;
+            if (reset) {
+                lastDoc = null;
+                hasMore = true;
+                document.getElementById('posts-container').innerHTML = '';
+            }
+            if (!hasMore) return;
+
+            loading = true;
+            showLoading();
+
+            try {
+                let query = db.collection('Bemtevi');
+
+                if (currentFeed === 'following' && currentUser) {
+                    const followingSnapshot = await db.collection('usuarios').doc(currentUser.uid)
+                        .collection('seguindo').get();
+                    const followingIds = followingSnapshot.docs.map(doc => doc.id);
+                    
+                    if (followingIds.length === 0) {
+                        document.getElementById('posts-container').innerHTML = '<div class="loading">Siga outros usuários para ver postagens!</div>';
+                        loading = false;
+                        hideLoading();
+                        return;
+                    }
+                    query = query.where('userId', 'in', followingIds);
+                    query = query.orderBy('createdAt', 'desc');
+                } else if (currentFeed === 'my-posts' && currentUser) {
+                    query = query.where('userId', '==', currentUser.uid);
+                    query = query.orderBy('createdAt', 'desc');
+                } else if (currentCategoryFilter) {
+                    query = query.where('categoria', '==', currentCategoryFilter);
+                    query = query.orderBy('createdAt', 'desc');
+                } else {
+                    query = query.orderBy('createdAt', 'desc');
+                }
+
+                if (lastDoc) {
+                    query = query.startAfter(lastDoc);
+                }
+
+                query = query.limit(20);
+                const snapshot = await query.get();
+
+                if (snapshot.empty) {
+                    hasMore = false;
+                    if (reset && document.getElementById('posts-container').children.length === 0) {
+                        document.getElementById('posts-container').innerHTML = '<div class="loading">Nenhuma postagem encontrada!</div>';
+                    }
+                    loading = false;
+                    hideLoading();
+                    return;
+                }
+
+                lastDoc = snapshot.docs[snapshot.docs.length - 1];
+                hasMore = snapshot.docs.length === 20;
+
+                snapshot.forEach(doc => {
+                    const post = { id: doc.id, ...doc.data() };
+                    renderPost(post);
+                });
+
+            } catch (error) {
+                console.error('Erro ao carregar posts:', error);
+                if (error.message.includes('index')) {
+                    document.getElementById('posts-container').innerHTML = `
+                        <div class="loading">⚙️ Configurando banco de dados...<br><small>Aguarde alguns instantes e recarregue.</small></div>
+                    `;
+                }
+            } finally {
+                loading = false;
+                hideLoading();
+            }
+        }
+
+        function renderPost(post) {
+            const container = document.getElementById('posts-container');
+            if (!container) return;
+
+            const postDate = post.createdAt?.toDate() || new Date();
+            const timeAgo = getTimeAgo(postDate);
+            const hasLink = post.link && post.link !== 'null';
+            const isLiked = currentUser && post.usuariosQueCurtiram?.includes(currentUser.uid);
+            
+            let specialStyle = '';
+            if (post.topicoEspecial && specialTopics[post.topicoEspecial]) {
+                specialStyle = `border-left: 4px solid ${specialTopics[post.topicoEspecial].color}; padding-left: 16px;`;
+            }
+
+            const postHtml = `
+                <div class="post-card" data-post-id="${post.id}">
+                    <div class="post-header">
+                        <div class="post-avatar-img" onclick="openProfile('${post.userId}', '${post.userNome}')">
+                            ${post.userAvatar ? `<img src="${post.userAvatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">` : (post.userNome?.charAt(0).toUpperCase() || '?')}
+                        </div>
+                        <div class="post-user-info" onclick="openProfile('${post.userId}', '${post.userNome}')">
+                            <span class="post-user-name">${escapeHtml(post.userNome)}</span>
+                            <span class="post-user-id">@${post.userId.substring(0, 8)}</span>
+                            <span class="post-time">• ${timeAgo}</span>
+                        </div>
+                    </div>
+                    <div class="post-category" style="background:${getCategoryColor(post.categoria)}20; color:${getCategoryColor(post.categoria)};">
+                        ${post.categoria}
+                    </div>
+                    <div class="post-content" style="${specialStyle}">
+                        ${post.topicoEspecial ? `<span style="color:${specialTopics[post.topicoEspecial]?.color};">${specialTopics[post.topicoEspecial]?.icon} ${post.topicoEspecial}</span><br>` : ''}
+                        ${escapeHtml(post.conteudo)}
+                        ${hasLink ? `<a href="${post.link}" target="_blank" class="post-link" onclick="event.stopPropagation()">
+                            <span class="material-icons" style="font-size:16px;">link</span> ${post.link.substring(0, 50)}${post.link.length > 50 ? '...' : ''}
+                        </a>` : ''}
+                    </div>
+                    <div class="post-stats">
+                        <span class="stat-action ${isLiked ? 'liked' : ''}" onclick="likePost('${post.id}')">
+                            <span class="material-icons" style="font-size:18px;">${isLiked ? 'favorite' : 'favorite_border'}</span> ${post.likes || 0}
+                        </span>
+                        <span class="stat-action" onclick="openComments('${post.id}', '${post.userId}', '${post.userNome}')">
+                            <span class="material-icons" style="font-size:18px;">chat_bubble_outline</span> ${post.comentarios || 0}
+                        </span>
+                        <span class="stat-action" onclick="sharePost('${post.id}')">
+                            <span class="material-icons" style="font-size:18px;">share</span>
+                        </span>
+                    </div>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', postHtml);
         }
 
         // ============================================
@@ -876,15 +1185,20 @@
             loadPosts(true);
         }
 
+        async function sharePost(postId) {
+            const url = `${window.location.origin}/post/${postId}`;
+            await navigator.clipboard.writeText(url);
+            alert('Link copiado!');
+        }
+
         // ============================================
-        // RENDERIZAÇÃO DA INTERFACE
+        // RENDERIZAÇÃO
         // ============================================
 
         function renderMainApp() {
             const app = document.getElementById('app');
             app.innerHTML = `
                 <div class="app-container">
-                    <!-- Sidebar Esquerda -->
                     <div class="sidebar-left">
                         <div class="logo">
                             <span class="logo-icon">🐦</span>
@@ -901,7 +1215,7 @@
                                 <span class="material-icons">person</span> Minhas Postagens
                             </li>
                         </ul>
-                        <div class="user-profile-mini">
+                        <div class="user-profile-mini" onclick="openProfile('${currentUser.uid}', '${currentUser.displayName || currentUser.email.split('@')[0]}')">
                             <div style="display:flex; align-items:center; gap:12px;">
                                 <div class="user-avatar-mini">
                                     ${currentUser?.displayName?.charAt(0)?.toUpperCase() || currentUser?.email?.charAt(0)?.toUpperCase() || '?'}
@@ -911,13 +1225,12 @@
                                     <div style="font-size:12px; color:#999;">@${currentUser?.uid?.substring(0, 8)}</div>
                                 </div>
                             </div>
-                            <button onclick="signOut()" style="margin-top:15px; width:100%; padding:10px; border:none; background:#f0f0f0; border-radius:12px; cursor:pointer;">
+                            <button onclick="event.stopPropagation(); signOut()" style="margin-top:15px; width:100%; padding:10px; border:none; background:#f0f0f0; border-radius:12px; cursor:pointer;">
                                 Sair
                             </button>
                         </div>
                     </div>
 
-                    <!-- Feed Principal -->
                     <div class="main-feed">
                         <div class="feed-header">
                             <div class="feed-title">
@@ -925,10 +1238,9 @@
                             </div>
                         </div>
 
-                        <!-- Caixa de Postagem -->
                         <div class="post-box">
                             <div class="post-input-area">
-                                <div class="post-avatar">
+                                <div class="post-avatar" onclick="openProfile('${currentUser.uid}', '${currentUser.displayName || currentUser.email.split('@')[0]}')">
                                     ${currentUser?.displayName?.charAt(0)?.toUpperCase() || currentUser?.email?.charAt(0)?.toUpperCase() || '?'}
                                 </div>
                                 <div class="post-input-container">
@@ -936,7 +1248,7 @@
                                     <div id="charCounter" class="char-counter">0/127</div>
                                     <div class="post-actions">
                                         <div class="post-buttons">
-                                            <select id="postCategory" class="attach-link-btn">
+                                            <select id="postCategory" class="category-select">
                                                 ${categories.map(cat => `<option value="${cat}">📁 ${cat}</option>`).join('')}
                                             </select>
                                             <input type="text" id="postLink" class="attach-link-btn" placeholder="🔗 Link (opcional)" style="width:200px;">
@@ -947,12 +1259,10 @@
                             </div>
                         </div>
 
-                        <!-- Posts Container -->
                         <div id="posts-container" class="posts-container"></div>
                         <div id="loading-indicator" class="loading" style="display:none;">Carregando mais posts...</div>
                     </div>
 
-                    <!-- Sidebar Direita -->
                     <div class="sidebar-right">
                         <div class="categories-box">
                             <div class="box-title">📂 Categorias</div>
@@ -962,6 +1272,10 @@
                                 `).join('')}
                                 <span class="category-chip ${!currentCategoryFilter ? 'selected' : ''}" onclick="clearCategoryFilter()">Todos</span>
                             </div>
+                        </div>
+                        <div class="suggestions-box">
+                            <div class="box-title">👥 Sugestões para seguir</div>
+                            <div id="suggestions-container"></div>
                         </div>
                         <div class="trending-box">
                             <div class="box-title">⚡ Tópicos Especiais</div>
@@ -973,9 +1287,34 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Modal de Comentários -->
+                <div id="comments-modal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>💬 Comentários</h3>
+                            <span class="close-modal" onclick="closeModal('comments-modal')">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div id="comments-container"></div>
+                            <textarea id="comment-input" class="comment-input" rows="3" placeholder="Escreva um comentário... (máx. 280 caracteres)" maxlength="280"></textarea>
+                            <button class="post-btn" onclick="sendComment()" style="margin-top:10px; width:100%;">Enviar Comentário</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal de Perfil -->
+                <div id="profile-modal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>👤 Perfil</h3>
+                            <span class="close-modal" onclick="closeModal('profile-modal')">&times;</span>
+                        </div>
+                        <div class="modal-body" id="profile-content"></div>
+                    </div>
+                </div>
             `;
 
-            // Event listeners
             const textarea = document.getElementById('postText');
             if (textarea) {
                 textarea.addEventListener('input', function() {
@@ -986,10 +1325,9 @@
                 });
             }
 
-            // Carregar posts
             loadPosts(true);
+            loadSuggestions();
 
-            // Scroll infinito
             window.addEventListener('scroll', () => {
                 if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
                     loadPosts();
@@ -1000,44 +1338,20 @@
         function renderWelcomeScreen() {
             const app = document.getElementById('app');
             app.innerHTML = `
-                <div class="login-container">
-                    <div class="login-box">
-                        <div class="logo" style="justify-content:center; margin-bottom:30px;">
-                            <span class="logo-icon">🐦</span>
-                            <span class="logo-text">Bemtevi</span>
+                <div style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;">
+                    <div style="background:white; border-radius:32px; padding:50px; max-width:500px; width:100%; text-align:center;">
+                        <div style="display:flex; justify-content:center; gap:10px; margin-bottom:30px;">
+                            <span style="font-size:48px;">🐦</span>
+                            <span style="font-size:48px; font-weight:700; background:linear-gradient(135deg,#667eea,#764ba2); -webkit-background-clip:text; background-clip:text; color:transparent;">Bemtevi</span>
                         </div>
                         <h2 style="margin-bottom:20px;">Bem-vindo ao Bemtevi!</h2>
                         <p style="color:#666; margin-bottom:30px;">Uma rede social livre e colaborativa</p>
-                        <button onclick="signIn()" class="post-btn" style="width:100%;">
+                        <button onclick="signIn()" style="background:linear-gradient(135deg,#667eea,#764ba2); color:white; border:none; padding:12px 30px; border-radius:50px; cursor:pointer; font-weight:600; width:100%;">
                             🔑 Entrar com Google
                         </button>
                         <div style="margin-top:20px; font-size:12px; color:#999;">
-                            Postagens de até 127 caracteres • Conteúdo moderado • Tópicos especiais
+                            Postagens de até 127 caracteres • Comentários • Curtidas • Seguir usuários
                         </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderCategorySelection() {
-            const app = document.getElementById('app');
-            app.innerHTML = `
-                <div class="login-container">
-                    <div class="login-box">
-                        <div class="logo" style="justify-content:center; margin-bottom:30px;">
-                            <span class="logo-icon">🐦</span>
-                            <span class="logo-text">Bemtevi</span>
-                        </div>
-                        <h3 style="margin-bottom:15px;">Escolha seus interesses</h3>
-                        <p style="color:#666; margin-bottom:20px;">Selecione as categorias que mais te interessam:</p>
-                        <div id="categorySelector" class="category-selector">
-                            ${categories.map(cat => `
-                                <div class="category-option" data-category="${cat}" onclick="toggleCategory('${cat}')">${cat}</div>
-                            `).join('')}
-                        </div>
-                        <button onclick="saveInterests()" class="post-btn" style="width:100%; margin-top:20px;">
-                            Começar 🚀
-                        </button>
                     </div>
                 </div>
             `;
@@ -1046,28 +1360,6 @@
         // ============================================
         // FUNÇÕES GLOBAIS
         // ============================================
-
-        window.selectedInterests = [];
-
-        window.toggleCategory = function(category) {
-            const element = document.querySelector(`[data-category="${category}"]`);
-            if (window.selectedInterests.includes(category)) {
-                window.selectedInterests = window.selectedInterests.filter(c => c !== category);
-                element.classList.remove('selected');
-            } else {
-                window.selectedInterests.push(category);
-                element.classList.add('selected');
-            }
-        };
-
-        window.saveInterests = async function() {
-            if (window.selectedInterests.length === 0) {
-                alert('Selecione pelo menos uma categoria de interesse!');
-                return;
-            }
-            await registerUserWithInterests(currentUser, window.selectedInterests);
-            renderMainApp();
-        };
 
         window.changeFeed = function(feed) {
             currentFeed = feed;
@@ -1105,9 +1397,10 @@
             }
         };
 
-        window.openPostDetail = function(postId) {
-            // Implementar modal de detalhes se necessário
-            console.log('Abrir detalhes do post:', postId);
+        window.closeModal = function(id) {
+            document.getElementById(id).style.display = 'none';
+            currentViewingPost = null;
+            currentViewingProfile = null;
         };
 
         window.signIn = async function() {
@@ -1115,13 +1408,17 @@
                 const result = await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
                 const userDoc = await db.collection('usuarios').doc(result.user.uid).get();
                 if (!userDoc.exists) {
-                    currentUser = result.user;
-                    renderCategorySelection();
-                } else {
-                    userInterests = userDoc.data().categoriasInteresse || [];
-                    currentUser = result.user;
-                    renderMainApp();
+                    await db.collection('usuarios').doc(result.user.uid).set({
+                        nome: result.user.displayName || result.user.email.split('@')[0],
+                        email: result.user.email,
+                        avatar: result.user.photoURL || null,
+                        dataCriacao: firebase.firestore.FieldValue.serverTimestamp(),
+                        seguidores: [],
+                        seguindo: []
+                    });
                 }
+                currentUser = result.user;
+                renderMainApp();
             } catch (error) {
                 alert('Erro no login: ' + error.message);
             }
@@ -1134,6 +1431,14 @@
             });
         };
 
+        // Expor funções globais
+        window.likePost = likePost;
+        window.openComments = openComments;
+        window.sendComment = sendComment;
+        window.openProfile = openProfile;
+        window.toggleFollow = toggleFollow;
+        window.sharePost = sharePost;
+
         // ============================================
         // INICIALIZAÇÃO
         // ============================================
@@ -1142,12 +1447,17 @@
             if (user) {
                 currentUser = user;
                 const userDoc = await db.collection('usuarios').doc(user.uid).get();
-                if (userDoc.exists) {
-                    userInterests = userDoc.data().categoriasInteresse || [];
-                    renderMainApp();
-                } else {
-                    renderCategorySelection();
+                if (!userDoc.exists) {
+                    await db.collection('usuarios').doc(user.uid).set({
+                        nome: user.displayName || user.email.split('@')[0],
+                        email: user.email,
+                        avatar: user.photoURL || null,
+                        dataCriacao: firebase.firestore.FieldValue.serverTimestamp(),
+                        seguidores: [],
+                        seguindo: []
+                    });
                 }
+                renderMainApp();
             } else {
                 renderWelcomeScreen();
             }
