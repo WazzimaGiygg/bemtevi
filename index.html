@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bemtevi - Rede Social</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Layout Principal */
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            gap: 20px;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Esquerda */
+        .sidebar-left {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .logo-icon {
+            font-size: 32px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-menu {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .nav-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: #f5f5f5;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .nav-item.active .material-icons {
+            color: white;
+        }
+
+        .nav-item .material-icons {
+            color: #667eea;
+        }
+
+        /* Perfil Sidebar */
+        .user-profile-mini {
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+            margin-top: 20px;
+        }
+
+        .user-avatar-mini {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        /* Feed Principal */
+        .main-feed {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .feed-header {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .feed-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        /* Postagem */
+        .post-box {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .post-input-area {
+            display: flex;
+            gap: 15px;
+        }
+
+        .post-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .post-input-container {
+            flex: 1;
+        }
+
+        .post-input {
+            width: 100%;
+            border: 2px solid #f0f0f0;
+            border-radius: 16px;
+            padding: 15px;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            resize: none;
+            transition: all 0.3s;
+        }
+
+        .post-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .char-counter {
+            text-align: right;
+            font-size: 12px;
+            margin-top: 8px;
+            color: #999;
+        }
+
+        .char-counter.warning {
+            color: #ff9800;
+        }
+
+        .char-counter.danger {
+            color: #f44336;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .post-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .post-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .post-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.3);
+        }
+
+        .post-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .attach-link-btn {
+            background: #f0f0f0;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .attach-link-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Posts */
+        .posts-container {
+            min-height: 500px;
+        }
+
+        .post-card {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .post-card:hover {
+            background: #fafafa;
+        }
+
+        .post-header {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .post-avatar-img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .post-user-info {
+            flex: 1;
+        }
+
+        .post-user-name {
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        .post-user-id {
+            font-size: 13px;
+            color: #999;
+            margin-left: 8px;
+        }
+
+        .post-time {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .post-content {
+            margin-bottom: 12px;
+            padding-left: 60px;
+            font-size: 15px;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        .post-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f5f5f5;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+            font-size: 13px;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .post-link:hover {
+            background: #e8e8e8;
+        }
+
+        .post-category {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            margin-left: 60px;
+        }
+
+        .post-stats {
+            display: flex;
+            gap: 20px;
+            padding-left: 60px;
+            margin-top: 12px;
+        }
+
+        .stat-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .stat-action:hover {
+            color: #667eea;
+        }
+
+        .stat-action.liked {
+            color: #e94560;
+        }
+
+        /* Sidebar Direita */
+        .sidebar-right {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .trending-box, .categories-box {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .box-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .category-chip {
+            display: inline-block;
+            padding: 6px 14px;
+            background: #f0f0f0;
+            border-radius: 20px;
+            margin: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .category-chip:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .category-chip.selected {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .close-modal {
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        /* Login */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 32px;
+            padding: 50px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .category-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .category-option {
+            padding: 10px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .category-option.selected {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+        }
+
+        @media (max-width: 1024px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar-left, .sidebar-right {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script>
+        // Configuração Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyB9GkSqTIZ0kbVsba_WOdQeVAETrF9qna0",
+            authDomain: "wzzm-ce3fc.firebaseapp.com",
+            projectId: "wzzm-ce3fc",
+            storageBucket: "wzzm-ce3fc.appspot.com",
+            messagingSenderId: "249427877153",
+            appId: "1:249427877153:web:0e4297294794a5aadeb260"
+        };
+
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // Estado Global
+        let currentUser = null;
+        let userInterests = [];
+        let currentFeed = 'for-you';
+        let lastDoc = null;
+        let loading = false;
+        let hasMore = true;
+        let currentCategoryFilter = null;
+
+        // ============================================
+        // CONFIGURAÇÕES INICIAIS
+        // ============================================
+
+        // Palavras/Tópicos bloqueados
+        const blockedTopics = [
+            'spam', 'porn', 'violencia', 'odio', 'discriminacao', 
+            'racismo', 'nazismo', 'pedofilia', 'droga', 'crime'
+        ];
+
+        // Categorias disponíveis
+        const categories = [
+            'Geral', 'Tecnologia', 'Ciência', 'Arte', 'Música',
+            'Esportes', 'Games', 'Educação', 'Política', 'Entretenimento'
+        ];
+
+        // Tópicos Especiais
+        const specialTopics = {
+            'AnúncioOficial': { icon: '📢', color: '#ff9800' },
+            'Urgente': { icon: '⚠️', color: '#f44336' },
+            'Comunicado': { icon: '📣', color: '#2196f3' },
+            'Dica': { icon: '💡', color: '#4caf50' }
+        };
+
+        // ============================================
+        // FUNÇÕES DE VALIDAÇÃO
+        // ============================================
+
+        function containsBlockedContent(text) {
+            const lowerText = text.toLowerCase();
+            return blockedTopics.some(topic => lowerText.includes(topic));
+        }
+
+        function extractLinks(text) {
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            const matches = text.match(urlRegex);
+            return matches ? matches[0] : null;
+        }
+
+        function removeLinks(text) {
+            return text.replace(/(https?:\/\/[^\s]+)/g, '').trim();
+        }
+
+        // ============================================
+        // FUNÇÕES DE POSTAGEM
+        // ============================================
+
+        async function createPost(conteudo, link = null, categoria = 'Geral') {
+            if (!currentUser) {
+                alert('Faça login para postar!');
+                return false;
+            }
+
+            let postText = conteudo.trim();
+            let extractedLink = link;
+
+            // Extrair link do texto se não foi fornecido separadamente
+            if (!extractedLink) {
+                extractedLink = extractLinks(postText);
+                postText = removeLinks(postText);
+            }
+
+            // Verificar limite de caracteres (sem contar o link)
+            if (postText.length > 127) {
+                alert('O texto da postagem deve ter no máximo 127 caracteres!');
+                return false;
+            }
+
+            if (postText.length === 0 && !extractedLink) {
+                alert('Digite algo para postar!');
+                return false;
+            }
+
+            // Verificar conteúdo bloqueado
+            if (containsBlockedContent(postText)) {
+                alert('⚠️ Sua postagem contém conteúdo não permitido!');
+                return false;
+            }
+
+            // Verificar se é tópico especial
+            let topicoEspecial = null;
+            for (const [key, value] of Object.entries(specialTopics)) {
+                if (postText.toUpperCase().includes(key.toUpperCase())) {
+                    topicoEspecial = key;
+                    break;
+                }
+            }
+
+            try {
+                const postData = {
+                    userId: currentUser.uid,
+                    userNome: currentUser.displayName || currentUser.email.split('@')[0],
+                    userAvatar: currentUser.photoURL || null,
+                    conteudo: postText.substring(0, 127),
+                    categoria: categoria,
+                    topicoEspecial: topicoEspecial,
+                    link: extractedLink,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    likes: 0,
+                    reposts: 0,
+                    comentarios: 0,
+                    usuariosQueCurtiram: []
+                };
+
+                await db.collection('Bemtevi').add(postData);
+                return true;
+            } catch (error) {
+                console.error('Erro ao postar:', error);
+                alert('Erro ao postar. Tente novamente.');
+                return false;
+            }
+        }
+
+        // ============================================
+        // CARREGAMENTO DE POSTS COM ROLAGEM INFINITA
+        // ============================================
+
+        async function loadPosts(reset = false) {
+            if (loading) return;
+            if (reset) {
+                lastDoc = null;
+                hasMore = true;
+                document.getElementById('posts-container').innerHTML = '';
+            }
+            if (!hasMore) return;
+
+            loading = true;
+            showLoading();
+
+            try {
+                let query = db.collection('Bemtevi');
+
+                // Filtro por feed
+                if (currentFeed === 'following') {
+                    const userDoc = await db.collection('usuarios').doc(currentUser?.uid).get();
+                    const following = userDoc.data()?.seguindo || [];
+                    if (following.length > 0) {
+                        query = query.where('userId', 'in', following);
+                    } else {
+                        document.getElementById('posts-container').innerHTML = '<div class="loading">Siga outros usuários para ver postagens!</div>';
+                        loading = false;
+                        return;
+                    }
+                } else if (currentFeed === 'my-posts' && currentUser) {
+                    query = query.where('userId', '==', currentUser.uid);
+                } else if (currentCategoryFilter) {
+                    query = query.where('categoria', '==', currentCategoryFilter);
+                }
+
+                query = query.orderBy('createdAt', 'desc');
+
+                if (lastDoc) {
+                    query = query.startAfter(lastDoc);
+                }
+
+                query = query.limit(20);
+
+                const snapshot = await query.get();
+
+                if (snapshot.empty) {
+                    hasMore = false;
+                    if (reset && document.getElementById('posts-container').children.length === 0) {
+                        document.getElementById('posts-container').innerHTML = '<div class="loading">Nenhuma postagem encontrada!</div>';
+                    }
+                    loading = false;
+                    hideLoading();
+                    return;
+                }
+
+                lastDoc = snapshot.docs[snapshot.docs.length - 1];
+                hasMore = snapshot.docs.length === 20;
+
+                snapshot.forEach(doc => {
+                    const post = { id: doc.id, ...doc.data() };
+                    renderPost(post);
+                });
+
+            } catch (error) {
+                console.error('Erro ao carregar posts:', error);
+            } finally {
+                loading = false;
+                hideLoading();
+            }
+        }
+
+        function renderPost(post) {
+            const container = document.getElementById('posts-container');
+            if (!container) return;
+
+            const postDate = post.createdAt?.toDate() || new Date();
+            const timeAgo = getTimeAgo(postDate);
+            const hasLink = post.link && post.link !== 'null';
+            
+            // Determinar cor do tópico especial
+            let specialStyle = '';
+            if (post.topicoEspecial && specialTopics[post.topicoEspecial]) {
+                specialStyle = `border-left: 4px solid ${specialTopics[post.topicoEspecial].color};`;
+            }
+
+            const postHtml = `
+                <div class="post-card" data-post-id="${post.id}" onclick="openPostDetail('${post.id}')">
+                    <div class="post-header">
+                        <div class="post-avatar-img">
+                            ${post.userAvatar ? `<img src="${post.userAvatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">` : post.userNome.charAt(0).toUpperCase()}
+                        </div>
+                        <div class="post-user-info">
+                            <span class="post-user-name">${escapeHtml(post.userNome)}</span>
+                            <span class="post-user-id">@${post.userId.substring(0, 8)}</span>
+                            <span class="post-time">• ${timeAgo}</span>
+                        </div>
+                    </div>
+                    <div class="post-category" style="background:${getCategoryColor(post.categoria)}20; color:${getCategoryColor(post.categoria)};">
+                        ${post.categoria}
+                    </div>
+                    <div class="post-content" style="${specialStyle} padding-left:60px; ${specialStyle ? 'padding: 8px 12px 8px 20px;' : ''}">
+                        ${post.topicoEspecial ? `<span style="color:${specialTopics[post.topicoEspecial]?.color};">${specialTopics[post.topicoEspecial]?.icon} ${post.topicoEspecial}</span><br>` : ''}
+                        ${escapeHtml(post.conteudo)}
+                        ${hasLink ? `<a href="${post.link}" target="_blank" class="post-link" onclick="event.stopPropagation()">
+                            <span class="material-icons" style="font-size:16px;">link</span> ${post.link.substring(0, 50)}${post.link.length > 50 ? '...' : ''}
+                        </a>` : ''}
+                    </div>
+                    <div class="post-stats">
+                        <span class="stat-action" onclick="event.stopPropagation(); likePost('${post.id}')">
+                            <span class="material-icons" style="font-size:18px;">favorite_border</span> ${post.likes || 0}
+                        </span>
+                        <span class="stat-action" onclick="event.stopPropagation(); openPostDetail('${post.id}')">
+                            <span class="material-icons" style="font-size:18px;">chat_bubble_outline</span> ${post.comentarios || 0}
+                        </span>
+                        <span class="stat-action" onclick="event.stopPropagation(); sharePost('${post.id}')">
+                            <span class="material-icons" style="font-size:18px;">share</span>
+                        </span>
+                    </div>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', postHtml);
+        }
+
+        // ============================================
+        // INTERAÇÕES
+        // ============================================
+
+        async function likePost(postId) {
+            if (!currentUser) {
+                alert('Faça login para curtir!');
+                return;
+            }
+
+            const postRef = db.collection('Bemtevi').doc(postId);
+            const postDoc = await postRef.get();
+            const usuariosQueCurtiram = postDoc.data()?.usuariosQueCurtiram || [];
+
+            if (usuariosQueCurtiram.includes(currentUser.uid)) {
+                await postRef.update({
+                    likes: firebase.firestore.FieldValue.increment(-1),
+                    usuariosQueCurtiram: firebase.firestore.FieldValue.arrayRemove(currentUser.uid)
+                });
+            } else {
+                await postRef.update({
+                    likes: firebase.firestore.FieldValue.increment(1),
+                    usuariosQueCurtiram: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+                });
+            }
+
+            // Recarregar posts para atualizar
+            refreshFeed();
+        }
+
+        async function sharePost(postId) {
+            const postUrl = `${window.location.origin}/post/${postId}`;
+            await navigator.clipboard.writeText(postUrl);
+            alert('Link copiado para a área de transferência!');
+        }
+
+        // ============================================
+        // CADASTRO DE USUÁRIO COM CATEGORIAS
+        // ============================================
+
+        async function registerUserWithInterests(user, selectedCategories) {
+            try {
+                await db.collection('usuarios').doc(user.uid).set({
+                    nome: user.displayName || user.email.split('@')[0],
+                    email: user.email,
+                    avatar: user.photoURL || null,
+                    categoriasInteresse: selectedCategories,
+                    dataCriacao: firebase.firestore.FieldValue.serverTimestamp(),
+                    seguidores: [],
+                    seguindo: []
+                });
+                userInterests = selectedCategories;
+                return true;
+            } catch (error) {
+                console.error('Erro ao salvar interesses:', error);
+                return false;
+            }
+        }
+
+        // ============================================
+        // UTILITÁRIOS
+        // ============================================
+
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            if (seconds < 60) return 'agora';
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return `${minutes}m`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours}h`;
+            const days = Math.floor(hours / 24);
+            return `${days}d`;
+        }
+
+        function getCategoryColor(category) {
+            const colors = {
+                'Geral': '#666', 'Tecnologia': '#2196f3', 'Ciência': '#4caf50',
+                'Arte': '#9c27b0', 'Música': '#f44336', 'Esportes': '#ff9800',
+                'Games': '#795548', 'Educação': '#00bcd4', 'Política': '#607d8b',
+                'Entretenimento': '#e91e63'
+            };
+            return colors[category] || '#667eea';
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showLoading() {
+            const loader = document.getElementById('loading-indicator');
+            if (loader) loader.style.display = 'block';
+        }
+
+        function hideLoading() {
+            const loader = document.getElementById('loading-indicator');
+            if (loader) loader.style.display = 'none';
+        }
+
+        function refreshFeed() {
+            lastDoc = null;
+            hasMore = true;
+            loadPosts(true);
+        }
+
+        // ============================================
+        // RENDERIZAÇÃO DA INTERFACE
+        // ============================================
+
+        function renderMainApp() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="app-container">
+                    <!-- Sidebar Esquerda -->
+                    <div class="sidebar-left">
+                        <div class="logo">
+                            <span class="logo-icon">🐦</span>
+                            <span class="logo-text">Bemtevi</span>
+                        </div>
+                        <ul class="nav-menu">
+                            <li class="nav-item ${currentFeed === 'for-you' ? 'active' : ''}" onclick="changeFeed('for-you')">
+                                <span class="material-icons">home</span> Para Você
+                            </li>
+                            <li class="nav-item ${currentFeed === 'following' ? 'active' : ''}" onclick="changeFeed('following')">
+                                <span class="material-icons">people</span> Seguindo
+                            </li>
+                            <li class="nav-item ${currentFeed === 'my-posts' ? 'active' : ''}" onclick="changeFeed('my-posts')">
+                                <span class="material-icons">person</span> Minhas Postagens
+                            </li>
+                        </ul>
+                        <div class="user-profile-mini">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <div class="user-avatar-mini">
+                                    ${currentUser?.displayName?.charAt(0)?.toUpperCase() || currentUser?.email?.charAt(0)?.toUpperCase() || '?'}
+                                </div>
+                                <div>
+                                    <div style="font-weight:600;">${currentUser?.displayName || currentUser?.email?.split('@')[0]}</div>
+                                    <div style="font-size:12px; color:#999;">@${currentUser?.uid?.substring(0, 8)}</div>
+                                </div>
+                            </div>
+                            <button onclick="signOut()" style="margin-top:15px; width:100%; padding:10px; border:none; background:#f0f0f0; border-radius:12px; cursor:pointer;">
+                                Sair
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Feed Principal -->
+                    <div class="main-feed">
+                        <div class="feed-header">
+                            <div class="feed-title">
+                                ${currentFeed === 'for-you' ? '📱 Para Você' : currentFeed === 'following' ? '👥 Seguindo' : '✍️ Minhas Postagens'}
+                            </div>
+                        </div>
+
+                        <!-- Caixa de Postagem -->
+                        <div class="post-box">
+                            <div class="post-input-area">
+                                <div class="post-avatar">
+                                    ${currentUser?.displayName?.charAt(0)?.toUpperCase() || currentUser?.email?.charAt(0)?.toUpperCase() || '?'}
+                                </div>
+                                <div class="post-input-container">
+                                    <textarea id="postText" class="post-input" rows="3" placeholder="O que está acontecendo? (Máx. 127 caracteres)" maxlength="127"></textarea>
+                                    <div id="charCounter" class="char-counter">0/127</div>
+                                    <div class="post-actions">
+                                        <div class="post-buttons">
+                                            <select id="postCategory" class="attach-link-btn">
+                                                ${categories.map(cat => `<option value="${cat}">📁 ${cat}</option>`).join('')}
+                                            </select>
+                                            <input type="text" id="postLink" class="attach-link-btn" placeholder="🔗 Link (opcional)" style="width:200px;">
+                                        </div>
+                                        <button class="post-btn" onclick="submitPost()">Postar 🚀</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Posts Container -->
+                        <div id="posts-container" class="posts-container"></div>
+                        <div id="loading-indicator" class="loading" style="display:none;">Carregando mais posts...</div>
+                    </div>
+
+                    <!-- Sidebar Direita -->
+                    <div class="sidebar-right">
+                        <div class="categories-box">
+                            <div class="box-title">📂 Categorias</div>
+                            <div id="categories-list">
+                                ${categories.map(cat => `
+                                    <span class="category-chip ${currentCategoryFilter === cat ? 'selected' : ''}" onclick="filterByCategory('${cat}')">${cat}</span>
+                                `).join('')}
+                                <span class="category-chip ${!currentCategoryFilter ? 'selected' : ''}" onclick="clearCategoryFilter()">Todos</span>
+                            </div>
+                        </div>
+                        <div class="trending-box">
+                            <div class="box-title">⚡ Tópicos Especiais</div>
+                            ${Object.entries(specialTopics).map(([key, value]) => `
+                                <div style="margin-bottom:10px;">
+                                    <span style="color:${value.color};">${value.icon}</span> ${key}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Event listeners
+            const textarea = document.getElementById('postText');
+            if (textarea) {
+                textarea.addEventListener('input', function() {
+                    const counter = document.getElementById('charCounter');
+                    const length = this.value.length;
+                    counter.textContent = `${length}/127`;
+                    counter.className = length > 110 ? 'char-counter warning' : length > 120 ? 'char-counter danger' : 'char-counter';
+                });
+            }
+
+            // Carregar posts
+            loadPosts(true);
+
+            // Scroll infinito
+            window.addEventListener('scroll', () => {
+                if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+                    loadPosts();
+                }
+            });
+        }
+
+        function renderWelcomeScreen() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="login-container">
+                    <div class="login-box">
+                        <div class="logo" style="justify-content:center; margin-bottom:30px;">
+                            <span class="logo-icon">🐦</span>
+                            <span class="logo-text">Bemtevi</span>
+                        </div>
+                        <h2 style="margin-bottom:20px;">Bem-vindo ao Bemtevi!</h2>
+                        <p style="color:#666; margin-bottom:30px;">Uma rede social livre e colaborativa</p>
+                        <button onclick="signIn()" class="post-btn" style="width:100%;">
+                            🔑 Entrar com Google
+                        </button>
+                        <div style="margin-top:20px; font-size:12px; color:#999;">
+                            Postagens de até 127 caracteres • Conteúdo moderado • Tópicos especiais
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderCategorySelection() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="login-container">
+                    <div class="login-box">
+                        <div class="logo" style="justify-content:center; margin-bottom:30px;">
+                            <span class="logo-icon">🐦</span>
+                            <span class="logo-text">Bemtevi</span>
+                        </div>
+                        <h3 style="margin-bottom:15px;">Escolha seus interesses</h3>
+                        <p style="color:#666; margin-bottom:20px;">Selecione as categorias que mais te interessam:</p>
+                        <div id="categorySelector" class="category-selector">
+                            ${categories.map(cat => `
+                                <div class="category-option" data-category="${cat}" onclick="toggleCategory('${cat}')">${cat}</div>
+                            `).join('')}
+                        </div>
+                        <button onclick="saveInterests()" class="post-btn" style="width:100%; margin-top:20px;">
+                            Começar 🚀
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============================================
+        // FUNÇÕES GLOBAIS
+        // ============================================
+
+        window.selectedInterests = [];
+
+        window.toggleCategory = function(category) {
+            const element = document.querySelector(`[data-category="${category}"]`);
+            if (window.selectedInterests.includes(category)) {
+                window.selectedInterests = window.selectedInterests.filter(c => c !== category);
+                element.classList.remove('selected');
+            } else {
+                window.selectedInterests.push(category);
+                element.classList.add('selected');
+            }
+        };
+
+        window.saveInterests = async function() {
+            if (window.selectedInterests.length === 0) {
+                alert('Selecione pelo menos uma categoria de interesse!');
+                return;
+            }
+            await registerUserWithInterests(currentUser, window.selectedInterests);
+            renderMainApp();
+        };
+
+        window.changeFeed = function(feed) {
+            currentFeed = feed;
+            currentCategoryFilter = null;
+            lastDoc = null;
+            hasMore = true;
+            renderMainApp();
+        };
+
+        window.filterByCategory = function(category) {
+            currentCategoryFilter = category;
+            currentFeed = 'for-you';
+            lastDoc = null;
+            hasMore = true;
+            renderMainApp();
+        };
+
+        window.clearCategoryFilter = function() {
+            currentCategoryFilter = null;
+            lastDoc = null;
+            hasMore = true;
+            renderMainApp();
+        };
+
+        window.submitPost = async function() {
+            const text = document.getElementById('postText').value;
+            const link = document.getElementById('postLink').value;
+            const category = document.getElementById('postCategory').value;
+            
+            const success = await createPost(text, link, category);
+            if (success) {
+                document.getElementById('postText').value = '';
+                document.getElementById('postLink').value = '';
+                refreshFeed();
+            }
+        };
+
+        window.openPostDetail = function(postId) {
+            // Implementar modal de detalhes se necessário
+            console.log('Abrir detalhes do post:', postId);
+        };
+
+        window.signIn = async function() {
+            try {
+                const result = await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+                const userDoc = await db.collection('usuarios').doc(result.user.uid).get();
+                if (!userDoc.exists) {
+                    currentUser = result.user;
+                    renderCategorySelection();
+                } else {
+                    userInterests = userDoc.data().categoriasInteresse || [];
+                    currentUser = result.user;
+                    renderMainApp();
+                }
+            } catch (error) {
+                alert('Erro no login: ' + error.message);
+            }
+        };
+
+        window.signOut = function() {
+            auth.signOut().then(() => {
+                currentUser = null;
+                renderWelcomeScreen();
+            });
+        };
+
+        // ============================================
+        // INICIALIZAÇÃO
+        // ============================================
+
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = user;
+                const userDoc = await db.collection('usuarios').doc(user.uid).get();
+                if (userDoc.exists) {
+                    userInterests = userDoc.data().categoriasInteresse || [];
+                    renderMainApp();
+                } else {
+                    renderCategorySelection();
+                }
+            } else {
+                renderWelcomeScreen();
+            }
+        });
+    </script>
+</body>
+</html>
