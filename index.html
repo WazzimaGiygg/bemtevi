@@ -18,6 +18,8 @@
             font-family: 'Inter', sans-serif;
             background: #000000;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Layout */
@@ -28,7 +30,7 @@
             grid-template-columns: 280px 1fr 320px;
             gap: 20px;
             padding: 20px;
-            min-height: 100vh;
+            flex: 1;
         }
 
         /* Sidebar */
@@ -443,15 +445,122 @@
         .box-title { color: #ffffff; }
         h3, h4 { color: #ffffff; }
 
+        /* Estilos do Rodapé */
+        .site-footer {
+            background: linear-gradient(135deg, #0a0a0a 0%, #141414 100%);
+            border-top: 1px solid #2a2a2a;
+            margin-top: 40px;
+            padding: 30px 20px 20px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 8px 12px;
+            margin-bottom: 20px;
+        }
+
+        .footer-link {
+            color: #aaa !important;
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            padding: 4px 0;
+            display: inline-block;
+        }
+
+        .footer-link:hover {
+            color: #667eea !important;
+            transform: translateY(-1px);
+        }
+
+        .footer-link.highlight {
+            color: #ffb347 !important;
+        }
+
+        .footer-link.highlight:hover {
+            color: #ff9500 !important;
+            text-shadow: 0 0 8px rgba(255, 180, 71, 0.3);
+        }
+
+        .footer-divider {
+            color: #444;
+            font-size: 12px;
+            margin: 0 2px;
+        }
+
+        .footer-copyright {
+            color: #666;
+            font-size: 11px;
+            padding-top: 15px;
+            border-top: 1px solid #222;
+            margin-top: 10px;
+        }
+
         @media (max-width: 1024px) {
             .app-container { grid-template-columns: 1fr; }
             .sidebar-left, .sidebar-right { display: none; }
             .beta-badge { top: 10px; right: 10px; }
         }
+
+        @media (max-width: 768px) {
+            .site-footer {
+                padding: 20px 15px 15px;
+            }
+            
+            .footer-links {
+                gap: 6px 8px;
+            }
+            
+            .footer-link {
+                font-size: 11px;
+            }
+            
+            .footer-divider {
+                font-size: 10px;
+            }
+            
+            .footer-copyright {
+                font-size: 10px;
+            }
+        }
     </style>
 </head>
 <body>
     <div id="app"></div>
+
+    <!-- Rodapé Padronizado -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="https://wazzimagiygg.com/donate/" class="footer-link" target="_blank">💝 Faça sua doação!</a>
+                <span class="footer-divider">|</span>
+                <a href="https://wazzimagiygg.com/desktop.html" class="footer-link" target="_blank">🖥️ Acessar Desktop</a>
+                <span class="footer-divider">|</span>
+                <a href="https://wazzimagiygg.com/LGPD" class="footer-link" target="_blank">🔒 LGPD</a>
+                <span class="footer-divider">|</span>
+                <a href="https://wazzimagiygg.com/MarcoCivil" class="footer-link" target="_blank">📜 Marco Civil</a>
+                <span class="footer-divider">|</span>
+                <a href="https://wazzimagiygg.com/relatorio-wikipedia.html" class="footer-link highlight" target="_blank">📄 Relatório Wikipédia</a>
+                <span class="footer-divider">|</span>
+                <a href="https://support.wazzimagiygg.com/" class="footer-link" target="_blank">🎫 Contato por Ticket</a>
+                <span class="footer-divider">|</span>
+                <a href="https://wazzimagiygg.com/produtos" class="footer-link highlight" target="_blank">🛍️ Produtos WazzimaGiygg</a>
+            </div>
+            <div class="footer-copyright">
+                © 2026 Bemtevi - Uma rede social livre e colaborativa
+            </div>
+        </div>
+    </footer>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
@@ -1151,5 +1260,3 @@
     <script src="https://gspotfverwazzimagiygg.wazzimagiygg.com/D6FefD0De/EfdFeF1ExcE0C/De0Var6H6f/QXdv0/dddcefb.js"></script>
 </body>
 </html>
-
-
