@@ -16,7 +16,7 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #000000;
             min-height: 100vh;
         }
 
@@ -39,10 +39,11 @@
         }
 
         .card {
-            background: white;
+            background: #1a1a1a;
             border-radius: 20px;
             padding: 20px;
             margin-bottom: 20px;
+            border: 1px solid #2a2a2a;
         }
 
         .logo {
@@ -51,7 +52,7 @@
             gap: 10px;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #f0f0f0;
+            border-bottom: 2px solid #2a2a2a;
         }
 
         .logo-icon { font-size: 32px; }
@@ -74,9 +75,10 @@
             align-items: center;
             gap: 12px;
             font-weight: 500;
+            color: #e0e0e0;
         }
 
-        .nav-item:hover { background: #f5f5f5; }
+        .nav-item:hover { background: #2a2a2a; }
         .nav-item.active {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
@@ -87,18 +89,22 @@
         /* Feed */
         .feed-header {
             padding: 20px;
-            border-bottom: 1px solid #f0f0f0;
-            background: white;
+            border-bottom: 1px solid #2a2a2a;
+            background: #1a1a1a;
             border-radius: 20px 20px 0 0;
         }
 
-        .feed-title { font-size: 20px; font-weight: 700; }
+        .feed-title { 
+            font-size: 20px; 
+            font-weight: 700;
+            color: #ffffff;
+        }
 
         /* Postagem */
         .post-box {
-            background: white;
+            background: #1a1a1a;
             padding: 20px;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid #2a2a2a;
         }
 
         .post-input-area { display: flex; gap: 15px; }
@@ -119,20 +125,23 @@
         .post-input-container { flex: 1; }
         .post-input {
             width: 100%;
-            border: 2px solid #f0f0f0;
+            border: 2px solid #2a2a2a;
             border-radius: 16px;
             padding: 15px;
             font-family: 'Inter', sans-serif;
             font-size: 16px;
             resize: none;
+            background: #0d0d0d;
+            color: #ffffff;
         }
         .post-input:focus { outline: none; border-color: #667eea; }
+        .post-input::placeholder { color: #666666; }
 
         .char-counter {
             text-align: right;
             font-size: 12px;
             margin-top: 8px;
-            color: #999;
+            color: #666666;
         }
         .char-counter.warning { color: #ff9800; }
         .char-counter.danger { color: #f44336; }
@@ -160,22 +169,23 @@
         .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .btn-secondary {
-            background: #f0f0f0;
+            background: #2a2a2a;
             border: none;
             padding: 8px 16px;
             border-radius: 50px;
             cursor: pointer;
             font-weight: 500;
+            color: #e0e0e0;
         }
 
         /* Posts */
-        .posts-container { background: white; border-radius: 0 0 20px 20px; }
+        .posts-container { background: #1a1a1a; border-radius: 0 0 20px 20px; }
         .post-card {
             padding: 20px;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid #2a2a2a;
             transition: background 0.2s;
         }
-        .post-card:hover { background: #fafafa; }
+        .post-card:hover { background: #222222; }
 
         .post-header { display: flex; gap: 12px; margin-bottom: 12px; cursor: pointer; }
         .post-avatar-img {
@@ -190,21 +200,21 @@
             font-weight: 700;
             flex-shrink: 0;
         }
-        .post-user-name { font-weight: 700; color: #1a1a2e; }
-        .post-user-id { font-size: 13px; color: #999; margin-left: 8px; }
-        .post-time { font-size: 12px; color: #999; }
+        .post-user-name { font-weight: 700; color: #ffffff; }
+        .post-user-id { font-size: 13px; color: #888888; margin-left: 8px; }
+        .post-time { font-size: 12px; color: #888888; }
         .post-content {
             margin-bottom: 12px;
             padding-left: 60px;
             font-size: 15px;
             line-height: 1.5;
-            color: #333;
+            color: #e0e0e0;
         }
         .post-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: #f5f5f5;
+            background: #2a2a2a;
             padding: 8px 12px;
             border-radius: 8px;
             margin-top: 8px;
@@ -232,7 +242,7 @@
             align-items: center;
             gap: 6px;
             font-size: 13px;
-            color: #666;
+            color: #aaaaaa;
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -243,12 +253,13 @@
         .category-chip {
             display: inline-block;
             padding: 6px 14px;
-            background: #f0f0f0;
+            background: #2a2a2a;
             border-radius: 20px;
             margin: 4px;
             font-size: 13px;
             cursor: pointer;
             transition: all 0.2s;
+            color: #e0e0e0;
         }
         .category-chip:hover,
         .category-chip.selected {
@@ -264,31 +275,33 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.9);
             z-index: 1000;
             justify-content: center;
             align-items: center;
         }
         .modal-content {
-            background: white;
+            background: #1a1a1a;
             border-radius: 24px;
             max-width: 600px;
             width: 90%;
             max-height: 85vh;
             overflow-y: auto;
+            border: 1px solid #2a2a2a;
         }
         .modal-header {
             padding: 20px;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid #2a2a2a;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
-            background: white;
+            background: #1a1a1a;
+            color: #ffffff;
         }
-        .modal-body { padding: 20px; }
-        .close-modal { cursor: pointer; font-size: 24px; }
+        .modal-body { padding: 20px; color: #e0e0e0; }
+        .close-modal { cursor: pointer; font-size: 24px; color: #ffffff; }
 
         /* Perfil */
         .profile-header {
@@ -327,7 +340,7 @@
         .stat-number { font-size: 20px; font-weight: 700; }
 
         /* Comentários */
-        .comment-item { display: flex; gap: 12px; padding: 15px 0; border-bottom: 1px solid #f0f0f0; }
+        .comment-item { display: flex; gap: 12px; padding: 15px 0; border-bottom: 1px solid #2a2a2a; }
         .comment-avatar {
             width: 32px;
             height: 32px;
@@ -341,19 +354,22 @@
             font-weight: 700;
         }
         .comment-content { flex: 1; }
-        .comment-name { font-weight: 600; font-size: 13px; }
-        .comment-text { font-size: 14px; margin-top: 4px; }
-        .comment-time { font-size: 10px; color: #999; margin-top: 4px; }
+        .comment-name { font-weight: 600; font-size: 13px; color: #ffffff; }
+        .comment-text { font-size: 14px; margin-top: 4px; color: #e0e0e0; }
+        .comment-time { font-size: 10px; color: #888888; margin-top: 4px; }
         .comment-input {
             width: 100%;
-            border: 2px solid #f0f0f0;
+            border: 2px solid #2a2a2a;
             border-radius: 16px;
             padding: 10px 15px;
             font-family: 'Inter', sans-serif;
             font-size: 14px;
             resize: none;
             margin-top: 15px;
+            background: #0d0d0d;
+            color: #ffffff;
         }
+        .comment-input::placeholder { color: #666666; }
 
         /* Sugestões */
         .suggestion-user {
@@ -361,7 +377,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 10px 0;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid #2a2a2a;
         }
         .suggestion-info { display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .suggestion-avatar {
@@ -386,7 +402,7 @@
         }
 
         /* Loading */
-        .loading { text-align: center; padding: 40px; color: #999; }
+        .loading { text-align: center; padding: 40px; color: #888888; }
 
         /* Login */
         .login-container {
@@ -397,13 +413,16 @@
             padding: 20px;
         }
         .login-box {
-            background: white;
+            background: #1a1a1a;
             border-radius: 32px;
             padding: 50px;
             max-width: 500px;
             width: 100%;
             text-align: center;
+            border: 1px solid #2a2a2a;
         }
+        .login-box h2 { color: #ffffff; }
+        .login-box p { color: #aaaaaa; }
 
         /* Beta Badge */
         .beta-badge {
@@ -417,8 +436,12 @@
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
+
+        /* Texto genérico */
+        .box-title { color: #ffffff; }
+        h3, h4 { color: #ffffff; }
 
         @media (max-width: 1024px) {
             .app-container { grid-template-columns: 1fr; }
@@ -710,7 +733,7 @@
                             <div><div class="stat-number">${postsSnapshot.size}</div><div>Posts</div></div>
                         </div>
                     </div>
-                    <h4 style="margin: 20px 0 10px;">📝 Últimas postagens</h4>
+                    <h4 style="margin: 20px 0 10px; color:#ffffff;">📝 Últimas postagens</h4>
                     <div id="profile-posts">${postsHtml || '<div class="loading">Nenhuma postagem ainda.</div>'}</div>
                 `;
                 modal.style.display = 'flex';
@@ -721,52 +744,45 @@
         }
 
         async function toggleFollow(userIdToFollow) {
-    if (!currentUser || userIdToFollow === currentUser.uid) return;
+            if (!currentUser || userIdToFollow === currentUser.uid) return;
 
-    try {
-        const followingRef = db.collection('usuarios').doc(currentUser.uid).collection('seguindo').doc(userIdToFollow);
-        const followersRef = db.collection('usuarios').doc(userIdToFollow).collection('seguidores').doc(currentUser.uid);
-        
-        const followingDoc = await followingRef.get();
+            try {
+                const followingRef = db.collection('usuarios').doc(currentUser.uid).collection('seguindo').doc(userIdToFollow);
+                const followersRef = db.collection('usuarios').doc(userIdToFollow).collection('seguidores').doc(currentUser.uid);
+                
+                const followingDoc = await followingRef.get();
 
-        if (followingDoc.exists) {
-            // Deixar de seguir
-            await followingRef.delete();
-            await followersRef.delete();
-            console.log('Deixou de seguir com sucesso');
-        } else {
-            // Seguir
-            await followingRef.set({
-                userId: userIdToFollow,
-                seguidoDesde: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            await followersRef.set({
-                seguidorId: currentUser.uid,
-                seguidoDesde: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            console.log('Seguiu com sucesso');
-        }
+                if (followingDoc.exists) {
+                    await followingRef.delete();
+                    await followersRef.delete();
+                    console.log('Deixou de seguir com sucesso');
+                } else {
+                    await followingRef.set({
+                        userId: userIdToFollow,
+                        seguidoDesde: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    await followersRef.set({
+                        seguidorId: currentUser.uid,
+                        seguidoDesde: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    console.log('Seguiu com sucesso');
+                }
 
-        // Atualizar interfaces
-        if (currentViewingProfile === userIdToFollow) {
-            await openProfile(userIdToFollow, '');
+                if (currentViewingProfile === userIdToFollow) {
+                    await openProfile(userIdToFollow, '');
+                }
+                await loadSuggestions();
+                await refreshFeed();
+                
+            } catch (error) {
+                console.error('Erro detalhado ao seguir:', error);
+                if (error.code === 'permission-denied') {
+                    alert('Erro de permissão. Por favor, recarregue a página e tente novamente.');
+                } else {
+                    alert('Erro ao seguir usuário: ' + error.message);
+                }
+            }
         }
-        await loadSuggestions();
-        await refreshFeed();
-        
-    } catch (error) {
-        console.error('Erro detalhado ao seguir:', error);
-        console.log('Código do erro:', error.code);
-        console.log('Mensagem:', error.message);
-        
-        // Mensagem amigável para o usuário
-        if (error.code === 'permission-denied') {
-            alert('Erro de permissão. Por favor, recarregue a página e tente novamente.');
-        } else {
-            alert('Erro ao seguir usuário: ' + error.message);
-        }
-    }
-}
 
         // ============================================
         // SUGESTÕES
@@ -786,7 +802,7 @@
                 const suggestions = usersSnapshot.docs.filter(doc => !followingIds.includes(doc.id)).slice(0, 5);
 
                 if (suggestions.length === 0) {
-                    container.innerHTML = '<div style="text-align:center; color:#999;">Nenhuma sugestão no momento</div>';
+                    container.innerHTML = '<div style="text-align:center; color:#888888;">Nenhuma sugestão no momento</div>';
                     return;
                 }
 
@@ -797,8 +813,8 @@
                             <div class="suggestion-info" onclick="openProfile('${doc.id}', '${userData.nome}')">
                                 <div class="suggestion-avatar">${userData.nome?.charAt(0).toUpperCase() || '?'}</div>
                                 <div>
-                                    <div style="font-weight:600; font-size:14px;">${escapeHtml(userData.nome || 'Usuário')}</div>
-                                    <div style="font-size:11px; color:#999;">@${doc.id.substring(0, 8)}</div>
+                                    <div style="font-weight:600; font-size:14px; color:#ffffff;">${escapeHtml(userData.nome || 'Usuário')}</div>
+                                    <div style="font-size:11px; color:#888888;">@${doc.id.substring(0, 8)}</div>
                                 </div>
                             </div>
                             <button class="follow-small-btn" onclick="toggleFollow('${doc.id}')">Seguir</button>
@@ -807,7 +823,7 @@
                 }).join('');
             } catch (error) {
                 console.error('Erro ao carregar sugestões:', error);
-                container.innerHTML = '<div style="text-align:center; color:#999;">Erro ao carregar sugestões</div>';
+                container.innerHTML = '<div style="text-align:center; color:#888888;">Erro ao carregar sugestões</div>';
             }
         }
 
@@ -929,15 +945,15 @@
                                     <span class="material-icons">person</span> Minhas Postagens
                                 </li>
                             </ul>
-                            <div style="margin-top:20px; padding-top:20px; border-top:1px solid #f0f0f0; cursor:pointer;" onclick="openProfile('${currentUser.uid}', '${currentUser.displayName || currentUser.email.split('@')[0]}')">
+                            <div style="margin-top:20px; padding-top:20px; border-top:1px solid #2a2a2a; cursor:pointer;" onclick="openProfile('${currentUser.uid}', '${currentUser.displayName || currentUser.email.split('@')[0]}')">
                                 <div style="display:flex; align-items:center; gap:12px;">
                                     <div class="post-avatar" style="width:40px; height:40px;">${currentUser.displayName?.charAt(0).toUpperCase() || currentUser.email.charAt(0).toUpperCase()}</div>
                                     <div>
-                                        <div style="font-weight:600;">${escapeHtml(currentUser.displayName || currentUser.email.split('@')[0])}</div>
-                                        <div style="font-size:12px; color:#999;">@${currentUser.uid.substring(0, 8)}</div>
+                                        <div style="font-weight:600; color:#ffffff;">${escapeHtml(currentUser.displayName || currentUser.email.split('@')[0])}</div>
+                                        <div style="font-size:12px; color:#888888;">@${currentUser.uid.substring(0, 8)}</div>
                                     </div>
                                 </div>
-                                <button onclick="event.stopPropagation(); signOut()" style="margin-top:15px; width:100%; padding:10px; border:none; background:#f0f0f0; border-radius:12px; cursor:pointer;">Sair</button>
+                                <button onclick="event.stopPropagation(); signOut()" style="margin-top:15px; width:100%; padding:10px; border:none; background:#2a2a2a; border-radius:12px; cursor:pointer; color:#ffffff;">Sair</button>
                             </div>
                         </div>
                     </div>
@@ -1017,9 +1033,9 @@
                             <span class="logo-text">Bemtevi</span>
                         </div>
                         <h2 style="margin-bottom:20px;">Bem-vindo!</h2>
-                        <p style="color:#666; margin-bottom:30px;">Uma rede social livre e colaborativa</p>
+                        <p style="color:#aaaaaa; margin-bottom:30px;">Uma rede social livre e colaborativa</p>
                         <button id="google-login-btn" class="btn-primary" style="width:100%;">🔑 Entrar com Google</button>
-                        <div style="margin-top:20px; font-size:12px; color:#999;">Postagens de até 127 caracteres • Comentários • Curtidas</div>
+                        <div style="margin-top:20px; font-size:12px; color:#666666;">Postagens de até 127 caracteres • Comentários • Curtidas</div>
                     </div>
                 </div>
             `;
@@ -1132,9 +1148,6 @@
         });
     </script>
 
-        <!-- Iframe do verificador/logs (mantido como você tinha) -->
-        <!-- Iframe do verificador/logs (mantido como você tinha) -->
-<script src="https://gspotfverwazzimagiygg.wazzimagiygg.com/D6FefD0De/EfdFeF1ExcE0C/De0Var6H6f/QXdv0/dddcefb.js"></script>
-    
+    <script src="https://gspotfverwazzimagiygg.wazzimagiygg.com/D6FefD0De/EfdFeF1ExcE0C/De0Var6H6f/QXdv0/dddcefb.js"></script>
 </body>
 </html>
