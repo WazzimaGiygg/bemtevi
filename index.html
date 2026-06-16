@@ -445,6 +445,78 @@
         .box-title { color: #ffffff; }
         h3, h4 { color: #ffffff; }
 
+        /* BANNED OVERLAY */
+        .banned-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .banned-overlay.show {
+            display: flex;
+        }
+
+        .banned-box {
+            background: #1a1a1a;
+            border: 2px solid #e94560;
+            border-radius: 16px;
+            padding: 50px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            color: white;
+        }
+
+        .banned-box .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .banned-box h2 {
+            color: #e94560;
+            margin-bottom: 15px;
+        }
+
+        .banned-box p {
+            color: #aaa;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .banned-box .btn-logout-banned {
+            background: #e94560;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .banned-box .btn-logout-banned:hover {
+            background: #c0392b;
+        }
+
+        .banned-box .ban-details {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 13px;
+            color: #888;
+        }
+
         /* Estilos do Rodapé */
         .site-footer {
             background: linear-gradient(135deg, #0a0a0a 0%, #141414 100%);
@@ -536,6 +608,20 @@
     </style>
 </head>
 <body>
+    <!-- BANNED OVERLAY -->
+    <div id="bannedOverlay" class="banned-overlay">
+        <div class="banned-box">
+            <div class="icon">🚫</div>
+            <h2>⚠️ Conta Banida</h2>
+            <p>Sua conta foi banida permanentemente do Bemtevi.</p>
+            <div id="banDetails" class="ban-details">
+                Motivo: Violação das políticas de uso
+            </div>
+            <p style="font-size: 14px; color: #666;">Se você acredita que isso é um erro, entre em contato com o suporte.</p>
+            <button class="btn-logout-banned" onclick="logoutBanned()">🚪 Sair da conta</button>
+        </div>
+    </div>
+
     <div id="app"></div>
 
     <!-- Rodapé Padronizado -->
@@ -584,42 +670,7 @@
         const auth = firebase.auth();
 
         // ============================================
-        // FUNÇÃO PARA REGISTRAR USUÁRIO
-        // ============================================
-        async function registerUser(user) {
-            try {
-                const uid = user.uid;
-                const userData = {
-                    uid: uid,
-                    email: user.email || '',
-                    name: user.displayName || 'Usuário',
-                    profilePictureUrl: user.photoURL || '',
-                    isAdmin: false,
-                    isBan: false,
-                    isBanned: false,
-                    isTeacher: false,
-                    isTeatcher: false,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    lastLoginAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
-
-                // Registra na coleção 'users'
-                await db.collection('users').doc(uid).set(userData, { merge: true });
-                
-                // Registra na coleção 'usuários'
-                await db.collection('usuários').doc(uid).set(userData, { merge: true });
-
-                console.log(`Usuário ${uid} registrado com sucesso!`);
-                return true;
-            } catch (error) {
-                console.error('Erro ao registrar usuário:', error);
-                return false;
-            }
-        }
-
-        // ============================================
-        // ESTADO GLOBAL
+        // VARIÁVEIS GLOBAIS
         // ============================================
         let currentUser = null;
         let currentFeed = 'for-you';
@@ -629,6 +680,7 @@
         let currentCategoryFilter = null;
         let currentViewingProfile = null;
         let currentViewingPost = null;
+        let isBanned = false;
 
         // Categorias
         const categories = ['Geral', 'Tecnologia', 'Ciência', 'Arte', 'Música', 'Esportes', 'Games', 'Educação', 'Política', 'Entretenimento'];
@@ -640,6 +692,92 @@
             'Games': '#795548', 'Educação': '#00bcd4', 'Política': '#607d8b',
             'Entretenimento': '#e91e63'
         };
+
+        // ============================================
+        // FUNÇÃO PARA REGISTRAR USUÁRIO (PRESERVANDO BAN)
+        // ============================================
+        async function registerUser(user) {
+            try {
+                const uid = user.uid;
+                
+                // Verifica se o usuário já existe para preservar o status de ban
+                const userDoc = await db.collection('users').doc(uid).get();
+                const existingData = userDoc.exists ? userDoc.data() : {};
+                
+                const userData = {
+                    uid: uid,
+                    email: user.email || '',
+                    name: user.displayName || 'Usuário',
+                    profilePictureUrl: user.photoURL || '',
+                    isAdmin: existingData.isAdmin || false,
+                    isBan: existingData.isBan || false,
+                    isBanned: existingData.isBanned || false,
+                    isTeacher: false,
+                    isTeatcher: false,
+                    createdAt: existingData.createdAt || firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastLoginAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                // Registra na coleção 'users'
+                await db.collection('users').doc(uid).set(userData, { merge: true });
+                
+                // Registra na coleção 'usuários'
+                await db.collection('usuários').doc(uid).set(userData, { merge: true });
+
+                console.log(`Usuário ${uid} registrado com sucesso! isBanned: ${userData.isBanned}`);
+                return userData;
+            } catch (error) {
+                console.error('Erro ao registrar usuário:', error);
+                return null;
+            }
+        }
+
+        // ============================================
+        // FUNÇÃO PARA VERIFICAR SE USUÁRIO ESTÁ BANIDO
+        // ============================================
+        async function checkIfUserIsBanned(user) {
+            if (!user) return false;
+            
+            try {
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                if (userDoc.exists) {
+                    const data = userDoc.data();
+                    return data.isBanned === true || data.isBan === true;
+                }
+            } catch (error) {
+                console.log("Erro ao verificar banimento:", error);
+            }
+            
+            return false;
+        }
+
+        // ============================================
+        // FUNÇÃO PARA USUÁRIO BANIDO
+        // ============================================
+        function showBannedScreen(reason = 'Violação das políticas de uso') {
+            const overlay = document.getElementById('bannedOverlay');
+            const details = document.getElementById('banDetails');
+            details.textContent = `Motivo: ${reason}`;
+            overlay.classList.add('show');
+            
+            // Esconde o conteúdo principal
+            document.getElementById('app').style.opacity = '0.3';
+            document.getElementById('app').style.pointerEvents = 'none';
+            document.querySelector('.site-footer').style.opacity = '0.3';
+            document.querySelector('.site-footer').style.pointerEvents = 'none';
+        }
+
+        function logoutBanned() {
+            auth.signOut().then(() => {
+                location.reload();
+            });
+        }
+
+        // ============================================
+        // ESTADO GLOBAL
+        // ============================================
+        // ... (restante do código)
 
         // ============================================
         // FUNÇÕES AUXILIARES
@@ -676,8 +814,12 @@
         // CRIAÇÃO DE POST
         // ============================================
         async function createPost(conteudo, link = null, categoria = 'Geral') {
-            if (!currentUser) {
-                alert('Faça login para postar!');
+            if (!currentUser || isBanned) {
+                if (isBanned) {
+                    alert('Sua conta está banida. Não é possível postar.');
+                } else {
+                    alert('Faça login para postar!');
+                }
                 return false;
             }
 
@@ -722,8 +864,12 @@
         // LIKE
         // ============================================
         async function likePost(postId) {
-            if (!currentUser) {
-                alert('Faça login para curtir!');
+            if (!currentUser || isBanned) {
+                if (isBanned) {
+                    alert('Sua conta está banida.');
+                } else {
+                    alert('Faça login para curtir!');
+                }
                 return;
             }
 
@@ -749,6 +895,10 @@
         // COMENTÁRIOS
         // ============================================
         async function openComments(postId, postUserId, postUserNome) {
+            if (isBanned) {
+                alert('Sua conta está banida.');
+                return;
+            }
             currentViewingPost = { id: postId, userId: postUserId, userNome: postUserNome };
             
             const modal = document.getElementById('comments-modal');
@@ -788,6 +938,10 @@
         }
 
         async function sendComment() {
+            if (isBanned) {
+                alert('Sua conta está banida. Não é possível comentar.');
+                return;
+            }
             const commentText = document.getElementById('comment-input').value.trim();
             if (!commentText) {
                 alert('Digite um comentário!');
@@ -824,6 +978,10 @@
         // PERFIL E SEGUIR
         // ============================================
         async function openProfile(userId, userName) {
+            if (isBanned) {
+                alert('Sua conta está banida.');
+                return;
+            }
             currentViewingProfile = userId;
             
             try {
@@ -831,7 +989,7 @@
                 const userData = userDoc.exists ? userDoc.data() : { nome: userName, seguidores: [], seguindo: [] };
                 
                 let isFollowing = false;
-                if (currentUser && userId !== currentUser.uid) {
+                if (currentUser && userId !== currentUser.uid && !isBanned) {
                     const followDoc = await db.collection('usuarios').doc(currentUser.uid)
                         .collection('seguindo').doc(userId).get();
                     isFollowing = followDoc.exists;
@@ -866,7 +1024,7 @@
                         <div class="profile-avatar">${(userData.nome || userName)?.charAt(0).toUpperCase() || '?'}</div>
                         <h3>${escapeHtml(userData.nome || userName)}</h3>
                         <div style="opacity:0.8;">@${userId.substring(0, 8)}</div>
-                        ${currentUser && userId !== currentUser.uid ? `
+                        ${currentUser && userId !== currentUser.uid && !isBanned ? `
                             <button class="follow-btn ${isFollowing ? 'following' : ''}" onclick="toggleFollow('${userId}')">
                                 ${isFollowing ? '✓ Seguindo' : '+ Seguir'}
                             </button>
@@ -888,7 +1046,12 @@
         }
 
         async function toggleFollow(userIdToFollow) {
-            if (!currentUser || userIdToFollow === currentUser.uid) return;
+            if (!currentUser || userIdToFollow === currentUser.uid || isBanned) {
+                if (isBanned) {
+                    alert('Sua conta está banida.');
+                }
+                return;
+            }
 
             try {
                 const followingRef = db.collection('usuarios').doc(currentUser.uid).collection('seguindo').doc(userIdToFollow);
@@ -932,7 +1095,7 @@
         // SUGESTÕES
         // ============================================
         async function loadSuggestions() {
-            if (!currentUser) return;
+            if (!currentUser || isBanned) return;
 
             const container = document.getElementById('suggestions-container');
             if (!container) return;
@@ -975,7 +1138,7 @@
         // CARREGAR POSTS
         // ============================================
         async function loadPosts(reset = false) {
-            if (loading) return;
+            if (loading || isBanned) return;
             if (reset) {
                 lastDoc = null;
                 hasMore = true;
@@ -1014,7 +1177,7 @@
                 snapshot.forEach(doc => {
                     const post = { id: doc.id, ...doc.data() };
                     const postDate = post.createdAt?.toDate() || new Date();
-                    const isLiked = currentUser && post.usuariosQueCurtiram?.includes(currentUser.uid);
+                    const isLiked = currentUser && post.usuariosQueCurtiram?.includes(currentUser.uid) && !isBanned;
                     
                     const postHtml = `
                         <div class="post-card">
@@ -1190,6 +1353,7 @@
         // FUNÇÕES GLOBAIS
         // ============================================
         window.changeFeed = function(feed) {
+            if (isBanned) return;
             currentFeed = feed;
             currentCategoryFilter = null;
             lastDoc = null;
@@ -1198,6 +1362,7 @@
         };
 
         window.filterByCategory = function(category) {
+            if (isBanned) return;
             currentCategoryFilter = category;
             currentFeed = 'for-you';
             lastDoc = null;
@@ -1206,6 +1371,7 @@
         };
 
         window.clearCategoryFilter = function() {
+            if (isBanned) return;
             currentCategoryFilter = null;
             lastDoc = null;
             hasMore = true;
@@ -1213,6 +1379,10 @@
         };
 
         window.submitPost = async function() {
+            if (isBanned) {
+                alert('Sua conta está banida. Não é possível postar.');
+                return;
+            }
             const text = document.getElementById('postText')?.value;
             const link = document.getElementById('postLink')?.value;
             const category = document.getElementById('postCategory')?.value || 'Geral';
@@ -1233,7 +1403,7 @@
                 provider.setCustomParameters({ prompt: 'select_account' });
                 const result = await auth.signInWithPopup(provider);
                 
-                // Registra o usuário no Firestore (users e usuários)
+                // Registra o usuário no Firestore
                 await registerUser(result.user);
                 
                 const userRef = db.collection('usuarios').doc(result.user.uid);
@@ -1249,6 +1419,14 @@
                     });
                 }
                 currentUser = result.user;
+                
+                // Verifica banimento após login
+                isBanned = await checkIfUserIsBanned(result.user);
+                if (isBanned) {
+                    showBannedScreen('Sua conta foi banida por violação das políticas de uso.');
+                    return;
+                }
+                
                 renderMainApp();
             } catch (error) {
                 console.error('Erro:', error);
@@ -1259,6 +1437,12 @@
         window.signOut = function() {
             auth.signOut().then(() => {
                 currentUser = null;
+                isBanned = false;
+                document.getElementById('bannedOverlay').classList.remove('show');
+                document.getElementById('app').style.opacity = '1';
+                document.getElementById('app').style.pointerEvents = 'auto';
+                document.querySelector('.site-footer').style.opacity = '1';
+                document.querySelector('.site-footer').style.pointerEvents = 'auto';
                 renderWelcomeScreen();
             });
         };
@@ -1270,6 +1454,7 @@
         window.openProfile = openProfile;
         window.toggleFollow = toggleFollow;
         window.sharePost = sharePost;
+        window.logoutBanned = logoutBanned;
 
         // ============================================
         // INICIALIZAÇÃO
@@ -1280,6 +1465,17 @@
                 
                 // Registra o usuário no Firestore
                 await registerUser(user);
+                
+                // VERIFICA BANIMENTO PRIMEIRO
+                isBanned = await checkIfUserIsBanned(user);
+                
+                if (isBanned) {
+                    // Usuário banido - mostra tela de bloqueio
+                    showBannedScreen('Sua conta foi banida por violação das políticas de uso.');
+                    // Não carrega o conteúdo
+                    document.getElementById('app').innerHTML = '';
+                    return;
+                }
                 
                 const userDoc = await db.collection('usuarios').doc(user.uid).get();
                 if (!userDoc.exists) {
@@ -1294,6 +1490,14 @@
                 }
                 renderMainApp();
             } else {
+                currentUser = null;
+                isBanned = false;
+                // Remove overlay de banido
+                document.getElementById('bannedOverlay').classList.remove('show');
+                document.getElementById('app').style.opacity = '1';
+                document.getElementById('app').style.pointerEvents = 'auto';
+                document.querySelector('.site-footer').style.opacity = '1';
+                document.querySelector('.site-footer').style.pointerEvents = 'auto';
                 renderWelcomeScreen();
             }
         });
