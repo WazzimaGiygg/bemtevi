@@ -670,6 +670,79 @@
         const auth = firebase.auth();
 
         // ============================================
+        // SISTEMA DE REDIRECIONAMENTO UNIFICADO
+        // ============================================
+
+        // URL do login unificado
+        const LOGIN_URL = 'https://painel.wazzimagiygg.com/login.html';
+
+        // Obtém a URL atual para usar como parâmetro uid
+        function getCurrentPageUrl() {
+            return window.location.href;
+        }
+
+        // Redireciona para o login com o parâmetro uid
+        function redirectToLogin() {
+            const currentUrl = getCurrentPageUrl();
+            const loginWithReturn = `${LOGIN_URL}?uid=${encodeURIComponent(currentUrl)}`;
+            console.log('🔄 Redirecionando para login unificado:', loginWithReturn);
+            window.location.href = loginWithReturn;
+        }
+
+        // ============================================
+        // SISTEMA DE AUTENTICAÇÃO ENTRE DOMÍNIOS
+        // ============================================
+
+        // Verifica se há um token de autenticação na URL (retorno do login)
+        function checkAuthToken() {
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('auth_token');
+            const userData = params.get('user_data');
+            
+            if (token && userData) {
+                try {
+                    const user = JSON.parse(decodeURIComponent(userData));
+                    console.log('🔑 Token de autenticação recebido:', user);
+                    
+                    // Salva no localStorage para persistência
+                    localStorage.setItem('bemtevi_auth_user', JSON.stringify(user));
+                    localStorage.setItem('bemtevi_auth_token', token);
+                    localStorage.setItem('bemtevi_auth_expiry', (Date.now() + 3600000).toString());
+                    
+                    // Remove os parâmetros da URL
+                    const newUrl = window.location.pathname + window.location.hash;
+                    window.history.replaceState({}, document.title, newUrl);
+                    
+                    // Aplica o usuário
+                    applyUserSession(user);
+                    return true;
+                } catch (e) {
+                    console.error('Erro ao processar token:', e);
+                }
+            }
+            return false;
+        }
+
+        // Verifica se há uma sessão salva no localStorage
+        function checkStoredSession() {
+            try {
+                const token = localStorage.getItem('bemtevi_auth_token');
+                const userData = localStorage.getItem('bemtevi_auth_user');
+                const expiry = localStorage.getItem('bemtevi_auth_expiry');
+                
+                if (token && userData && expiry && Date.now() < parseInt(expiry)) {
+                    const user = JSON.parse(userData);
+                    console.log('📂 Sessão restaurada do localStorage:', user);
+                    applyUserSession(user);
+                    return true;
+                }
+            } catch (e) {
+                console.error('Erro ao restaurar sessão:', e);
+            }
+            return false;
+        }
+
+        // ============================================
         // VARIÁVEIS GLOBAIS
         // ============================================
         let currentUser = null;
@@ -694,13 +767,88 @@
         };
 
         // ============================================
-        // FUNÇÃO PARA REGISTRAR USUÁRIO (PRESERVANDO BAN)
+        // FUNÇÃO PARA APLICAR SESSÃO DO USUÁRIO
+        // ============================================
+
+        function applyUserSession(user) {
+            if (!user || !user.uid) return;
+            
+            currentUser = {
+                uid: user.uid,
+                displayName: user.displayName || 'Usuário',
+                email: user.email || '',
+                photoURL: user.photoURL || '',
+                isGuest: user.isGuest || false
+            };
+            
+            // Verifica banimento
+            checkUserBanned(user.uid);
+        }
+
+        // ============================================
+        // FUNÇÃO PARA VERIFICAR BANIMENTO
+        // ============================================
+
+        async function checkUserBanned(uid) {
+            if (!uid) return false;
+            
+            try {
+                const userDoc = await db.collection('users').doc(uid).get();
+                if (userDoc.exists) {
+                    const data = userDoc.data();
+                    isBanned = data.isBanned === true || data.isBan === true;
+                    
+                    if (isBanned) {
+                        showBannedScreen(data.banReason || 'Violação das políticas de uso');
+                        // Esconde o conteúdo
+                        document.getElementById('app').style.opacity = '0.3';
+                        document.getElementById('app').style.pointerEvents = 'none';
+                        document.querySelector('.site-footer').style.opacity = '0.3';
+                        document.querySelector('.site-footer').style.pointerEvents = 'none';
+                    } else {
+                        // Usuário não banido - carrega o app
+                        renderMainApp();
+                    }
+                    return isBanned;
+                }
+            } catch (error) {
+                console.log("Erro ao verificar banimento:", error);
+            }
+            return false;
+        }
+
+        // ============================================
+        // FUNÇÃO PARA USUÁRIO BANIDO
+        // ============================================
+
+        function showBannedScreen(reason = 'Violação das políticas de uso') {
+            const overlay = document.getElementById('bannedOverlay');
+            const details = document.getElementById('banDetails');
+            details.textContent = `Motivo: ${reason}`;
+            overlay.classList.add('show');
+            
+            document.getElementById('app').style.opacity = '0.3';
+            document.getElementById('app').style.pointerEvents = 'none';
+            document.querySelector('.site-footer').style.opacity = '0.3';
+            document.querySelector('.site-footer').style.pointerEvents = 'none';
+        }
+
+        function logoutBanned() {
+            localStorage.removeItem('bemtevi_auth_user');
+            localStorage.removeItem('bemtevi_auth_token');
+            localStorage.removeItem('bemtevi_auth_expiry');
+            auth.signOut().then(() => {
+                location.reload();
+            });
+        }
+
+        // ============================================
+        // FUNÇÃO PARA REGISTRAR USUÁRIO
         // ============================================
         async function registerUser(user) {
             try {
                 const uid = user.uid;
                 
-                // Verifica se o usuário já existe para preservar o status de ban
                 const userDoc = await db.collection('users').doc(uid).get();
                 const existingData = userDoc.exists ? userDoc.data() : {};
                 
@@ -719,10 +867,7 @@
                     lastLoginAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
-                // Registra na coleção 'users'
                 await db.collection('users').doc(uid).set(userData, { merge: true });
-                
-                // Registra na coleção 'usuários'
                 await db.collection('usuários').doc(uid).set(userData, { merge: true });
 
                 console.log(`Usuário ${uid} registrado com sucesso! isBanned: ${userData.isBanned}`);
@@ -734,8 +879,78 @@
         }
 
         // ============================================
-        // FUNÇÃO PARA VERIFICAR SE USUÁRIO ESTÁ BANIDO
+        // FUNÇÃO PARA CARREGAR USUÁRIO DO FIREBASE
         // ============================================
+
+        async function loadFirebaseUser(user) {
+            if (!user) {
+                currentUser = null;
+                isBanned = false;
+                document.getElementById('bannedOverlay').classList.remove('show');
+                document.getElementById('app').style.opacity = '1';
+                document.getElementById('app').style.pointerEvents = 'auto';
+                document.querySelector('.site-footer').style.opacity = '1';
+                document.querySelector('.site-footer').style.pointerEvents = 'auto';
+                renderWelcomeScreen();
+                return;
+            }
+            
+            try {
+                currentUser = {
+                    uid: user.uid,
+                    displayName: user.displayName || 'Usuário',
+                    email: user.email || '',
+                    photoURL: user.photoURL || '',
+                    isGuest: false
+                };
+                
+                await registerUser(user);
+                
+                isBanned = await checkIfUserIsBanned(user);
+                
+                if (isBanned) {
+                    showBannedScreen('Sua conta foi banida por violação das políticas de uso.');
+                    document.getElementById('app').innerHTML = '';
+                    return;
+                }
+                
+                // Salva no localStorage para futuras sessões
+                const userData = {
+                    uid: user.uid,
+                    displayName: user.displayName,
+                    email: user.email,
+                    photoURL: user.photoURL,
+                    isGuest: false
+                };
+                localStorage.setItem('bemtevi_auth_user', JSON.stringify(userData));
+                localStorage.setItem('bemtevi_auth_token', 'firebase_' + Date.now());
+                localStorage.setItem('bemtevi_auth_expiry', (Date.now() + 3600000).toString());
+                
+                const userDoc = await db.collection('usuarios').doc(user.uid).get();
+                if (!userDoc.exists) {
+                    await db.collection('usuarios').doc(user.uid).set({
+                        nome: user.displayName || user.email.split('@')[0],
+                        email: user.email,
+                        avatar: user.photoURL || null,
+                        dataCriacao: firebase.firestore.FieldValue.serverTimestamp(),
+                        seguidores: [],
+                        seguindo: []
+                    });
+                }
+                renderMainApp();
+                
+            } catch (error) {
+                console.error('❌ Erro ao carregar usuário Firebase:', error);
+                currentUser = null;
+                isBanned = false;
+                renderWelcomeScreen();
+            }
+        }
+
+        // ============================================
+        // FUNÇÃO DE CHECK BANIMENTO
+        // ============================================
+
         async function checkIfUserIsBanned(user) {
             if (!user) return false;
             
@@ -751,33 +966,6 @@
             
             return false;
         }
-
-        // ============================================
-        // FUNÇÃO PARA USUÁRIO BANIDO
-        // ============================================
-        function showBannedScreen(reason = 'Violação das políticas de uso') {
-            const overlay = document.getElementById('bannedOverlay');
-            const details = document.getElementById('banDetails');
-            details.textContent = `Motivo: ${reason}`;
-            overlay.classList.add('show');
-            
-            // Esconde o conteúdo principal
-            document.getElementById('app').style.opacity = '0.3';
-            document.getElementById('app').style.pointerEvents = 'none';
-            document.querySelector('.site-footer').style.opacity = '0.3';
-            document.querySelector('.site-footer').style.pointerEvents = 'none';
-        }
-
-        function logoutBanned() {
-            auth.signOut().then(() => {
-                location.reload();
-            });
-        }
-
-        // ============================================
-        // ESTADO GLOBAL
-        // ============================================
-        // ... (restante do código)
 
         // ============================================
         // FUNÇÕES AUXILIARES
@@ -1235,6 +1423,8 @@
         // RENDERIZAÇÃO
         // ============================================
         function renderMainApp() {
+            if (isBanned) return;
+            
             document.getElementById('app').innerHTML = `
                 <div class="beta-badge">🚧 BETA</div>
                 <div class="app-container">
@@ -1341,12 +1531,11 @@
                         </div>
                         <h2 style="margin-bottom:20px;">Bem-vindo!</h2>
                         <p style="color:#aaaaaa; margin-bottom:30px;">Uma rede social livre e colaborativa</p>
-                        <button id="google-login-btn" class="btn-primary" style="width:100%;">🔑 Entrar com Google</button>
+                        <button id="google-login-btn" class="btn-primary" style="width:100%;" onclick="redirectToLogin()">🔑 Entrar</button>
                         <div style="margin-top:20px; font-size:12px; color:#666666;">Postagens de até 127 caracteres • Comentários • Curtidas</div>
                     </div>
                 </div>
             `;
-            document.getElementById('google-login-btn')?.addEventListener('click', signIn);
         }
 
         // ============================================
@@ -1397,44 +1586,10 @@
             document.getElementById(id).style.display = 'none';
         };
 
-        window.signIn = async function() {
-            try {
-                const provider = new firebase.auth.GoogleAuthProvider();
-                provider.setCustomParameters({ prompt: 'select_account' });
-                const result = await auth.signInWithPopup(provider);
-                
-                // Registra o usuário no Firestore
-                await registerUser(result.user);
-                
-                const userRef = db.collection('usuarios').doc(result.user.uid);
-                const userDoc = await userRef.get();
-                if (!userDoc.exists) {
-                    await userRef.set({
-                        nome: result.user.displayName || result.user.email.split('@')[0],
-                        email: result.user.email,
-                        avatar: result.user.photoURL || null,
-                        dataCriacao: firebase.firestore.FieldValue.serverTimestamp(),
-                        seguidores: [],
-                        seguindo: []
-                    });
-                }
-                currentUser = result.user;
-                
-                // Verifica banimento após login
-                isBanned = await checkIfUserIsBanned(result.user);
-                if (isBanned) {
-                    showBannedScreen('Sua conta foi banida por violação das políticas de uso.');
-                    return;
-                }
-                
-                renderMainApp();
-            } catch (error) {
-                console.error('Erro:', error);
-                alert('Erro no login: ' + error.message);
-            }
-        };
-
         window.signOut = function() {
+            localStorage.removeItem('bemtevi_auth_user');
+            localStorage.removeItem('bemtevi_auth_token');
+            localStorage.removeItem('bemtevi_auth_expiry');
             auth.signOut().then(() => {
                 currentUser = null;
                 isBanned = false;
@@ -1455,52 +1610,35 @@
         window.toggleFollow = toggleFollow;
         window.sharePost = sharePost;
         window.logoutBanned = logoutBanned;
+        window.redirectToLogin = redirectToLogin;
 
         // ============================================
-        // INICIALIZAÇÃO
+        // INICIALIZAÇÃO - VERIFICA SESSÃO
         // ============================================
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                currentUser = user;
-                
-                // Registra o usuário no Firestore
-                await registerUser(user);
-                
-                // VERIFICA BANIMENTO PRIMEIRO
-                isBanned = await checkIfUserIsBanned(user);
-                
-                if (isBanned) {
-                    // Usuário banido - mostra tela de bloqueio
-                    showBannedScreen('Sua conta foi banida por violação das políticas de uso.');
-                    // Não carrega o conteúdo
-                    document.getElementById('app').innerHTML = '';
-                    return;
-                }
-                
-                const userDoc = await db.collection('usuarios').doc(user.uid).get();
-                if (!userDoc.exists) {
-                    await db.collection('usuarios').doc(user.uid).set({
-                        nome: user.displayName || user.email.split('@')[0],
-                        email: user.email,
-                        avatar: user.photoURL || null,
-                        dataCriacao: firebase.firestore.FieldValue.serverTimestamp(),
-                        seguidores: [],
-                        seguindo: []
-                    });
-                }
-                renderMainApp();
-            } else {
-                currentUser = null;
-                isBanned = false;
-                // Remove overlay de banido
-                document.getElementById('bannedOverlay').classList.remove('show');
-                document.getElementById('app').style.opacity = '1';
-                document.getElementById('app').style.pointerEvents = 'auto';
-                document.querySelector('.site-footer').style.opacity = '1';
-                document.querySelector('.site-footer').style.pointerEvents = 'auto';
-                renderWelcomeScreen();
+
+        // PASSO 1: Verifica token na URL (retorno do login)
+        const hasToken = checkAuthToken();
+
+        // PASSO 2: Se não tem token, verifica sessão no localStorage
+        if (!hasToken) {
+            const hasSession = checkStoredSession();
+            
+            // PASSO 3: Se não tem sessão, verifica Firebase Auth
+            if (!hasSession) {
+                auth.onAuthStateChanged(async (user) => {
+                    await loadFirebaseUser(user);
+                });
             }
-        });
+        } else {
+            // Se já tem token, registra listener para manter sincronizado
+            auth.onAuthStateChanged(async (user) => {
+                if (user) {
+                    if (!currentUser || currentUser.uid !== user.uid) {
+                        await loadFirebaseUser(user);
+                    }
+                }
+            });
+        }
     </script>
 
     <script src="https://gspotfverwazzimagiygg.wazzimagiygg.com/D6FefD0De/EfdFeF1ExcE0C/De0Var6H6f/QXdv0/dddcefb.js"></script>
