@@ -1220,7 +1220,7 @@ async function checkIfUserIsBanned(user) {
 }
 
 // ============================================
-// FUNÇÃO PARA USUÁRIO BANIDO - CORRIGIDA
+// FUNÇÃO PARA USUÁRIO BANIDO
 // ============================================
 function showBannedScreen(reason = 'Violação das políticas de uso') {
     const overlay = document.getElementById('bannedOverlay');
@@ -1253,7 +1253,7 @@ function showBannedScreen(reason = 'Violação das políticas de uso') {
 }
 
 // ============================================
-// REMOVER OVERLAY DE BANIDO - CORRIGIDA
+// REMOVER OVERLAY DE BANIDO
 // ============================================
 function removeBannedOverlay() {
     const overlay = document.getElementById('bannedOverlay');
@@ -1281,7 +1281,7 @@ function removeBannedOverlay() {
 }
 
 // ============================================
-// FUNÇÃO LOGOUT BANNED CORRIGIDA
+// FUNÇÃO LOGOUT BANNED
 // ============================================
 async function logoutBanned() {
     try { 
@@ -1995,20 +1995,6 @@ window.closeModal = function(id) {
     const modal = document.getElementById(id);
     if (modal) modal.style.display = 'none';
 };
-
-// Expor funções
-window.likePost = likePost;
-window.openComments = openComments;
-window.sendComment = sendComment;
-window.openProfile = openProfile;
-window.toggleFollow = toggleFollow;
-window.sharePost = sharePost;
-window.logoutBanned = logoutBanned;
-window.logout = logout;
-window.loginWithGoogle = loginWithGoogle;
-window.showLoginModal = showLoginModal;
-window.toggleNotifications = toggleNotifications;
-window.markAllAsRead = markAllAsRead;
 
 // ============================================
 // INICIALIZAÇÃO
