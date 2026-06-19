@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="icon" href="https://gspotfverwazzimagiygg.wazzimagiygg.com/bemtevi/Favicom.png" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Lato:wght@300;400;700;900&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,14 +16,324 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Lato', 'Inter', sans-serif;
             background: #000000;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* Layout */
+        /* ===== HEADER PADRONIZADO WAZZIMAGIYGG ===== */
+        .header {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            padding: 12px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+        }
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .logo-area-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .logo-area-header img {
+            height: 36px;
+            border-radius: 8px;
+        }
+        .logo-area-header h1 {
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        .logo-area-header small {
+            font-size: 0.65em;
+            opacity: 0.7;
+            display: block;
+            font-weight: 300;
+        }
+        .user-info-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1em;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .user-avatar:hover { transform: scale(1.05); }
+        .user-name { font-weight: 500; font-size: 0.85em; }
+        .user-email { font-size: 0.7em; opacity: 0.7; }
+        .btn-logout {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.75em;
+            transition: all 0.2s;
+        }
+        .btn-logout:hover { background: rgba(255,255,255,0.2); }
+        .btn-login {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.75em;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-login:hover { background: rgba(255,255,255,0.25); }
+        .badge-admin {
+            background: #e94560;
+            color: white;
+            font-size: 0.55em;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-banned {
+            background: #dc3545;
+            color: white;
+            font-size: 0.55em;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* NOTIFICATION BELL */
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 30px;
+            transition: background 0.2s;
+        }
+        .notification-bell:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .notification-bell .material-icons {
+            font-size: 20px;
+        }
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #e94560;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 9px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #1a1a2e;
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 340px;
+            max-height: 350px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 200;
+            color: #1a1a2e;
+        }
+        .notification-dropdown.show {
+            display: block;
+        }
+        .notification-dropdown-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .notification-dropdown-header h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+        .notification-dropdown-header button {
+            background: none;
+            border: none;
+            color: #4a6cf7;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .notification-item {
+            padding: 10px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+        .notification-item:hover {
+            background: #f8f9fa;
+        }
+        .notification-item.unread {
+            background: #eef2ff;
+            border-left: 3px solid #4a6cf7;
+        }
+        .notification-item .notif-title {
+            font-weight: 600;
+            font-size: 12px;
+            color: #1a1a2e;
+        }
+        .notification-item .notif-message {
+            font-size: 11px;
+            color: #666;
+            margin-top: 3px;
+        }
+        .notification-item .notif-time {
+            font-size: 10px;
+            color: #999;
+            margin-top: 3px;
+        }
+        .notification-empty {
+            padding: 20px;
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+        }
+        .notification-empty .material-icons {
+            font-size: 36px;
+            opacity: 0.4;
+        }
+
+        /* ===== BANNED OVERLAY ===== */
+        .banned-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .banned-overlay.show {
+            display: flex;
+        }
+
+        .banned-box {
+            background: #1a1a1a;
+            border: 2px solid #e94560;
+            border-radius: 16px;
+            padding: 50px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            color: white;
+        }
+
+        .banned-box .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .banned-box h2 {
+            color: #e94560;
+            margin-bottom: 15px;
+        }
+
+        .banned-box p {
+            color: #aaa;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .banned-box .btn-logout-banned {
+            background: #e94560;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .banned-box .btn-logout-banned:hover {
+            background: #c0392b;
+        }
+
+        .banned-box .ban-details {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 13px;
+            color: #888;
+        }
+
+        /* ===== BETA BADGE ===== */
+        .beta-badge {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 9999;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        /* ===== LAYOUT ===== */
         .app-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -31,6 +342,7 @@
             gap: 20px;
             padding: 20px;
             flex: 1;
+            width: 100%;
         }
 
         /* Sidebar */
@@ -426,104 +738,16 @@
         .login-box h2 { color: #ffffff; }
         .login-box p { color: #aaaaaa; }
 
-        /* Beta Badge */
-        .beta-badge {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-
-        /* Texto genérico */
         .box-title { color: #ffffff; }
         h3, h4 { color: #ffffff; }
 
-        /* BANNED OVERLAY */
-        .banned-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            flex-direction: column;
-            padding: 20px;
-        }
-
-        .banned-overlay.show {
-            display: flex;
-        }
-
-        .banned-box {
-            background: #1a1a1a;
-            border: 2px solid #e94560;
-            border-radius: 16px;
-            padding: 50px;
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-            color: white;
-        }
-
-        .banned-box .icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-        }
-
-        .banned-box h2 {
-            color: #e94560;
-            margin-bottom: 15px;
-        }
-
-        .banned-box p {
-            color: #aaa;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-
-        .banned-box .btn-logout-banned {
-            background: #e94560;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: background 0.3s;
-        }
-
-        .banned-box .btn-logout-banned:hover {
-            background: #c0392b;
-        }
-
-        .banned-box .ban-details {
-            background: #2a2a2a;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            font-size: 13px;
-            color: #888;
-        }
-
-        /* Estilos do Rodapé */
+        /* ===== FOOTER PADRONIZADO ===== */
         .site-footer {
             background: linear-gradient(135deg, #0a0a0a 0%, #141414 100%);
             border-top: 1px solid #2a2a2a;
             margin-top: 40px;
-            padding: 30px 20px 20px;
-            font-family: 'Inter', sans-serif;
+            padding: 25px 20px 20px;
+            font-family: 'Lato', 'Inter', sans-serif;
         }
 
         .footer-content {
@@ -538,13 +762,13 @@
             justify-content: center;
             align-items: center;
             gap: 8px 12px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .footer-link {
             color: #aaa !important;
             text-decoration: none;
-            font-size: 13px;
+            font-size: 12px;
             transition: all 0.3s ease;
             padding: 4px 0;
             display: inline-block;
@@ -566,943 +790,1149 @@
 
         .footer-divider {
             color: #444;
-            font-size: 12px;
+            font-size: 11px;
             margin: 0 2px;
         }
 
         .footer-copyright {
             color: #666;
             font-size: 11px;
-            padding-top: 15px;
+            padding-top: 12px;
             border-top: 1px solid #222;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
             .app-container { grid-template-columns: 1fr; }
             .sidebar-left, .sidebar-right { display: none; }
-            .beta-badge { top: 10px; right: 10px; }
+            .beta-badge { top: 80px; right: 10px; }
+            .header-content { flex-direction: column; align-items: stretch; gap: 8px; }
+            .user-info-header { justify-content: space-between; }
+            .notification-dropdown { width: 300px; right: -20px; }
         }
 
         @media (max-width: 768px) {
-            .site-footer {
-                padding: 20px 15px 15px;
-            }
-            
-            .footer-links {
-                gap: 6px 8px;
-            }
-            
-            .footer-link {
-                font-size: 11px;
-            }
-            
-            .footer-divider {
-                font-size: 10px;
-            }
-            
-            .footer-copyright {
-                font-size: 10px;
-            }
+            .app-container { padding: 10px; }
+            .post-actions { flex-direction: column; align-items: stretch; }
+            .post-actions input, .post-actions select { width: 100% !important; }
+            .site-footer { padding: 20px 15px 15px; }
+            .footer-links { gap: 6px 8px; flex-direction: column; }
+            .footer-link { font-size: 11px; }
+            .footer-divider { display: none; }
+            .footer-copyright { font-size: 10px; }
+            .login-box { padding: 30px 20px; }
+            .banned-box { padding: 30px 20px; }
+            .beta-badge { top: 75px; right: 5px; font-size: 10px; padding: 3px 10px; }
+        }
+
+        @media (max-width: 480px) {
+            .user-name, .user-email { display: none; }
+            .notification-dropdown { width: calc(100vw - 40px); right: -10px; }
+            .modal-content { width: 95%; }
+            .profile-stats { gap: 15px; }
+            .stat-number { font-size: 16px; }
         }
     </style>
 </head>
 <body>
-    <!-- BANNED OVERLAY -->
-    <div id="bannedOverlay" class="banned-overlay">
-        <div class="banned-box">
-            <div class="icon">🚫</div>
-            <h2>⚠️ Conta Banida</h2>
-            <p>Sua conta foi banida permanentemente do Bemtevi.</p>
-            <div id="banDetails" class="ban-details">
-                Motivo: Violação das políticas de uso
+
+<!-- ===== BANNED OVERLAY ===== -->
+<div id="bannedOverlay" class="banned-overlay">
+    <div class="banned-box">
+        <div class="icon">🚫</div>
+        <h2>⚠️ Conta Banida</h2>
+        <p>Sua conta foi banida permanentemente do Bemtevi.</p>
+        <div id="banDetails" class="ban-details">
+            Motivo: Violação das políticas de uso
+        </div>
+        <p style="font-size: 14px; color: #666;">Se você acredita que isso é um erro, entre em contato com o suporte.</p>
+        <button class="btn-logout-banned" onclick="logoutBanned()">🚪 Sair da conta</button>
+    </div>
+</div>
+
+<!-- ===== HEADER PADRONIZADO WAZZIMAGIYGG ===== -->
+<header class="header">
+    <div class="header-content">
+        <div class="logo-area-header" onclick="location.reload()">
+            <img src="https://wazzimagiygg.com/favicom.png" alt="Logo">
+            <div>
+                <h1>WazzimaGiygg</h1>
+                <small>Bemtevi</small>
             </div>
-            <p style="font-size: 14px; color: #666;">Se você acredita que isso é um erro, entre em contato com o suporte.</p>
-            <button class="btn-logout-banned" onclick="logoutBanned()">🚪 Sair da conta</button>
+        </div>
+        <div class="user-info-header" id="userInfo">
+            <div class="user-avatar" id="userAvatar">👤</div>
+            <div>
+                <div class="user-name" id="userName">Carregando...</div>
+                <div class="user-email" id="userEmail">aguarde</div>
+            </div>
+            <span id="userBadge"></span>
+            
+            <!-- NOTIFICATION BELL -->
+            <div class="notification-bell" id="notificationBell" onclick="toggleNotifications(event)">
+                <span class="material-icons">notifications</span>
+                <span class="notification-badge" id="notifBadge" style="display:none;">0</span>
+                <div class="notification-dropdown" id="notifDropdown">
+                    <div class="notification-dropdown-header">
+                        <h3>🔔 Notificações</h3>
+                        <button onclick="markAllAsRead(event)">Marcar todas como lidas</button>
+                    </div>
+                    <div id="notificationList">
+                        <div class="notification-empty">
+                            <span class="material-icons">notifications_off</span>
+                            <p>Nenhuma notificação</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn-logout" id="btnLogout" style="display:none;" onclick="logout()">Sair</button>
+            <button class="btn-login" id="btnLogin" onclick="showLoginModal()">
+                <span class="material-icons" style="font-size:16px;">person</span> Entrar
+            </button>
         </div>
     </div>
+</header>
 
-    <div id="app"></div>
+<!-- ===== BETA BADGE ===== -->
+<div class="beta-badge">🚧 BETA</div>
 
-    <!-- Rodapé Padronizado -->
-    <footer class="site-footer">
-        <div class="footer-content">
-            <div class="footer-links">
-                <a href="https://wazzimagiygg.com/donate/" class="footer-link" target="_blank">💝 Faça sua doação!</a>
-                <span class="footer-divider">|</span>
-                <a href="https://wazzimagiygg.com/desktop.html" class="footer-link" target="_blank">🖥️ Acessar Desktop</a>
-                <span class="footer-divider">|</span>
-                <a href="https://wazzimagiygg.com/LGPD" class="footer-link" target="_blank">🔒 LGPD</a>
-                <span class="footer-divider">|</span>
-                <a href="https://wazzimagiygg.com/MarcoCivil" class="footer-link" target="_blank">📜 Marco Civil</a>
-                <span class="footer-divider">|</span>
-                <a href="https://wazzimagiygg.com/relatorio-wikipedia.html" class="footer-link highlight" target="_blank">📄 Relatório Wikipédia</a>
-                <span class="footer-divider">|</span>
-                <a href="https://support.wazzimagiygg.com/" class="footer-link" target="_blank">🎫 Contato por Ticket</a>
-                <span class="footer-divider">|</span>
-                <a href="https://wazzimagiygg.com/produtos" class="footer-link highlight" target="_blank">🛍️ Produtos WazzimaGiygg</a>
+<!-- ===== APP CONTAINER ===== -->
+<div id="app"></div>
+
+<!-- ===== FOOTER PADRONIZADO ===== -->
+<footer class="site-footer">
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="https://wazzimagiygg.com/donate/" class="footer-link" target="_blank">💝 Doação</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/desktop.html" class="footer-link" target="_blank">🖥️ Desktop</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/LGPD" class="footer-link" target="_blank">🔒 LGPD</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/MarcoCivil" class="footer-link" target="_blank">📜 Marco Civil</a>
+            <span class="footer-divider">|</span>
+            <a href="https://support.wazzimagiygg.com/" class="footer-link" target="_blank">🎫 Ticket</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/produtos" class="footer-link highlight" target="_blank">🛍️ Produtos</a>
+            <span class="footer-divider">|</span>
+            <a href="https://painel.wazzimagiygg.com/" class="footer-link highlight" target="_blank">👤 Sua conta</a>
+        </div>
+        <div class="footer-copyright">
+            © 2026 Bemtevi - Uma rede social livre e colaborativa
+        </div>
+    </div>
+</footer>
+
+<!-- ===== MODAL LOGIN ===== -->
+<div id="login-modal" class="modal">
+    <div class="modal-content" style="max-width: 400px;">
+        <div class="modal-header">
+            <h3><i class="material-icons">login</i> Entrar no Bemtevi</h3>
+            <button class="close-modal" onclick="closeModal('login-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p style="margin-bottom: 20px;">Faça login para postar e interagir</p>
+            <button id="google-login-btn" class="btn-primary" style="width:100%; display:flex; align-items:center; justify-content:center; gap:10px;">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style="width:20px; height:20px;">
+                Entrar com Google
+            </button>
+            <div style="margin-top:20px; font-size:12px; color:#666666; text-align:center;">Postagens de até 127 caracteres • Comentários • Curtidas</div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== MODAL COMENTÁRIOS ===== -->
+<div id="comments-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>💬 Comentários</h3>
+            <button class="close-modal" onclick="closeModal('comments-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="comments-container"></div>
+            <textarea id="comment-input" class="comment-input" rows="3" placeholder="Escreva um comentário... (máx. 280 caracteres)" maxlength="280"></textarea>
+            <button class="btn-primary" onclick="sendComment()" style="margin-top:10px; width:100%;">Enviar Comentário</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== MODAL PERFIL ===== -->
+<div id="profile-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>👤 Perfil</h3>
+            <button class="close-modal" onclick="closeModal('profile-modal')">&times;</button>
+        </div>
+        <div class="modal-body" id="profile-content"></div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+<script>
+// ============================================
+// CONFIGURAÇÃO DO FIREBASE
+// ============================================
+const firebaseConfig = {
+    apiKey: "AIzaSyB9GkSqTIZ0kbVsba_WOdQeVAETrF9qna0",
+    authDomain: "wzzm-ce3fc.firebaseapp.com",
+    projectId: "wzzm-ce3fc",
+    storageBucket: "wzzm-ce3fc.appspot.com",
+    messagingSenderId: "249427877153",
+    appId: "1:249427877153:web:0e4297294794a5aadeb260"
+};
+
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+
+// ============================================
+// VARIÁVEIS GLOBAIS
+// ============================================
+let currentUser = null;
+let currentFeed = 'for-you';
+let lastDoc = null;
+let loading = false;
+let hasMore = true;
+let currentCategoryFilter = null;
+let currentViewingProfile = null;
+let currentViewingPost = null;
+let isBanned = false;
+let notifications = [];
+let unreadCount = 0;
+let notificationListener = null;
+
+// Categorias
+const categories = ['Geral', 'Tecnologia', 'Ciência', 'Arte', 'Música', 'Esportes', 'Games', 'Educação', 'Política', 'Entretenimento'];
+
+// Cores das categorias
+const categoryColors = {
+    'Geral': '#666', 'Tecnologia': '#2196f3', 'Ciência': '#4caf50',
+    'Arte': '#9c27b0', 'Música': '#f44336', 'Esportes': '#ff9800',
+    'Games': '#795548', 'Educação': '#00bcd4', 'Política': '#607d8b',
+    'Entretenimento': '#e91e63'
+};
+
+// ============================================
+// FUNÇÕES DE UTILIDADE
+// ============================================
+function getInitials(name) {
+    if (!name) return '?';
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+    return name.substring(0, 2).toUpperCase();
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function getTimeAgo(date) {
+    if (!date) return 'agora';
+    if (date.toDate) date = date.toDate();
+    const seconds = Math.floor((new Date() - date) / 1000);
+    if (seconds < 60) return 'agora';
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h`;
+    const days = Math.floor(hours / 24);
+    return `${days}d`;
+}
+
+function extractLinks(text) {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const matches = text.match(urlRegex);
+    return matches ? matches[0] : null;
+}
+
+function removeLinks(text) {
+    return text.replace(/(https?:\/\/[^\s]+)/g, '').trim();
+}
+
+// ============================================
+// NOTIFICAÇÕES
+// ============================================
+async function loadNotifications() {
+    if (!currentUser) return;
+    try {
+        const snapshot = await db.collection('notifications')
+            .where('userId', '==', currentUser.uid)
+            .orderBy('timestamp', 'desc')
+            .limit(50)
+            .get();
+        notifications = [];
+        snapshot.forEach(doc => {
+            notifications.push({ 
+                id: doc.id, 
+                ...doc.data(),
+                timestamp: doc.data().timestamp || new Date()
+            });
+        });
+        unreadCount = notifications.filter(n => !n.lida).length;
+        updateNotificationBadge();
+        renderNotifications();
+    } catch (error) {
+        console.error('Erro ao carregar notificações:', error);
+    }
+}
+
+function updateNotificationBadge() {
+    const badge = document.getElementById('notifBadge');
+    if (unreadCount > 0) {
+        badge.style.display = 'flex';
+        badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+function renderNotifications() {
+    const list = document.getElementById('notificationList');
+    if (!list) return;
+    if (notifications.length === 0) {
+        list.innerHTML = `<div class="notification-empty"><span class="material-icons">notifications_off</span><p>Nenhuma notificação</p></div>`;
+        return;
+    }
+    list.innerHTML = notifications.slice(0, 10).map(notif => `
+        <div class="notification-item ${notif.lida ? '' : 'unread'}" onclick="markAsRead('${notif.id}')">
+            <div class="notif-title">${escapeHtml(notif.titulo || 'Notificação')}</div>
+            <div class="notif-message">${escapeHtml(notif.mensagem || '')}</div>
+            <div class="notif-time">${getTimeAgo(notif.timestamp)}</div>
+        </div>
+    `).join('');
+}
+
+async function markAsRead(id) {
+    if (!id) return;
+    try {
+        await db.collection('notifications').doc(id).update({ lida: true });
+        const notif = notifications.find(n => n.id === id);
+        if (notif && !notif.lida) { notif.lida = true; unreadCount--; updateNotificationBadge(); renderNotifications(); }
+    } catch (error) { console.error('Erro:', error); }
+}
+
+async function markAllAsRead(event) {
+    if (event) event.stopPropagation();
+    if (unreadCount === 0) return;
+    try {
+        const batch = db.batch();
+        notifications.filter(n => !n.lida).forEach(n => batch.update(db.collection('notifications').doc(n.id), { lida: true }));
+        await batch.commit();
+        notifications.forEach(n => n.lida = true);
+        unreadCount = 0;
+        updateNotificationBadge();
+        renderNotifications();
+    } catch (error) { console.error('Erro:', error); }
+}
+
+function toggleNotifications(event) {
+    if (event) event.stopPropagation();
+    const dropdown = document.getElementById('notifDropdown');
+    if (dropdown) {
+        dropdown.classList.toggle('show');
+        if (dropdown.classList.contains('show')) loadNotifications();
+    }
+}
+
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.notification-bell')) {
+        const dropdown = document.getElementById('notifDropdown');
+        if (dropdown) dropdown.classList.remove('show');
+    }
+});
+
+function listenNotifications() {
+    if (notificationListener) { notificationListener(); notificationListener = null; }
+    if (!currentUser) return;
+    notificationListener = db.collection('notifications')
+        .where('userId', '==', currentUser.uid)
+        .orderBy('timestamp', 'desc')
+        .limit(50)
+        .onSnapshot((snapshot) => {
+            notifications = [];
+            snapshot.forEach(doc => notifications.push({ id: doc.id, ...doc.data(), timestamp: doc.data().timestamp || new Date() }));
+            unreadCount = notifications.filter(n => !n.lida).length;
+            updateNotificationBadge();
+            renderNotifications();
+        }, (error) => console.error('Erro no listener:', error));
+}
+
+// ============================================
+// REGISTRO DE USUÁRIO
+// ============================================
+async function registerUser(user) {
+    try {
+        const uid = user.uid;
+        const userDoc = await db.collection('users').doc(uid).get();
+        const existingData = userDoc.exists ? userDoc.data() : {};
+        
+        const userData = {
+            uid: uid,
+            email: user.email || '',
+            name: user.displayName || 'Usuário',
+            profilePictureUrl: user.photoURL || '',
+            isAdmin: existingData.isAdmin || false,
+            isBan: existingData.isBan || false,
+            isBanned: existingData.isBanned || false,
+            isTeacher: false,
+            isTeatcher: false,
+            createdAt: existingData.createdAt || firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            lastLoginAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        await db.collection('users').doc(uid).set(userData, { merge: true });
+        await db.collection('usuários').doc(uid).set(userData, { merge: true });
+
+        console.log(`Usuário ${uid} registrado com sucesso! isBanned: ${userData.isBanned}`);
+        return userData;
+    } catch (error) {
+        console.error('Erro ao registrar usuário:', error);
+        return null;
+    }
+}
+
+// ============================================
+// VERIFICAÇÃO DE BANIMENTO
+// ============================================
+async function checkIfUserIsBanned(user) {
+    if (!user) return false;
+    try {
+        const userDoc = await db.collection('users').doc(user.uid).get();
+        if (userDoc.exists) {
+            const data = userDoc.data();
+            return data.isBanned === true || data.isBan === true;
+        }
+    } catch (error) {
+        console.log("Erro ao verificar banimento:", error);
+    }
+    return false;
+}
+
+function showBannedScreen(reason = 'Violação das políticas de uso') {
+    const overlay = document.getElementById('bannedOverlay');
+    const details = document.getElementById('banDetails');
+    details.textContent = `Motivo: ${reason}`;
+    overlay.classList.add('show');
+    document.querySelector('.app-container').style.opacity = '0.3';
+    document.querySelector('.app-container').style.pointerEvents = 'none';
+    document.querySelector('.header').style.opacity = '0.3';
+    document.querySelector('.header').style.pointerEvents = 'none';
+    document.querySelector('.site-footer').style.opacity = '0.3';
+    document.querySelector('.site-footer').style.pointerEvents = 'none';
+}
+
+async function logoutBanned() {
+    try { await auth.signOut(); location.reload(); } catch (e) { location.reload(); }
+}
+
+// ============================================
+// AUTENTICAÇÃO - UI
+// ============================================
+function updateUI() {
+    const avatar = document.getElementById('userAvatar');
+    const name = document.getElementById('userName');
+    const email = document.getElementById('userEmail');
+    const badge = document.getElementById('userBadge');
+    const btnLogin = document.getElementById('btnLogin');
+    const btnLogout = document.getElementById('btnLogout');
+    
+    if (currentUser && !isBanned) {
+        let displayName = currentUser.displayName || (currentUser.email ? currentUser.email.split('@')[0] : 'Usuário');
+        if (currentUser.photoURL) {
+            avatar.innerHTML = `<img src="${currentUser.photoURL}" alt="Avatar">`;
+        } else {
+            avatar.textContent = getInitials(displayName);
+        }
+        name.textContent = displayName.length > 20 ? displayName.substring(0,17)+'...' : displayName;
+        email.textContent = currentUser.email || '';
+        let badges = '';
+        if (isBanned) badges += '<span class="badge-banned">🚫 Banido</span> ';
+        badge.innerHTML = badges;
+        btnLogin.style.display = 'none';
+        btnLogout.style.display = 'inline-block';
+    } else {
+        avatar.innerHTML = '👤';
+        name.textContent = 'Visitante';
+        email.textContent = '';
+        badge.innerHTML = '';
+        btnLogin.style.display = 'inline-block';
+        btnLogout.style.display = 'none';
+    }
+}
+
+function showLoginModal() { document.getElementById('login-modal').classList.add('show'); }
+function closeLoginModal() { document.getElementById('login-modal').classList.remove('show'); }
+
+async function loginWithGoogle() {
+    try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        const result = await auth.signInWithPopup(provider);
+        currentUser = result.user;
+        await registerUser(currentUser);
+        isBanned = await checkIfUserIsBanned(currentUser);
+        if (isBanned) { showBannedScreen('Sua conta foi banida.'); await auth.signOut(); updateUI(); return; }
+        updateUI();
+        closeLoginModal();
+        await loadNotifications();
+        listenNotifications();
+        renderMainApp();
+    } catch (error) {
+        console.error('Erro no login:', error);
+        alert('Erro ao fazer login: ' + error.message);
+    }
+}
+
+async function logout() {
+    try {
+        await auth.signOut();
+        currentUser = null;
+        isBanned = false;
+        if (notificationListener) { notificationListener(); notificationListener = null; }
+        notifications = [];
+        unreadCount = 0;
+        updateNotificationBadge();
+        updateUI();
+        renderWelcomeScreen();
+    } catch (error) {
+        console.error('Erro no logout:', error);
+        alert('Erro ao sair: ' + error.message);
+    }
+}
+
+// ============================================
+// CRIAÇÃO DE POST
+// ============================================
+async function createPost(conteudo, link = null, categoria = 'Geral') {
+    if (!currentUser || isBanned) {
+        if (isBanned) {
+            alert('Sua conta está banida. Não é possível postar.');
+        } else {
+            alert('Faça login para postar!');
+        }
+        return false;
+    }
+
+    let postText = conteudo.trim();
+    let extractedLink = link || extractLinks(postText);
+    if (!extractedLink) postText = removeLinks(postText);
+
+    if (postText.length > 127) {
+        alert('O texto deve ter no máximo 127 caracteres!');
+        return false;
+    }
+
+    if (postText.length === 0 && !extractedLink) {
+        alert('Digite algo para postar!');
+        return false;
+    }
+
+    try {
+        const postData = {
+            userId: currentUser.uid,
+            userNome: currentUser.displayName || currentUser.email.split('@')[0],
+            userEmail: currentUser.email,
+            userAvatar: currentUser.photoURL || null,
+            conteudo: postText.substring(0, 127),
+            categoria: categoria,
+            link: extractedLink,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            likes: 0,
+            comentarios: 0,
+            usuariosQueCurtiram: []
+        };
+        await db.collection('Bemtevi').add(postData);
+        return true;
+    } catch (error) {
+        console.error('Erro ao postar:', error);
+        alert('Erro ao postar. Tente novamente.');
+        return false;
+    }
+}
+
+// ============================================
+// LIKE
+// ============================================
+async function likePost(postId) {
+    if (!currentUser || isBanned) {
+        if (isBanned) {
+            alert('Sua conta está banida.');
+        } else {
+            alert('Faça login para curtir!');
+        }
+        return;
+    }
+
+    const postRef = db.collection('Bemtevi').doc(postId);
+    const postDoc = await postRef.get();
+    const usuariosQueCurtiram = postDoc.data()?.usuariosQueCurtiram || [];
+
+    if (usuariosQueCurtiram.includes(currentUser.uid)) {
+        await postRef.update({
+            likes: firebase.firestore.FieldValue.increment(-1),
+            usuariosQueCurtiram: firebase.firestore.FieldValue.arrayRemove(currentUser.uid)
+        });
+    } else {
+        await postRef.update({
+            likes: firebase.firestore.FieldValue.increment(1),
+            usuariosQueCurtiram: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+        });
+    }
+    refreshFeed();
+}
+
+// ============================================
+// COMENTÁRIOS
+// ============================================
+async function openComments(postId, postUserId, postUserNome) {
+    if (isBanned) {
+        alert('Sua conta está banida.');
+        return;
+    }
+    currentViewingPost = { id: postId, userId: postUserId, userNome: postUserNome };
+    
+    const modal = document.getElementById('comments-modal');
+    const container = document.getElementById('comments-container');
+    container.innerHTML = '<div class="loading">Carregando comentários...</div>';
+    modal.style.display = 'flex';
+
+    try {
+        const snapshot = await db.collection('Bemtevi').doc(postId)
+            .collection('comentarios')
+            .orderBy('createdAt', 'desc')
+            .get();
+
+        if (snapshot.empty) {
+            container.innerHTML = '<div class="loading">Nenhum comentário ainda. Seja o primeiro!</div>';
+        } else {
+            container.innerHTML = '';
+            snapshot.forEach(doc => {
+                const comment = doc.data();
+                const commentDate = comment.createdAt?.toDate() || new Date();
+                container.innerHTML += `
+                    <div class="comment-item">
+                        <div class="comment-avatar">${comment.userNome?.charAt(0).toUpperCase() || '?'}</div>
+                        <div class="comment-content">
+                            <div class="comment-name">${escapeHtml(comment.userNome)}</div>
+                            <div class="comment-text">${escapeHtml(comment.conteudo)}</div>
+                            <div class="comment-time">${getTimeAgo(commentDate)}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        container.innerHTML = '<div class="loading">Erro ao carregar comentários</div>';
+    }
+}
+
+async function sendComment() {
+    if (isBanned) {
+        alert('Sua conta está banida. Não é possível comentar.');
+        return;
+    }
+    const commentText = document.getElementById('comment-input').value.trim();
+    if (!commentText) {
+        alert('Digite um comentário!');
+        return;
+    }
+
+    if (commentText.length > 280) {
+        alert('Comentário muito longo! Máximo 280 caracteres.');
+        return;
+    }
+
+    try {
+        await db.collection('Bemtevi').doc(currentViewingPost.id).collection('comentarios').add({
+            userId: currentUser.uid,
+            userNome: currentUser.displayName || currentUser.email.split('@')[0],
+            conteudo: commentText,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        await db.collection('Bemtevi').doc(currentViewingPost.id).update({
+            comentarios: firebase.firestore.FieldValue.increment(1)
+        });
+
+        document.getElementById('comment-input').value = '';
+        await openComments(currentViewingPost.id, currentViewingPost.userId, currentViewingPost.userNome);
+        refreshFeed();
+    } catch (error) {
+        console.error('Erro ao comentar:', error);
+        alert('Erro ao enviar comentário.');
+    }
+}
+
+// ============================================
+// PERFIL E SEGUIR
+// ============================================
+async function openProfile(userId, userName) {
+    if (isBanned) {
+        alert('Sua conta está banida.');
+        return;
+    }
+    currentViewingProfile = userId;
+    
+    try {
+        const userDoc = await db.collection('usuarios').doc(userId).get();
+        const userData = userDoc.exists ? userDoc.data() : { nome: userName, seguidores: [], seguindo: [] };
+        
+        let isFollowing = false;
+        if (currentUser && userId !== currentUser.uid && !isBanned) {
+            const followDoc = await db.collection('usuarios').doc(currentUser.uid)
+                .collection('seguindo').doc(userId).get();
+            isFollowing = followDoc.exists;
+        }
+
+        const postsSnapshot = await db.collection('Bemtevi')
+            .where('userId', '==', userId)
+            .orderBy('createdAt', 'desc')
+            .limit(10)
+            .get();
+
+        let postsHtml = '';
+        postsSnapshot.forEach(doc => {
+            const post = doc.data();
+            postsHtml += `
+                <div class="post-card" style="padding:15px;">
+                    <div class="post-content" style="padding-left:0">
+                        ${escapeHtml(post.conteudo)}
+                        ${post.link ? `<a href="${post.link}" target="_blank" class="post-link" style="margin-top:8px;">🔗 ${post.link.substring(0, 40)}</a>` : ''}
+                    </div>
+                    <div class="post-stats" style="padding-left:0">
+                        <span>❤️ ${post.likes || 0}</span>
+                        <span>💬 ${post.comentarios || 0}</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        const modal = document.getElementById('profile-modal');
+        document.getElementById('profile-content').innerHTML = `
+            <div class="profile-header">
+                <div class="profile-avatar">${(userData.nome || userName)?.charAt(0).toUpperCase() || '?'}</div>
+                <h3>${escapeHtml(userData.nome || userName)}</h3>
+                <div style="opacity:0.8;">@${userId.substring(0, 8)}</div>
+                ${currentUser && userId !== currentUser.uid && !isBanned ? `
+                    <button class="follow-btn ${isFollowing ? 'following' : ''}" onclick="toggleFollow('${userId}')">
+                        ${isFollowing ? '✓ Seguindo' : '+ Seguir'}
+                    </button>
+                ` : ''}
+                <div class="profile-stats">
+                    <div><div class="stat-number">${userData.seguidores?.length || 0}</div><div>Seguidores</div></div>
+                    <div><div class="stat-number">${userData.seguindo?.length || 0}</div><div>Seguindo</div></div>
+                    <div><div class="stat-number">${postsSnapshot.size}</div><div>Posts</div></div>
+                </div>
             </div>
-            <div class="footer-copyright">
-                © 2026 Bemtevi - Uma rede social livre e colaborativa
+            <h4 style="margin: 20px 0 10px; color:#ffffff;">📝 Últimas postagens</h4>
+            <div id="profile-posts">${postsHtml || '<div class="loading">Nenhuma postagem ainda.</div>'}</div>
+        `;
+        modal.style.display = 'flex';
+    } catch (error) {
+        console.error('Erro ao abrir perfil:', error);
+        alert('Erro ao carregar perfil');
+    }
+}
+
+async function toggleFollow(userIdToFollow) {
+    if (!currentUser || userIdToFollow === currentUser.uid || isBanned) {
+        if (isBanned) {
+            alert('Sua conta está banida.');
+        }
+        return;
+    }
+
+    try {
+        const followingRef = db.collection('usuarios').doc(currentUser.uid).collection('seguindo').doc(userIdToFollow);
+        const followersRef = db.collection('usuarios').doc(userIdToFollow).collection('seguidores').doc(currentUser.uid);
+        
+        const followingDoc = await followingRef.get();
+
+        if (followingDoc.exists) {
+            await followingRef.delete();
+            await followersRef.delete();
+            console.log('Deixou de seguir com sucesso');
+        } else {
+            await followingRef.set({
+                userId: userIdToFollow,
+                seguidoDesde: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            await followersRef.set({
+                seguidorId: currentUser.uid,
+                seguidoDesde: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            console.log('Seguiu com sucesso');
+        }
+
+        if (currentViewingProfile === userIdToFollow) {
+            await openProfile(userIdToFollow, '');
+        }
+        await loadSuggestions();
+        await refreshFeed();
+        
+    } catch (error) {
+        console.error('Erro detalhado ao seguir:', error);
+        if (error.code === 'permission-denied') {
+            alert('Erro de permissão. Por favor, recarregue a página e tente novamente.');
+        } else {
+            alert('Erro ao seguir usuário: ' + error.message);
+        }
+    }
+}
+
+// ============================================
+// SUGESTÕES
+// ============================================
+async function loadSuggestions() {
+    if (!currentUser || isBanned) return;
+
+    const container = document.getElementById('suggestions-container');
+    if (!container) return;
+
+    try {
+        const followingSnapshot = await db.collection('usuarios').doc(currentUser.uid).collection('seguindo').get();
+        const followingIds = followingSnapshot.docs.map(doc => doc.id);
+        followingIds.push(currentUser.uid);
+
+        const usersSnapshot = await db.collection('usuarios').limit(10).get();
+        const suggestions = usersSnapshot.docs.filter(doc => !followingIds.includes(doc.id)).slice(0, 5);
+
+        if (suggestions.length === 0) {
+            container.innerHTML = '<div style="text-align:center; color:#888888;">Nenhuma sugestão no momento</div>';
+            return;
+        }
+
+        container.innerHTML = suggestions.map(doc => {
+            const userData = doc.data();
+            return `
+                <div class="suggestion-user">
+                    <div class="suggestion-info" onclick="openProfile('${doc.id}', '${userData.nome}')">
+                        <div class="suggestion-avatar">${userData.nome?.charAt(0).toUpperCase() || '?'}</div>
+                        <div>
+                            <div style="font-weight:600; font-size:14px; color:#ffffff;">${escapeHtml(userData.nome || 'Usuário')}</div>
+                            <div style="font-size:11px; color:#888888;">@${doc.id.substring(0, 8)}</div>
+                        </div>
+                    </div>
+                    <button class="follow-small-btn" onclick="toggleFollow('${doc.id}')">Seguir</button>
+                </div>
+            `;
+        }).join('');
+    } catch (error) {
+        console.error('Erro ao carregar sugestões:', error);
+        container.innerHTML = '<div style="text-align:center; color:#888888;">Erro ao carregar sugestões</div>';
+    }
+}
+
+// ============================================
+// CARREGAR POSTS
+// ============================================
+async function loadPosts(reset = false) {
+    if (loading || isBanned) return;
+    if (reset) {
+        lastDoc = null;
+        hasMore = true;
+        document.getElementById('posts-container').innerHTML = '';
+    }
+    if (!hasMore) return;
+
+    loading = true;
+    document.getElementById('loading-indicator').style.display = 'block';
+
+    try {
+        let query = db.collection('Bemtevi').orderBy('createdAt', 'desc');
+
+        if (currentFeed === 'my-posts' && currentUser) {
+            query = db.collection('Bemtevi').where('userId', '==', currentUser.uid).orderBy('createdAt', 'desc');
+        } else if (currentCategoryFilter) {
+            query = db.collection('Bemtevi').where('categoria', '==', currentCategoryFilter).orderBy('createdAt', 'desc');
+        }
+
+        if (lastDoc) query = query.startAfter(lastDoc);
+        const snapshot = await query.limit(20).get();
+
+        if (snapshot.empty) {
+            hasMore = false;
+            if (reset && document.getElementById('posts-container').children.length === 0) {
+                document.getElementById('posts-container').innerHTML = '<div class="loading">Nenhuma postagem encontrada!</div>';
+            }
+            loading = false;
+            document.getElementById('loading-indicator').style.display = 'none';
+            return;
+        }
+
+        lastDoc = snapshot.docs[snapshot.docs.length - 1];
+        hasMore = snapshot.docs.length === 20;
+
+        snapshot.forEach(doc => {
+            const post = { id: doc.id, ...doc.data() };
+            const postDate = post.createdAt?.toDate() || new Date();
+            const isLiked = currentUser && post.usuariosQueCurtiram?.includes(currentUser.uid) && !isBanned;
+            
+            const postHtml = `
+                <div class="post-card">
+                    <div class="post-header" onclick="openProfile('${post.userId}', '${post.userNome}')">
+                        <div class="post-avatar-img">${post.userNome?.charAt(0).toUpperCase() || '?'}</div>
+                        <div>
+                            <span class="post-user-name">${escapeHtml(post.userNome)}</span>
+                            <span class="post-user-id">@${post.userId?.substring(0, 8)}</span>
+                            <span class="post-time">• ${getTimeAgo(postDate)}</span>
+                        </div>
+                    </div>
+                    <div class="post-category" style="background:${categoryColors[post.categoria] || '#666'}20; color:${categoryColors[post.categoria] || '#666'}">
+                        ${post.categoria || 'Geral'}
+                    </div>
+                    <div class="post-content">
+                        ${escapeHtml(post.conteudo)}
+                        ${post.link ? `<a href="${post.link}" target="_blank" class="post-link" onclick="event.stopPropagation()">🔗 ${post.link.substring(0, 50)}${post.link.length > 50 ? '...' : ''}</a>` : ''}
+                    </div>
+                    <div class="post-stats">
+                        <span class="stat-action ${isLiked ? 'liked' : ''}" onclick="likePost('${post.id}')">
+                            <span class="material-icons" style="font-size:18px;">${isLiked ? 'favorite' : 'favorite_border'}</span> ${post.likes || 0}
+                        </span>
+                        <span class="stat-action" onclick="openComments('${post.id}', '${post.userId}', '${post.userNome}')">
+                            <span class="material-icons" style="font-size:18px;">chat_bubble_outline</span> ${post.comentarios || 0}
+                        </span>
+                        <span class="stat-action" onclick="sharePost('${post.id}')">
+                            <span class="material-icons" style="font-size:18px;">share</span>
+                        </span>
+                    </div>
+                </div>
+            `;
+            document.getElementById('posts-container').insertAdjacentHTML('beforeend', postHtml);
+        });
+    } catch (error) {
+        console.error('Erro ao carregar posts:', error);
+        document.getElementById('posts-container').innerHTML = '<div class="loading">Erro ao carregar posts. Recarregue a página.</div>';
+    } finally {
+        loading = false;
+        document.getElementById('loading-indicator').style.display = 'none';
+    }
+}
+
+async function sharePost(postId) {
+    await navigator.clipboard.writeText(`${window.location.origin}/post/${postId}`);
+    alert('Link copiado!');
+}
+
+function refreshFeed() {
+    lastDoc = null;
+    hasMore = true;
+    loadPosts(true);
+}
+
+// ============================================
+// RENDERIZAÇÃO
+// ============================================
+function renderMainApp() {
+    const container = document.getElementById('app');
+    container.innerHTML = `
+        <div class="app-container">
+            <div class="sidebar-left">
+                <div class="card">
+                    <div class="logo">
+                        <span class="logo-icon">🐦</span>
+                        <span class="logo-text">Bemtevi</span>
+                    </div>
+                    <ul class="nav-menu">
+                        <li class="nav-item ${currentFeed === 'for-you' ? 'active' : ''}" onclick="changeFeed('for-you')">
+                            <span class="material-icons">home</span> Para Você
+                        </li>
+                        <li class="nav-item ${currentFeed === 'my-posts' ? 'active' : ''}" onclick="changeFeed('my-posts')">
+                            <span class="material-icons">person</span> Minhas Postagens
+                        </li>
+                    </ul>
+                    <div style="margin-top:20px; padding-top:20px; border-top:1px solid #2a2a2a; cursor:pointer;" onclick="openProfile('${currentUser.uid}', '${currentUser.displayName || currentUser.email.split('@')[0]}')">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div class="post-avatar" style="width:40px; height:40px;">${currentUser.displayName?.charAt(0).toUpperCase() || currentUser.email.charAt(0).toUpperCase()}</div>
+                            <div>
+                                <div style="font-weight:600; color:#ffffff;">${escapeHtml(currentUser.displayName || currentUser.email.split('@')[0])}</div>
+                                <div style="font-size:12px; color:#888888;">@${currentUser.uid.substring(0, 8)}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="feed-header"><div class="feed-title">📱 Feed</div></div>
+                <div class="post-box">
+                    <div class="post-input-area">
+                        <div class="post-avatar">${currentUser.displayName?.charAt(0).toUpperCase() || currentUser.email.charAt(0).toUpperCase()}</div>
+                        <div class="post-input-container">
+                            <textarea id="postText" class="post-input" rows="3" placeholder="O que está acontecendo? (Máx. 127 caracteres)" maxlength="127"></textarea>
+                            <div id="charCounter" class="char-counter">0/127</div>
+                            <div class="post-actions">
+                                <select id="postCategory" class="btn-secondary">${categories.map(cat => `<option value="${cat}">📁 ${cat}</option>`).join('')}</select>
+                                <input type="text" id="postLink" class="btn-secondary" placeholder="🔗 Link (opcional)" style="width:200px;">
+                                <button class="btn-primary" onclick="submitPost()">Postar 🚀</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="posts-container" class="posts-container"></div>
+                <div id="loading-indicator" class="loading" style="display:none;">Carregando mais posts...</div>
+            </div>
+
+            <div class="sidebar-right">
+                <div class="card">
+                    <div class="box-title" style="font-weight:700; margin-bottom:15px;">📂 Categorias</div>
+                    ${categories.map(cat => `<span class="category-chip ${currentCategoryFilter === cat ? 'selected' : ''}" onclick="filterByCategory('${cat}')">${cat}</span>`).join('')}
+                    <span class="category-chip ${!currentCategoryFilter ? 'selected' : ''}" onclick="clearCategoryFilter()">Todos</span>
+                </div>
+                <div class="card">
+                    <div class="box-title" style="font-weight:700; margin-bottom:15px;">👥 Sugestões</div>
+                    <div id="suggestions-container"></div>
+                </div>
             </div>
         </div>
-    </footer>
+    `;
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    document.getElementById('postText')?.addEventListener('input', function() {
+        const len = this.value.length;
+        document.getElementById('charCounter').innerHTML = `${len}/127`;
+        document.getElementById('charCounter').className = len > 110 ? 'char-counter warning' : len > 120 ? 'char-counter danger' : 'char-counter';
+    });
 
-    <script>
-        // ============================================
-        // CONFIGURAÇÃO DO FIREBASE
-        // ============================================
-        const firebaseConfig = {
-            apiKey: "AIzaSyB9GkSqTIZ0kbVsba_WOdQeVAETrF9qna0",
-            authDomain: "wzzm-ce3fc.firebaseapp.com",
-            projectId: "wzzm-ce3fc",
-            storageBucket: "wzzm-ce3fc.appspot.com",
-            messagingSenderId: "249427877153",
-            appId: "1:249427877153:web:0e4297294794a5aadeb260"
-        };
+    loadPosts(true);
+    loadSuggestions();
+    window.addEventListener('scroll', () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) loadPosts();
+    });
+}
 
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
-
-        // ============================================
-        // VARIÁVEIS GLOBAIS
-        // ============================================
-        let currentUser = null;
-        let currentFeed = 'for-you';
-        let lastDoc = null;
-        let loading = false;
-        let hasMore = true;
-        let currentCategoryFilter = null;
-        let currentViewingProfile = null;
-        let currentViewingPost = null;
-        let isBanned = false;
-
-        // Categorias
-        const categories = ['Geral', 'Tecnologia', 'Ciência', 'Arte', 'Música', 'Esportes', 'Games', 'Educação', 'Política', 'Entretenimento'];
-        
-        // Cores das categorias
-        const categoryColors = {
-            'Geral': '#666', 'Tecnologia': '#2196f3', 'Ciência': '#4caf50',
-            'Arte': '#9c27b0', 'Música': '#f44336', 'Esportes': '#ff9800',
-            'Games': '#795548', 'Educação': '#00bcd4', 'Política': '#607d8b',
-            'Entretenimento': '#e91e63'
-        };
-
-        // ============================================
-        // FUNÇÃO PARA REGISTRAR USUÁRIO (PRESERVANDO BAN)
-        // ============================================
-        async function registerUser(user) {
-            try {
-                const uid = user.uid;
-                
-                // Verifica se o usuário já existe para preservar o status de ban
-                const userDoc = await db.collection('users').doc(uid).get();
-                const existingData = userDoc.exists ? userDoc.data() : {};
-                
-                const userData = {
-                    uid: uid,
-                    email: user.email || '',
-                    name: user.displayName || 'Usuário',
-                    profilePictureUrl: user.photoURL || '',
-                    isAdmin: existingData.isAdmin || false,
-                    isBan: existingData.isBan || false,
-                    isBanned: existingData.isBanned || false,
-                    isTeacher: false,
-                    isTeatcher: false,
-                    createdAt: existingData.createdAt || firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    lastLoginAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
-
-                // Registra na coleção 'users'
-                await db.collection('users').doc(uid).set(userData, { merge: true });
-                
-                // Registra na coleção 'usuários'
-                await db.collection('usuários').doc(uid).set(userData, { merge: true });
-
-                console.log(`Usuário ${uid} registrado com sucesso! isBanned: ${userData.isBanned}`);
-                return userData;
-            } catch (error) {
-                console.error('Erro ao registrar usuário:', error);
-                return null;
-            }
-        }
-
-        // ============================================
-        // FUNÇÃO PARA VERIFICAR SE USUÁRIO ESTÁ BANIDO
-        // ============================================
-        async function checkIfUserIsBanned(user) {
-            if (!user) return false;
-            
-            try {
-                const userDoc = await db.collection('users').doc(user.uid).get();
-                if (userDoc.exists) {
-                    const data = userDoc.data();
-                    return data.isBanned === true || data.isBan === true;
-                }
-            } catch (error) {
-                console.log("Erro ao verificar banimento:", error);
-            }
-            
-            return false;
-        }
-
-        // ============================================
-        // FUNÇÃO PARA USUÁRIO BANIDO
-        // ============================================
-        function showBannedScreen(reason = 'Violação das políticas de uso') {
-            const overlay = document.getElementById('bannedOverlay');
-            const details = document.getElementById('banDetails');
-            details.textContent = `Motivo: ${reason}`;
-            overlay.classList.add('show');
-            
-            // Esconde o conteúdo principal
-            document.getElementById('app').style.opacity = '0.3';
-            document.getElementById('app').style.pointerEvents = 'none';
-            document.querySelector('.site-footer').style.opacity = '0.3';
-            document.querySelector('.site-footer').style.pointerEvents = 'none';
-        }
-
-        function logoutBanned() {
-            auth.signOut().then(() => {
-                location.reload();
-            });
-        }
-
-        // ============================================
-        // ESTADO GLOBAL
-        // ============================================
-        // ... (restante do código)
-
-        // ============================================
-        // FUNÇÕES AUXILIARES
-        // ============================================
-        function getTimeAgo(date) {
-            const seconds = Math.floor((new Date() - date) / 1000);
-            if (seconds < 60) return 'agora';
-            const minutes = Math.floor(seconds / 60);
-            if (minutes < 60) return `${minutes}m`;
-            const hours = Math.floor(minutes / 60);
-            if (hours < 24) return `${hours}h`;
-            const days = Math.floor(hours / 24);
-            return `${days}d`;
-        }
-
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        function extractLinks(text) {
-            const urlRegex = /(https?:\/\/[^\s]+)/g;
-            const matches = text.match(urlRegex);
-            return matches ? matches[0] : null;
-        }
-
-        function removeLinks(text) {
-            return text.replace(/(https?:\/\/[^\s]+)/g, '').trim();
-        }
-
-        // ============================================
-        // CRIAÇÃO DE POST
-        // ============================================
-        async function createPost(conteudo, link = null, categoria = 'Geral') {
-            if (!currentUser || isBanned) {
-                if (isBanned) {
-                    alert('Sua conta está banida. Não é possível postar.');
-                } else {
-                    alert('Faça login para postar!');
-                }
-                return false;
-            }
-
-            let postText = conteudo.trim();
-            let extractedLink = link || extractLinks(postText);
-            if (!extractedLink) postText = removeLinks(postText);
-
-            if (postText.length > 127) {
-                alert('O texto deve ter no máximo 127 caracteres!');
-                return false;
-            }
-
-            if (postText.length === 0 && !extractedLink) {
-                alert('Digite algo para postar!');
-                return false;
-            }
-
-            try {
-                const postData = {
-                    userId: currentUser.uid,
-                    userNome: currentUser.displayName || currentUser.email.split('@')[0],
-                    userEmail: currentUser.email,
-                    userAvatar: currentUser.photoURL || null,
-                    conteudo: postText.substring(0, 127),
-                    categoria: categoria,
-                    link: extractedLink,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    likes: 0,
-                    comentarios: 0,
-                    usuariosQueCurtiram: []
-                };
-                await db.collection('Bemtevi').add(postData);
-                return true;
-            } catch (error) {
-                console.error('Erro ao postar:', error);
-                alert('Erro ao postar. Tente novamente.');
-                return false;
-            }
-        }
-
-        // ============================================
-        // LIKE
-        // ============================================
-        async function likePost(postId) {
-            if (!currentUser || isBanned) {
-                if (isBanned) {
-                    alert('Sua conta está banida.');
-                } else {
-                    alert('Faça login para curtir!');
-                }
-                return;
-            }
-
-            const postRef = db.collection('Bemtevi').doc(postId);
-            const postDoc = await postRef.get();
-            const usuariosQueCurtiram = postDoc.data()?.usuariosQueCurtiram || [];
-
-            if (usuariosQueCurtiram.includes(currentUser.uid)) {
-                await postRef.update({
-                    likes: firebase.firestore.FieldValue.increment(-1),
-                    usuariosQueCurtiram: firebase.firestore.FieldValue.arrayRemove(currentUser.uid)
-                });
-            } else {
-                await postRef.update({
-                    likes: firebase.firestore.FieldValue.increment(1),
-                    usuariosQueCurtiram: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
-                });
-            }
-            refreshFeed();
-        }
-
-        // ============================================
-        // COMENTÁRIOS
-        // ============================================
-        async function openComments(postId, postUserId, postUserNome) {
-            if (isBanned) {
-                alert('Sua conta está banida.');
-                return;
-            }
-            currentViewingPost = { id: postId, userId: postUserId, userNome: postUserNome };
-            
-            const modal = document.getElementById('comments-modal');
-            const container = document.getElementById('comments-container');
-            container.innerHTML = '<div class="loading">Carregando comentários...</div>';
-            modal.style.display = 'flex';
-
-            try {
-                const snapshot = await db.collection('Bemtevi').doc(postId)
-                    .collection('comentarios')
-                    .orderBy('createdAt', 'desc')
-                    .get();
-
-                if (snapshot.empty) {
-                    container.innerHTML = '<div class="loading">Nenhum comentário ainda. Seja o primeiro!</div>';
-                } else {
-                    container.innerHTML = '';
-                    snapshot.forEach(doc => {
-                        const comment = doc.data();
-                        const commentDate = comment.createdAt?.toDate() || new Date();
-                        container.innerHTML += `
-                            <div class="comment-item">
-                                <div class="comment-avatar">${comment.userNome?.charAt(0).toUpperCase() || '?'}</div>
-                                <div class="comment-content">
-                                    <div class="comment-name">${escapeHtml(comment.userNome)}</div>
-                                    <div class="comment-text">${escapeHtml(comment.conteudo)}</div>
-                                    <div class="comment-time">${getTimeAgo(commentDate)}</div>
-                                </div>
-                            </div>
-                        `;
-                    });
-                }
-            } catch (error) {
-                console.error('Erro:', error);
-                container.innerHTML = '<div class="loading">Erro ao carregar comentários</div>';
-            }
-        }
-
-        async function sendComment() {
-            if (isBanned) {
-                alert('Sua conta está banida. Não é possível comentar.');
-                return;
-            }
-            const commentText = document.getElementById('comment-input').value.trim();
-            if (!commentText) {
-                alert('Digite um comentário!');
-                return;
-            }
-
-            if (commentText.length > 280) {
-                alert('Comentário muito longo! Máximo 280 caracteres.');
-                return;
-            }
-
-            try {
-                await db.collection('Bemtevi').doc(currentViewingPost.id).collection('comentarios').add({
-                    userId: currentUser.uid,
-                    userNome: currentUser.displayName || currentUser.email.split('@')[0],
-                    conteudo: commentText,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                await db.collection('Bemtevi').doc(currentViewingPost.id).update({
-                    comentarios: firebase.firestore.FieldValue.increment(1)
-                });
-
-                document.getElementById('comment-input').value = '';
-                await openComments(currentViewingPost.id, currentViewingPost.userId, currentViewingPost.userNome);
-                refreshFeed();
-            } catch (error) {
-                console.error('Erro ao comentar:', error);
-                alert('Erro ao enviar comentário.');
-            }
-        }
-
-        // ============================================
-        // PERFIL E SEGUIR
-        // ============================================
-        async function openProfile(userId, userName) {
-            if (isBanned) {
-                alert('Sua conta está banida.');
-                return;
-            }
-            currentViewingProfile = userId;
-            
-            try {
-                const userDoc = await db.collection('usuarios').doc(userId).get();
-                const userData = userDoc.exists ? userDoc.data() : { nome: userName, seguidores: [], seguindo: [] };
-                
-                let isFollowing = false;
-                if (currentUser && userId !== currentUser.uid && !isBanned) {
-                    const followDoc = await db.collection('usuarios').doc(currentUser.uid)
-                        .collection('seguindo').doc(userId).get();
-                    isFollowing = followDoc.exists;
-                }
-
-                const postsSnapshot = await db.collection('Bemtevi')
-                    .where('userId', '==', userId)
-                    .orderBy('createdAt', 'desc')
-                    .limit(10)
-                    .get();
-
-                let postsHtml = '';
-                postsSnapshot.forEach(doc => {
-                    const post = doc.data();
-                    postsHtml += `
-                        <div class="post-card" style="padding:15px;">
-                            <div class="post-content" style="padding-left:0">
-                                ${escapeHtml(post.conteudo)}
-                                ${post.link ? `<a href="${post.link}" target="_blank" class="post-link" style="margin-top:8px;">🔗 ${post.link.substring(0, 40)}</a>` : ''}
-                            </div>
-                            <div class="post-stats" style="padding-left:0">
-                                <span>❤️ ${post.likes || 0}</span>
-                                <span>💬 ${post.comentarios || 0}</span>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                const modal = document.getElementById('profile-modal');
-                document.getElementById('profile-content').innerHTML = `
-                    <div class="profile-header">
-                        <div class="profile-avatar">${(userData.nome || userName)?.charAt(0).toUpperCase() || '?'}</div>
-                        <h3>${escapeHtml(userData.nome || userName)}</h3>
-                        <div style="opacity:0.8;">@${userId.substring(0, 8)}</div>
-                        ${currentUser && userId !== currentUser.uid && !isBanned ? `
-                            <button class="follow-btn ${isFollowing ? 'following' : ''}" onclick="toggleFollow('${userId}')">
-                                ${isFollowing ? '✓ Seguindo' : '+ Seguir'}
-                            </button>
-                        ` : ''}
-                        <div class="profile-stats">
-                            <div><div class="stat-number">${userData.seguidores?.length || 0}</div><div>Seguidores</div></div>
-                            <div><div class="stat-number">${userData.seguindo?.length || 0}</div><div>Seguindo</div></div>
-                            <div><div class="stat-number">${postsSnapshot.size}</div><div>Posts</div></div>
-                        </div>
-                    </div>
-                    <h4 style="margin: 20px 0 10px; color:#ffffff;">📝 Últimas postagens</h4>
-                    <div id="profile-posts">${postsHtml || '<div class="loading">Nenhuma postagem ainda.</div>'}</div>
-                `;
-                modal.style.display = 'flex';
-            } catch (error) {
-                console.error('Erro ao abrir perfil:', error);
-                alert('Erro ao carregar perfil');
-            }
-        }
-
-        async function toggleFollow(userIdToFollow) {
-            if (!currentUser || userIdToFollow === currentUser.uid || isBanned) {
-                if (isBanned) {
-                    alert('Sua conta está banida.');
-                }
-                return;
-            }
-
-            try {
-                const followingRef = db.collection('usuarios').doc(currentUser.uid).collection('seguindo').doc(userIdToFollow);
-                const followersRef = db.collection('usuarios').doc(userIdToFollow).collection('seguidores').doc(currentUser.uid);
-                
-                const followingDoc = await followingRef.get();
-
-                if (followingDoc.exists) {
-                    await followingRef.delete();
-                    await followersRef.delete();
-                    console.log('Deixou de seguir com sucesso');
-                } else {
-                    await followingRef.set({
-                        userId: userIdToFollow,
-                        seguidoDesde: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    await followersRef.set({
-                        seguidorId: currentUser.uid,
-                        seguidoDesde: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    console.log('Seguiu com sucesso');
-                }
-
-                if (currentViewingProfile === userIdToFollow) {
-                    await openProfile(userIdToFollow, '');
-                }
-                await loadSuggestions();
-                await refreshFeed();
-                
-            } catch (error) {
-                console.error('Erro detalhado ao seguir:', error);
-                if (error.code === 'permission-denied') {
-                    alert('Erro de permissão. Por favor, recarregue a página e tente novamente.');
-                } else {
-                    alert('Erro ao seguir usuário: ' + error.message);
-                }
-            }
-        }
-
-        // ============================================
-        // SUGESTÕES
-        // ============================================
-        async function loadSuggestions() {
-            if (!currentUser || isBanned) return;
-
-            const container = document.getElementById('suggestions-container');
-            if (!container) return;
-
-            try {
-                const followingSnapshot = await db.collection('usuarios').doc(currentUser.uid).collection('seguindo').get();
-                const followingIds = followingSnapshot.docs.map(doc => doc.id);
-                followingIds.push(currentUser.uid);
-
-                const usersSnapshot = await db.collection('usuarios').limit(10).get();
-                const suggestions = usersSnapshot.docs.filter(doc => !followingIds.includes(doc.id)).slice(0, 5);
-
-                if (suggestions.length === 0) {
-                    container.innerHTML = '<div style="text-align:center; color:#888888;">Nenhuma sugestão no momento</div>';
-                    return;
-                }
-
-                container.innerHTML = suggestions.map(doc => {
-                    const userData = doc.data();
-                    return `
-                        <div class="suggestion-user">
-                            <div class="suggestion-info" onclick="openProfile('${doc.id}', '${userData.nome}')">
-                                <div class="suggestion-avatar">${userData.nome?.charAt(0).toUpperCase() || '?'}</div>
-                                <div>
-                                    <div style="font-weight:600; font-size:14px; color:#ffffff;">${escapeHtml(userData.nome || 'Usuário')}</div>
-                                    <div style="font-size:11px; color:#888888;">@${doc.id.substring(0, 8)}</div>
-                                </div>
-                            </div>
-                            <button class="follow-small-btn" onclick="toggleFollow('${doc.id}')">Seguir</button>
-                        </div>
-                    `;
-                }).join('');
-            } catch (error) {
-                console.error('Erro ao carregar sugestões:', error);
-                container.innerHTML = '<div style="text-align:center; color:#888888;">Erro ao carregar sugestões</div>';
-            }
-        }
-
-        // ============================================
-        // CARREGAR POSTS
-        // ============================================
-        async function loadPosts(reset = false) {
-            if (loading || isBanned) return;
-            if (reset) {
-                lastDoc = null;
-                hasMore = true;
-                document.getElementById('posts-container').innerHTML = '';
-            }
-            if (!hasMore) return;
-
-            loading = true;
-            document.getElementById('loading-indicator').style.display = 'block';
-
-            try {
-                let query = db.collection('Bemtevi').orderBy('createdAt', 'desc');
-
-                if (currentFeed === 'my-posts' && currentUser) {
-                    query = db.collection('Bemtevi').where('userId', '==', currentUser.uid).orderBy('createdAt', 'desc');
-                } else if (currentCategoryFilter) {
-                    query = db.collection('Bemtevi').where('categoria', '==', currentCategoryFilter).orderBy('createdAt', 'desc');
-                }
-
-                if (lastDoc) query = query.startAfter(lastDoc);
-                const snapshot = await query.limit(20).get();
-
-                if (snapshot.empty) {
-                    hasMore = false;
-                    if (reset && document.getElementById('posts-container').children.length === 0) {
-                        document.getElementById('posts-container').innerHTML = '<div class="loading">Nenhuma postagem encontrada!</div>';
-                    }
-                    loading = false;
-                    document.getElementById('loading-indicator').style.display = 'none';
-                    return;
-                }
-
-                lastDoc = snapshot.docs[snapshot.docs.length - 1];
-                hasMore = snapshot.docs.length === 20;
-
-                snapshot.forEach(doc => {
-                    const post = { id: doc.id, ...doc.data() };
-                    const postDate = post.createdAt?.toDate() || new Date();
-                    const isLiked = currentUser && post.usuariosQueCurtiram?.includes(currentUser.uid) && !isBanned;
-                    
-                    const postHtml = `
-                        <div class="post-card">
-                            <div class="post-header" onclick="openProfile('${post.userId}', '${post.userNome}')">
-                                <div class="post-avatar-img">${post.userNome?.charAt(0).toUpperCase() || '?'}</div>
-                                <div>
-                                    <span class="post-user-name">${escapeHtml(post.userNome)}</span>
-                                    <span class="post-user-id">@${post.userId?.substring(0, 8)}</span>
-                                    <span class="post-time">• ${getTimeAgo(postDate)}</span>
-                                </div>
-                            </div>
-                            <div class="post-category" style="background:${categoryColors[post.categoria] || '#666'}20; color:${categoryColors[post.categoria] || '#666'}">
-                                ${post.categoria || 'Geral'}
-                            </div>
-                            <div class="post-content">
-                                ${escapeHtml(post.conteudo)}
-                                ${post.link ? `<a href="${post.link}" target="_blank" class="post-link" onclick="event.stopPropagation()">🔗 ${post.link.substring(0, 50)}${post.link.length > 50 ? '...' : ''}</a>` : ''}
-                            </div>
-                            <div class="post-stats">
-                                <span class="stat-action ${isLiked ? 'liked' : ''}" onclick="likePost('${post.id}')">
-                                    <span class="material-icons" style="font-size:18px;">${isLiked ? 'favorite' : 'favorite_border'}</span> ${post.likes || 0}
-                                </span>
-                                <span class="stat-action" onclick="openComments('${post.id}', '${post.userId}', '${post.userNome}')">
-                                    <span class="material-icons" style="font-size:18px;">chat_bubble_outline</span> ${post.comentarios || 0}
-                                </span>
-                                <span class="stat-action" onclick="sharePost('${post.id}')">
-                                    <span class="material-icons" style="font-size:18px;">share</span>
-                                </span>
-                            </div>
-                        </div>
-                    `;
-                    document.getElementById('posts-container').insertAdjacentHTML('beforeend', postHtml);
-                });
-            } catch (error) {
-                console.error('Erro ao carregar posts:', error);
-                document.getElementById('posts-container').innerHTML = '<div class="loading">Erro ao carregar posts. Recarregue a página.</div>';
-            } finally {
-                loading = false;
-                document.getElementById('loading-indicator').style.display = 'none';
-            }
-        }
-
-        async function sharePost(postId) {
-            await navigator.clipboard.writeText(`${window.location.origin}/post/${postId}`);
-            alert('Link copiado!');
-        }
-
-        function refreshFeed() {
-            lastDoc = null;
-            hasMore = true;
-            loadPosts(true);
-        }
-
-        // ============================================
-        // RENDERIZAÇÃO
-        // ============================================
-        function renderMainApp() {
-            document.getElementById('app').innerHTML = `
-                <div class="beta-badge">🚧 BETA</div>
-                <div class="app-container">
-                    <div class="sidebar-left">
-                        <div class="card">
-                            <div class="logo">
-                                <span class="logo-icon">🐦</span>
-                                <span class="logo-text">Bemtevi</span>
-                            </div>
-                            <ul class="nav-menu">
-                                <li class="nav-item ${currentFeed === 'for-you' ? 'active' : ''}" onclick="changeFeed('for-you')">
-                                    <span class="material-icons">home</span> Para Você
-                                </li>
-                                <li class="nav-item ${currentFeed === 'my-posts' ? 'active' : ''}" onclick="changeFeed('my-posts')">
-                                    <span class="material-icons">person</span> Minhas Postagens
-                                </li>
-                            </ul>
-                            <div style="margin-top:20px; padding-top:20px; border-top:1px solid #2a2a2a; cursor:pointer;" onclick="openProfile('${currentUser.uid}', '${currentUser.displayName || currentUser.email.split('@')[0]}')">
-                                <div style="display:flex; align-items:center; gap:12px;">
-                                    <div class="post-avatar" style="width:40px; height:40px;">${currentUser.displayName?.charAt(0).toUpperCase() || currentUser.email.charAt(0).toUpperCase()}</div>
-                                    <div>
-                                        <div style="font-weight:600; color:#ffffff;">${escapeHtml(currentUser.displayName || currentUser.email.split('@')[0])}</div>
-                                        <div style="font-size:12px; color:#888888;">@${currentUser.uid.substring(0, 8)}</div>
-                                    </div>
-                                </div>
-                                <button onclick="event.stopPropagation(); signOut()" style="margin-top:15px; width:100%; padding:10px; border:none; background:#2a2a2a; border-radius:12px; cursor:pointer; color:#ffffff;">Sair</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="feed-header"><div class="feed-title">📱 Feed</div></div>
-                        <div class="post-box">
-                            <div class="post-input-area">
-                                <div class="post-avatar">${currentUser.displayName?.charAt(0).toUpperCase() || currentUser.email.charAt(0).toUpperCase()}</div>
-                                <div class="post-input-container">
-                                    <textarea id="postText" class="post-input" rows="3" placeholder="O que está acontecendo? (Máx. 127 caracteres)" maxlength="127"></textarea>
-                                    <div id="charCounter" class="char-counter">0/127</div>
-                                    <div class="post-actions">
-                                        <select id="postCategory" class="btn-secondary">${categories.map(cat => `<option value="${cat}">📁 ${cat}</option>`).join('')}</select>
-                                        <input type="text" id="postLink" class="btn-secondary" placeholder="🔗 Link (opcional)" style="width:200px;">
-                                        <button class="btn-primary" onclick="submitPost()">Postar 🚀</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="posts-container" class="posts-container"></div>
-                        <div id="loading-indicator" class="loading" style="display:none;">Carregando mais posts...</div>
-                    </div>
-
-                    <div class="sidebar-right">
-                        <div class="card">
-                            <div class="box-title" style="font-weight:700; margin-bottom:15px;">📂 Categorias</div>
-                            ${categories.map(cat => `<span class="category-chip ${currentCategoryFilter === cat ? 'selected' : ''}" onclick="filterByCategory('${cat}')">${cat}</span>`).join('')}
-                            <span class="category-chip ${!currentCategoryFilter ? 'selected' : ''}" onclick="clearCategoryFilter()">Todos</span>
-                        </div>
-                        <div class="card">
-                            <div class="box-title" style="font-weight:700; margin-bottom:15px;">👥 Sugestões</div>
-                            <div id="suggestions-container"></div>
-                        </div>
-                    </div>
+function renderWelcomeScreen() {
+    const container = document.getElementById('app');
+    container.innerHTML = `
+        <div class="login-container">
+            <div class="login-box">
+                <div class="logo" style="justify-content:center; margin-bottom:30px;">
+                    <span class="logo-icon">🐦</span>
+                    <span class="logo-text">Bemtevi</span>
                 </div>
+                <h2 style="margin-bottom:20px;">Bem-vindo!</h2>
+                <p style="color:#aaaaaa; margin-bottom:30px;">Uma rede social livre e colaborativa</p>
+                <button id="google-login-welcome" class="btn-primary" style="width:100%;">🔑 Entrar com Google</button>
+                <div style="margin-top:20px; font-size:12px; color:#666666;">Postagens de até 127 caracteres • Comentários • Curtidas</div>
+            </div>
+        </div>
+    `;
+    document.getElementById('google-login-welcome')?.addEventListener('click', loginWithGoogle);
+}
 
-                <div id="comments-modal" class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header"><h3>💬 Comentários</h3><span class="close-modal" onclick="closeModal('comments-modal')">&times;</span></div>
-                        <div class="modal-body">
-                            <div id="comments-container"></div>
-                            <textarea id="comment-input" class="comment-input" rows="3" placeholder="Escreva um comentário... (máx. 280 caracteres)" maxlength="280"></textarea>
-                            <button class="btn-primary" onclick="sendComment()" style="margin-top:10px; width:100%;">Enviar Comentário</button>
-                        </div>
-                    </div>
-                </div>
+// ============================================
+// FUNÇÕES GLOBAIS
+// ============================================
+window.changeFeed = function(feed) {
+    if (isBanned) return;
+    currentFeed = feed;
+    currentCategoryFilter = null;
+    lastDoc = null;
+    hasMore = true;
+    renderMainApp();
+};
 
-                <div id="profile-modal" class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header"><h3>👤 Perfil</h3><span class="close-modal" onclick="closeModal('profile-modal')">&times;</span></div>
-                        <div class="modal-body" id="profile-content"></div>
-                    </div>
-                </div>
-            `;
+window.filterByCategory = function(category) {
+    if (isBanned) return;
+    currentCategoryFilter = category;
+    currentFeed = 'for-you';
+    lastDoc = null;
+    hasMore = true;
+    renderMainApp();
+};
 
-            document.getElementById('postText')?.addEventListener('input', function() {
-                const len = this.value.length;
-                document.getElementById('charCounter').innerHTML = `${len}/127`;
-                document.getElementById('charCounter').className = len > 110 ? 'char-counter warning' : len > 120 ? 'char-counter danger' : 'char-counter';
-            });
+window.clearCategoryFilter = function() {
+    if (isBanned) return;
+    currentCategoryFilter = null;
+    lastDoc = null;
+    hasMore = true;
+    renderMainApp();
+};
 
-            loadPosts(true);
-            loadSuggestions();
-            window.addEventListener('scroll', () => {
-                if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) loadPosts();
-            });
-        }
+window.submitPost = async function() {
+    if (isBanned) {
+        alert('Sua conta está banida. Não é possível postar.');
+        return;
+    }
+    const text = document.getElementById('postText')?.value;
+    const link = document.getElementById('postLink')?.value;
+    const category = document.getElementById('postCategory')?.value || 'Geral';
+    if (await createPost(text, link, category)) {
+        document.getElementById('postText').value = '';
+        document.getElementById('postLink').value = '';
+        refreshFeed();
+    }
+};
 
-        function renderWelcomeScreen() {
-            document.getElementById('app').innerHTML = `
-                <div class="beta-badge">🚧 BETA</div>
-                <div class="login-container">
-                    <div class="login-box">
-                        <div class="logo" style="justify-content:center; margin-bottom:30px;">
-                            <span class="logo-icon">🐦</span>
-                            <span class="logo-text">Bemtevi</span>
-                        </div>
-                        <h2 style="margin-bottom:20px;">Bem-vindo!</h2>
-                        <p style="color:#aaaaaa; margin-bottom:30px;">Uma rede social livre e colaborativa</p>
-                        <button id="google-login-btn" class="btn-primary" style="width:100%;">🔑 Entrar com Google</button>
-                        <div style="margin-top:20px; font-size:12px; color:#666666;">Postagens de até 127 caracteres • Comentários • Curtidas</div>
-                    </div>
-                </div>
-            `;
-            document.getElementById('google-login-btn')?.addEventListener('click', signIn);
-        }
+window.closeModal = function(id) {
+    document.getElementById(id).style.display = 'none';
+};
 
-        // ============================================
-        // FUNÇÕES GLOBAIS
-        // ============================================
-        window.changeFeed = function(feed) {
-            if (isBanned) return;
-            currentFeed = feed;
-            currentCategoryFilter = null;
-            lastDoc = null;
-            hasMore = true;
-            renderMainApp();
-        };
+window.closeModal = function(id) {
+    const modal = document.getElementById(id);
+    if (modal) modal.style.display = 'none';
+};
 
-        window.filterByCategory = function(category) {
-            if (isBanned) return;
-            currentCategoryFilter = category;
-            currentFeed = 'for-you';
-            lastDoc = null;
-            hasMore = true;
-            renderMainApp();
-        };
+// Expor funções
+window.likePost = likePost;
+window.openComments = openComments;
+window.sendComment = sendComment;
+window.openProfile = openProfile;
+window.toggleFollow = toggleFollow;
+window.sharePost = sharePost;
+window.logoutBanned = logoutBanned;
+window.logout = logout;
+window.loginWithGoogle = loginWithGoogle;
+window.showLoginModal = showLoginModal;
+window.toggleNotifications = toggleNotifications;
+window.markAllAsRead = markAllAsRead;
 
-        window.clearCategoryFilter = function() {
-            if (isBanned) return;
-            currentCategoryFilter = null;
-            lastDoc = null;
-            hasMore = true;
-            renderMainApp();
-        };
+// ============================================
+// INICIALIZAÇÃO
+// ============================================
+document.getElementById('google-login-btn')?.addEventListener('click', loginWithGoogle);
 
-        window.submitPost = async function() {
-            if (isBanned) {
-                alert('Sua conta está banida. Não é possível postar.');
-                return;
-            }
-            const text = document.getElementById('postText')?.value;
-            const link = document.getElementById('postLink')?.value;
-            const category = document.getElementById('postCategory')?.value || 'Geral';
-            if (await createPost(text, link, category)) {
-                document.getElementById('postText').value = '';
-                document.getElementById('postLink').value = '';
-                refreshFeed();
-            }
-        };
+auth.onAuthStateChanged(async (user) => {
+    if (user) {
+        currentUser = user;
+        await registerUser(user);
+        isBanned = await checkIfUserIsBanned(user);
+        if (isBanned) { showBannedScreen('Sua conta foi banida.'); await auth.signOut(); updateUI(); return; }
+        updateUI();
+        await loadNotifications();
+        listenNotifications();
+        renderMainApp();
+    } else {
+        currentUser = null;
+        isBanned = false;
+        updateUI();
+        if (notificationListener) { notificationListener(); notificationListener = null; }
+        notifications = [];
+        unreadCount = 0;
+        updateNotificationBadge();
+        document.getElementById('bannedOverlay').classList.remove('show');
+        document.querySelector('.app-container').style.opacity = '1';
+        document.querySelector('.app-container').style.pointerEvents = 'auto';
+        document.querySelector('.header').style.opacity = '1';
+        document.querySelector('.header').style.pointerEvents = 'auto';
+        document.querySelector('.site-footer').style.opacity = '1';
+        document.querySelector('.site-footer').style.pointerEvents = 'auto';
+        renderWelcomeScreen();
+    }
+});
 
-        window.closeModal = function(id) {
-            document.getElementById(id).style.display = 'none';
-        };
+console.log('🐦 Bemtevi - Rede Social Beta inicializada com sucesso!');
+console.log('🔔 Notificações integradas via coleção "notifications"');
+</script>
 
-        window.signIn = async function() {
-            try {
-                const provider = new firebase.auth.GoogleAuthProvider();
-                provider.setCustomParameters({ prompt: 'select_account' });
-                const result = await auth.signInWithPopup(provider);
-                
-                // Registra o usuário no Firestore
-                await registerUser(result.user);
-                
-                const userRef = db.collection('usuarios').doc(result.user.uid);
-                const userDoc = await userRef.get();
-                if (!userDoc.exists) {
-                    await userRef.set({
-                        nome: result.user.displayName || result.user.email.split('@')[0],
-                        email: result.user.email,
-                        avatar: result.user.photoURL || null,
-                        dataCriacao: firebase.firestore.FieldValue.serverTimestamp(),
-                        seguidores: [],
-                        seguindo: []
-                    });
-                }
-                currentUser = result.user;
-                
-                // Verifica banimento após login
-                isBanned = await checkIfUserIsBanned(result.user);
-                if (isBanned) {
-                    showBannedScreen('Sua conta foi banida por violação das políticas de uso.');
-                    return;
-                }
-                
-                renderMainApp();
-            } catch (error) {
-                console.error('Erro:', error);
-                alert('Erro no login: ' + error.message);
-            }
-        };
-
-        window.signOut = function() {
-            auth.signOut().then(() => {
-                currentUser = null;
-                isBanned = false;
-                document.getElementById('bannedOverlay').classList.remove('show');
-                document.getElementById('app').style.opacity = '1';
-                document.getElementById('app').style.pointerEvents = 'auto';
-                document.querySelector('.site-footer').style.opacity = '1';
-                document.querySelector('.site-footer').style.pointerEvents = 'auto';
-                renderWelcomeScreen();
-            });
-        };
-
-        // Expor funções
-        window.likePost = likePost;
-        window.openComments = openComments;
-        window.sendComment = sendComment;
-        window.openProfile = openProfile;
-        window.toggleFollow = toggleFollow;
-        window.sharePost = sharePost;
-        window.logoutBanned = logoutBanned;
-
-        // ============================================
-        // INICIALIZAÇÃO
-        // ============================================
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                currentUser = user;
-                
-                // Registra o usuário no Firestore
-                await registerUser(user);
-                
-                // VERIFICA BANIMENTO PRIMEIRO
-                isBanned = await checkIfUserIsBanned(user);
-                
-                if (isBanned) {
-                    // Usuário banido - mostra tela de bloqueio
-                    showBannedScreen('Sua conta foi banida por violação das políticas de uso.');
-                    // Não carrega o conteúdo
-                    document.getElementById('app').innerHTML = '';
-                    return;
-                }
-                
-                const userDoc = await db.collection('usuarios').doc(user.uid).get();
-                if (!userDoc.exists) {
-                    await db.collection('usuarios').doc(user.uid).set({
-                        nome: user.displayName || user.email.split('@')[0],
-                        email: user.email,
-                        avatar: user.photoURL || null,
-                        dataCriacao: firebase.firestore.FieldValue.serverTimestamp(),
-                        seguidores: [],
-                        seguindo: []
-                    });
-                }
-                renderMainApp();
-            } else {
-                currentUser = null;
-                isBanned = false;
-                // Remove overlay de banido
-                document.getElementById('bannedOverlay').classList.remove('show');
-                document.getElementById('app').style.opacity = '1';
-                document.getElementById('app').style.pointerEvents = 'auto';
-                document.querySelector('.site-footer').style.opacity = '1';
-                document.querySelector('.site-footer').style.pointerEvents = 'auto';
-                renderWelcomeScreen();
-            }
-        });
-    </script>
-
-    <script src="https://gspotfverwazzimagiygg.wazzimagiygg.com/D6FefD0De/EfdFeF1ExcE0C/De0Var6H6f/QXdv0/dddcefb.js"></script>
+<script src="https://gspotfverwazzimagiygg.wazzimagiygg.com/D6FefD0De/EfdFeF1ExcE0C/De0Var6H6f/QXdv0/dddcefb.js"></script>
 </body>
 </html>
