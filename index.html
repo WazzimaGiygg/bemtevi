@@ -1086,11 +1086,13 @@ async function loadNotifications() {
 
 function updateNotificationBadge() {
     const badge = document.getElementById('notifBadge');
-    if (unreadCount > 0) {
-        badge.style.display = 'flex';
-        badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
-    } else {
-        badge.style.display = 'none';
+    if (badge) {
+        if (unreadCount > 0) {
+            badge.style.display = 'flex';
+            badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+        } else {
+            badge.style.display = 'none';
+        }
     }
 }
 
@@ -1217,21 +1219,77 @@ async function checkIfUserIsBanned(user) {
     return false;
 }
 
+// ============================================
+// FUNÇÃO PARA USUÁRIO BANIDO - CORRIGIDA
+// ============================================
 function showBannedScreen(reason = 'Violação das políticas de uso') {
     const overlay = document.getElementById('bannedOverlay');
+    if (!overlay) return;
+    
     const details = document.getElementById('banDetails');
-    details.textContent = `Motivo: ${reason}`;
+    if (details) {
+        details.textContent = `Motivo: ${reason}`;
+    }
     overlay.classList.add('show');
-    document.querySelector('.app-container').style.opacity = '0.3';
-    document.querySelector('.app-container').style.pointerEvents = 'none';
-    document.querySelector('.header').style.opacity = '0.3';
-    document.querySelector('.header').style.pointerEvents = 'none';
-    document.querySelector('.site-footer').style.opacity = '0.3';
-    document.querySelector('.site-footer').style.pointerEvents = 'none';
+    
+    // Verifica se os elementos existem antes de tentar acessá-los
+    const appContainer = document.querySelector('.app-container');
+    if (appContainer) {
+        appContainer.style.opacity = '0.3';
+        appContainer.style.pointerEvents = 'none';
+    }
+    
+    const header = document.querySelector('.header');
+    if (header) {
+        header.style.opacity = '0.3';
+        header.style.pointerEvents = 'none';
+    }
+    
+    const footer = document.querySelector('.site-footer');
+    if (footer) {
+        footer.style.opacity = '0.3';
+        footer.style.pointerEvents = 'none';
+    }
 }
 
+// ============================================
+// REMOVER OVERLAY DE BANIDO - CORRIGIDA
+// ============================================
+function removeBannedOverlay() {
+    const overlay = document.getElementById('bannedOverlay');
+    if (overlay) {
+        overlay.classList.remove('show');
+    }
+    
+    const appContainer = document.querySelector('.app-container');
+    if (appContainer) {
+        appContainer.style.opacity = '1';
+        appContainer.style.pointerEvents = 'auto';
+    }
+    
+    const header = document.querySelector('.header');
+    if (header) {
+        header.style.opacity = '1';
+        header.style.pointerEvents = 'auto';
+    }
+    
+    const footer = document.querySelector('.site-footer');
+    if (footer) {
+        footer.style.opacity = '1';
+        footer.style.pointerEvents = 'auto';
+    }
+}
+
+// ============================================
+// FUNÇÃO LOGOUT BANNED CORRIGIDA
+// ============================================
 async function logoutBanned() {
-    try { await auth.signOut(); location.reload(); } catch (e) { location.reload(); }
+    try { 
+        await auth.signOut(); 
+        location.reload(); 
+    } catch (e) { 
+        location.reload(); 
+    }
 }
 
 // ============================================
@@ -1247,30 +1305,41 @@ function updateUI() {
     
     if (currentUser && !isBanned) {
         let displayName = currentUser.displayName || (currentUser.email ? currentUser.email.split('@')[0] : 'Usuário');
-        if (currentUser.photoURL) {
-            avatar.innerHTML = `<img src="${currentUser.photoURL}" alt="Avatar">`;
-        } else {
-            avatar.textContent = getInitials(displayName);
+        if (avatar) {
+            if (currentUser.photoURL) {
+                avatar.innerHTML = `<img src="${currentUser.photoURL}" alt="Avatar">`;
+            } else {
+                avatar.textContent = getInitials(displayName);
+            }
         }
-        name.textContent = displayName.length > 20 ? displayName.substring(0,17)+'...' : displayName;
-        email.textContent = currentUser.email || '';
-        let badges = '';
-        if (isBanned) badges += '<span class="badge-banned">🚫 Banido</span> ';
-        badge.innerHTML = badges;
-        btnLogin.style.display = 'none';
-        btnLogout.style.display = 'inline-block';
+        if (name) name.textContent = displayName.length > 20 ? displayName.substring(0,17)+'...' : displayName;
+        if (email) email.textContent = currentUser.email || '';
+        if (badge) {
+            let badges = '';
+            if (isBanned) badges += '<span class="badge-banned">🚫 Banido</span> ';
+            badge.innerHTML = badges;
+        }
+        if (btnLogin) btnLogin.style.display = 'none';
+        if (btnLogout) btnLogout.style.display = 'inline-block';
     } else {
-        avatar.innerHTML = '👤';
-        name.textContent = 'Visitante';
-        email.textContent = '';
-        badge.innerHTML = '';
-        btnLogin.style.display = 'inline-block';
-        btnLogout.style.display = 'none';
+        if (avatar) avatar.innerHTML = '👤';
+        if (name) name.textContent = 'Visitante';
+        if (email) email.textContent = '';
+        if (badge) badge.innerHTML = '';
+        if (btnLogin) btnLogin.style.display = 'inline-block';
+        if (btnLogout) btnLogout.style.display = 'none';
     }
 }
 
-function showLoginModal() { document.getElementById('login-modal').classList.add('show'); }
-function closeLoginModal() { document.getElementById('login-modal').classList.remove('show'); }
+function showLoginModal() { 
+    const modal = document.getElementById('login-modal');
+    if (modal) modal.classList.add('show');
+}
+
+function closeLoginModal() { 
+    const modal = document.getElementById('login-modal');
+    if (modal) modal.classList.remove('show');
+}
 
 async function loginWithGoogle() {
     try {
@@ -1279,7 +1348,12 @@ async function loginWithGoogle() {
         currentUser = result.user;
         await registerUser(currentUser);
         isBanned = await checkIfUserIsBanned(currentUser);
-        if (isBanned) { showBannedScreen('Sua conta foi banida.'); await auth.signOut(); updateUI(); return; }
+        if (isBanned) { 
+            showBannedScreen('Sua conta foi banida.'); 
+            await auth.signOut(); 
+            updateUI(); 
+            return; 
+        }
         updateUI();
         closeLoginModal();
         await loadNotifications();
@@ -1401,6 +1475,8 @@ async function openComments(postId, postUserId, postUserNome) {
     
     const modal = document.getElementById('comments-modal');
     const container = document.getElementById('comments-container');
+    if (!modal || !container) return;
+    
     container.innerHTML = '<div class="loading">Carregando comentários...</div>';
     modal.style.display = 'flex';
 
@@ -1440,7 +1516,10 @@ async function sendComment() {
         alert('Sua conta está banida. Não é possível comentar.');
         return;
     }
-    const commentText = document.getElementById('comment-input').value.trim();
+    const commentInput = document.getElementById('comment-input');
+    if (!commentInput) return;
+    
+    const commentText = commentInput.value.trim();
     if (!commentText) {
         alert('Digite um comentário!');
         return;
@@ -1463,7 +1542,7 @@ async function sendComment() {
             comentarios: firebase.firestore.FieldValue.increment(1)
         });
 
-        document.getElementById('comment-input').value = '';
+        commentInput.value = '';
         await openComments(currentViewingPost.id, currentViewingPost.userId, currentViewingPost.userNome);
         refreshFeed();
     } catch (error) {
@@ -1517,7 +1596,10 @@ async function openProfile(userId, userName) {
         });
 
         const modal = document.getElementById('profile-modal');
-        document.getElementById('profile-content').innerHTML = `
+        const content = document.getElementById('profile-content');
+        if (!modal || !content) return;
+        
+        content.innerHTML = `
             <div class="profile-header">
                 <div class="profile-avatar">${(userData.nome || userName)?.charAt(0).toUpperCase() || '?'}</div>
                 <h3>${escapeHtml(userData.nome || userName)}</h3>
@@ -1640,12 +1722,14 @@ async function loadPosts(reset = false) {
     if (reset) {
         lastDoc = null;
         hasMore = true;
-        document.getElementById('posts-container').innerHTML = '';
+        const postsContainer = document.getElementById('posts-container');
+        if (postsContainer) postsContainer.innerHTML = '';
     }
     if (!hasMore) return;
 
     loading = true;
-    document.getElementById('loading-indicator').style.display = 'block';
+    const loadingIndicator = document.getElementById('loading-indicator');
+    if (loadingIndicator) loadingIndicator.style.display = 'block';
 
     try {
         let query = db.collection('Bemtevi').orderBy('createdAt', 'desc');
@@ -1659,13 +1743,19 @@ async function loadPosts(reset = false) {
         if (lastDoc) query = query.startAfter(lastDoc);
         const snapshot = await query.limit(20).get();
 
+        const postsContainer = document.getElementById('posts-container');
+        if (!postsContainer) {
+            loading = false;
+            return;
+        }
+
         if (snapshot.empty) {
             hasMore = false;
-            if (reset && document.getElementById('posts-container').children.length === 0) {
-                document.getElementById('posts-container').innerHTML = '<div class="loading">Nenhuma postagem encontrada!</div>';
+            if (reset && postsContainer.children.length === 0) {
+                postsContainer.innerHTML = '<div class="loading">Nenhuma postagem encontrada!</div>';
             }
             loading = false;
-            document.getElementById('loading-indicator').style.display = 'none';
+            if (loadingIndicator) loadingIndicator.style.display = 'none';
             return;
         }
 
@@ -1707,20 +1797,28 @@ async function loadPosts(reset = false) {
                     </div>
                 </div>
             `;
-            document.getElementById('posts-container').insertAdjacentHTML('beforeend', postHtml);
+            postsContainer.insertAdjacentHTML('beforeend', postHtml);
         });
     } catch (error) {
         console.error('Erro ao carregar posts:', error);
-        document.getElementById('posts-container').innerHTML = '<div class="loading">Erro ao carregar posts. Recarregue a página.</div>';
+        const postsContainer = document.getElementById('posts-container');
+        if (postsContainer) {
+            postsContainer.innerHTML = '<div class="loading">Erro ao carregar posts. Recarregue a página.</div>';
+        }
     } finally {
         loading = false;
-        document.getElementById('loading-indicator').style.display = 'none';
+        const loadingIndicator = document.getElementById('loading-indicator');
+        if (loadingIndicator) loadingIndicator.style.display = 'none';
     }
 }
 
 async function sharePost(postId) {
-    await navigator.clipboard.writeText(`${window.location.origin}/post/${postId}`);
-    alert('Link copiado!');
+    try {
+        await navigator.clipboard.writeText(`${window.location.origin}/post/${postId}`);
+        alert('Link copiado!');
+    } catch (error) {
+        alert('Erro ao copiar link.');
+    }
 }
 
 function refreshFeed() {
@@ -1734,6 +1832,8 @@ function refreshFeed() {
 // ============================================
 function renderMainApp() {
     const container = document.getElementById('app');
+    if (!container) return;
+    
     container.innerHTML = `
         <div class="app-container">
             <div class="sidebar-left">
@@ -1796,21 +1896,36 @@ function renderMainApp() {
         </div>
     `;
 
-    document.getElementById('postText')?.addEventListener('input', function() {
-        const len = this.value.length;
-        document.getElementById('charCounter').innerHTML = `${len}/127`;
-        document.getElementById('charCounter').className = len > 110 ? 'char-counter warning' : len > 120 ? 'char-counter danger' : 'char-counter';
-    });
+    const postText = document.getElementById('postText');
+    if (postText) {
+        postText.addEventListener('input', function() {
+            const len = this.value.length;
+            const counter = document.getElementById('charCounter');
+            if (counter) {
+                counter.innerHTML = `${len}/127`;
+                counter.className = len > 110 ? 'char-counter warning' : len > 120 ? 'char-counter danger' : 'char-counter';
+            }
+        });
+    }
 
     loadPosts(true);
     loadSuggestions();
-    window.addEventListener('scroll', () => {
-        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) loadPosts();
-    });
+    
+    // Remove event listener antigo para evitar duplicação
+    window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll);
+}
+
+function handleScroll() {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+        loadPosts();
+    }
 }
 
 function renderWelcomeScreen() {
     const container = document.getElementById('app');
+    if (!container) return;
+    
     container.innerHTML = `
         <div class="login-container">
             <div class="login-box">
@@ -1825,7 +1940,9 @@ function renderWelcomeScreen() {
             </div>
         </div>
     `;
-    document.getElementById('google-login-welcome')?.addEventListener('click', loginWithGoogle);
+    
+    const loginBtn = document.getElementById('google-login-welcome');
+    if (loginBtn) loginBtn.addEventListener('click', loginWithGoogle);
 }
 
 // ============================================
@@ -1866,14 +1983,12 @@ window.submitPost = async function() {
     const link = document.getElementById('postLink')?.value;
     const category = document.getElementById('postCategory')?.value || 'Geral';
     if (await createPost(text, link, category)) {
-        document.getElementById('postText').value = '';
-        document.getElementById('postLink').value = '';
+        const postText = document.getElementById('postText');
+        const postLink = document.getElementById('postLink');
+        if (postText) postText.value = '';
+        if (postLink) postLink.value = '';
         refreshFeed();
     }
-};
-
-window.closeModal = function(id) {
-    document.getElementById(id).style.display = 'none';
 };
 
 window.closeModal = function(id) {
@@ -1898,14 +2013,22 @@ window.markAllAsRead = markAllAsRead;
 // ============================================
 // INICIALIZAÇÃO
 // ============================================
-document.getElementById('google-login-btn')?.addEventListener('click', loginWithGoogle);
+document.addEventListener('DOMContentLoaded', function() {
+    const googleBtn = document.getElementById('google-login-btn');
+    if (googleBtn) googleBtn.addEventListener('click', loginWithGoogle);
+});
 
 auth.onAuthStateChanged(async (user) => {
     if (user) {
         currentUser = user;
         await registerUser(user);
         isBanned = await checkIfUserIsBanned(user);
-        if (isBanned) { showBannedScreen('Sua conta foi banida.'); await auth.signOut(); updateUI(); return; }
+        if (isBanned) { 
+            showBannedScreen('Sua conta foi banida.'); 
+            await auth.signOut(); 
+            updateUI(); 
+            return; 
+        }
         updateUI();
         await loadNotifications();
         listenNotifications();
@@ -1918,13 +2041,7 @@ auth.onAuthStateChanged(async (user) => {
         notifications = [];
         unreadCount = 0;
         updateNotificationBadge();
-        document.getElementById('bannedOverlay').classList.remove('show');
-        document.querySelector('.app-container').style.opacity = '1';
-        document.querySelector('.app-container').style.pointerEvents = 'auto';
-        document.querySelector('.header').style.opacity = '1';
-        document.querySelector('.header').style.pointerEvents = 'auto';
-        document.querySelector('.site-footer').style.opacity = '1';
-        document.querySelector('.site-footer').style.pointerEvents = 'auto';
+        removeBannedOverlay();
         renderWelcomeScreen();
     }
 });
