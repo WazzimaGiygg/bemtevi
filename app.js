@@ -1138,3 +1138,4 @@ auth.onAuthStateChanged(async (user) => {
 
 console.log('🐦 Bemtevi - Rede Social Beta inicializada com sucesso!');
 console.log('🔔 Notificações integradas via coleção "notifications"');
+//saida
