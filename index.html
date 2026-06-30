@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bemtevi - Rede Social Beta</title>
+    <title>Bemtevi - Rede Social</title>
     
     <!-- Fonts e Icones -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Lato:wght@300;400;700;900&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
     
     <!-- Favicon -->
-    <link rel="icon" href="https://gspotfverwazzimagiygg.wazzimagiygg.com/bemtevi/Favicom.png" type="image/x-icon">
+    <link rel="icon" href="https://wazzimagiygg.com/favicom.png" type="image/x-icon">
     <link rel="stylesheet" href="https://gspotfverwazzimagiygg.wazzimagiygg.com/bemtevi/style.css">
 </head>
 <body>
@@ -53,18 +53,16 @@
         <div class="icon">🚫</div>
         <h2>⚠️ Conta Banida</h2>
         <p>Sua conta foi banida permanentemente do Bemtevi.</p>
-        <div id="banDetails" class="ban-details">
-            Motivo: Violação das políticas de uso
-        </div>
+        <div id="banDetails" class="ban-details">Motivo: Violação das políticas de uso</div>
         <p style="font-size: 14px; color: #666;">Se você acredita que isso é um erro, entre em contato com o suporte.</p>
         <button class="btn-logout-banned" onclick="logoutBanned()">🚪 Sair da conta</button>
     </div>
 </div>
 
-<!-- ===== HEADER PADRONIZADO WAZZIMAGIYGG ===== -->
+<!-- ===== HEADER ===== -->
 <header class="header">
     <div class="header-content">
-        <div class="logo-area-header" onclick="location.reload()">
+        <div class="logo-area-header" onclick="location.href='index.html'">
             <img src="https://wazzimagiygg.com/favicom.png" alt="Logo">
             <div>
                 <h1>WazzimaGiygg</h1>
@@ -111,7 +109,10 @@
 <!-- ===== APP CONTAINER ===== -->
 <div id="app"></div>
 
-<!-- ===== FOOTER PADRONIZADO ===== -->
+<!-- ===== TOAST ===== -->
+<div id="toast"></div>
+
+<!-- ===== FOOTER ===== -->
 <footer class="site-footer">
     <div class="footer-content">
         <div class="footer-links">
@@ -129,9 +130,7 @@
             <span class="footer-divider">|</span>
             <a href="https://painel.wazzimagiygg.com/" class="footer-link highlight" target="_blank">👤 Sua conta</a>
         </div>
-        <div class="footer-copyright">
-            © 2026 Bemtevi - Uma rede social livre e colaborativa
-        </div>
+        <div class="footer-copyright">© 2026 Bemtevi - Uma rede social livre e colaborativa</div>
     </div>
 </footer>
 
@@ -168,28 +167,50 @@
     </div>
 </div>
 
-<!-- ===== MODAL PERFIL (EMBED) ===== -->
-<div id="profile-modal" class="modal">
-    <div class="modal-content">
+<!-- ===== MODAL CRIAR COMUNIDADE ===== -->
+<div id="createCommunityModal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
         <div class="modal-header">
-            <h3>👤 Perfil</h3>
-            <button class="close-modal" onclick="closeModal('profile-modal')">&times;</button>
+            <h3>🏛️ Criar Nova Comunidade</h3>
+            <button class="close-modal" onclick="closeModal('createCommunityModal')">&times;</button>
         </div>
-        <div class="modal-body" id="profile-content"></div>
+        <div class="modal-body">
+            <div style="margin-bottom:15px;">
+                <label style="display:block; margin-bottom:5px; color:#aaa; font-size:13px;">Nome da Comunidade *</label>
+                <input type="text" id="communityName" class="modal-input" placeholder="Ex: Tecnologia, Música, Games..." maxlength="50">
+                <div style="font-size:11px; color:#666; margin-top:4px;">Mínimo 3 caracteres, máximo 50</div>
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="display:block; margin-bottom:5px; color:#aaa; font-size:13px;">Descrição</label>
+                <textarea id="communityDescription" class="modal-textarea" placeholder="Descreva o propósito da comunidade..." maxlength="300"></textarea>
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="display:block; margin-bottom:5px; color:#aaa; font-size:13px;">Categoria</label>
+                <select id="communityCategory" class="modal-input">
+                    <option value="Geral">Geral</option>
+                    <option value="Tecnologia">Tecnologia</option>
+                    <option value="Ciência">Ciência</option>
+                    <option value="Arte">Arte</option>
+                    <option value="Música">Música</option>
+                    <option value="Esportes">Esportes</option>
+                    <option value="Games">Games</option>
+                    <option value="Educação">Educação</option>
+                    <option value="Política">Política</option>
+                    <option value="Entretenimento">Entretenimento</option>
+                </select>
+            </div>
+            <button class="btn-primary" onclick="createCommunityFromModal()" style="width:100%;">
+                🚀 Criar Comunidade
+            </button>
+        </div>
     </div>
 </div>
-
-<!-- ===== TOAST ===== -->
-<div id="toast" style="display:none;"></div>
 
 <!-- ===== SCRIPTS ===== -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 <script src="https://gspotfverwazzimagiygg.wazzimagiygg.com/bemtevi/script.js"></script>
-
-<!-- Script externo -->
-<script src="https://gspotfverwazzimagiygg.wazzimagiygg.com/D6FefD0De/EfdFeF1ExcE0C/De0Var6H6f/QXdv0/dddcefb.js"></script>
 
 </body>
 </html>
