@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensagens - Bemtevi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <link rel="icon" href="https://wazzimagiygg.com/favicom.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://gspotfverwazzimagiygg.wazzimagiygg.com/bemtevi/style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="header-content">
+        <div class="logo-area-header" onclick="location.href='index.html'">
+            <img src="https://wazzimagiygg.com/favicom.png" alt="Logo">
+            <div>
+                <h1>WazzimaGiygg</h1>
+                <small>Bemtevi</small>
+            </div>
+        </div>
+        <div class="user-info-header" id="userInfo">
+            <div class="user-avatar" id="userAvatar">👤</div>
+            <div>
+                <div class="user-name" id="userName">Carregando...</div>
+                <div class="user-email" id="userEmail">aguarde</div>
+            </div>
+            <span id="userBadge"></span>
+            <button class="btn-logout" id="btnLogout" style="display:none;" onclick="logout()">Sair</button>
+            <button class="btn-login" id="btnLogin" onclick="showLoginModal()">Entrar</button>
+        </div>
+    </div>
+</header>
+
+<div class="beta-badge">🚧 BETA</div>
+
+<!-- CONTEÚDO -->
+<div id="app" style="max-width: 900px; margin: 0 auto; padding: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1 style="color: white;">💬 Mensagens</h1>
+        <button class="btn-secondary" onclick="location.href='index.html'">← Voltar</button>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 300px 1fr; gap: 20px; min-height: 500px;">
+        <!-- Lista de chats -->
+        <div style="background: #1a1a1a; border-radius: 20px; border: 1px solid #2a2a2a; overflow: hidden;">
+            <div style="padding: 16px; border-bottom: 1px solid #2a2a2a;">
+                <h3 style="color: #fff; font-size: 14px;">Conversas</h3>
+            </div>
+            <div id="chatList" style="overflow-y: auto; max-height: 500px;">
+                <div class="loading">Carregando conversas...</div>
+            </div>
+        </div>
+        
+        <!-- Chat -->
+        <div style="background: #1a1a1a; border-radius: 20px; border: 1px solid #2a2a2a; display: flex; flex-direction: column;">
+            <div id="chatHeader" style="padding: 16px; border-bottom: 1px solid #2a2a2a;">
+                <span style="color: #888;">Selecione uma conversa</span>
+            </div>
+            <div id="chatMessages" style="flex: 1; overflow-y: auto; padding: 16px; min-height: 300px;">
+                <div style="text-align: center; color: #666; padding: 40px 0;">
+                    <span class="material-icons" style="font-size: 48px; opacity: 0.3;">chat</span>
+                    <p style="margin-top: 12px;">Selecione uma conversa para começar</p>
+                </div>
+            </div>
+            <div id="chatInput" style="padding: 16px; border-top: 1px solid #2a2a2a; display: none;">
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="messageInput" class="modal-input" placeholder="Digite uma mensagem..." style="flex:1;">
+                    <button class="btn-primary" onclick="sendMessageToChat()">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="https://wazzimagiygg.com/donate/" class="footer-link" target="_blank">💝 Doação</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/desktop.html" class="footer-link" target="_blank">🖥️ Desktop</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/LGPD" class="footer-link" target="_blank">🔒 LGPD</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/MarcoCivil" class="footer-link" target="_blank">📜 Marco Civil</a>
+            <span class="footer-divider">|</span>
+            <a href="https://support.wazzimagiygg.com/" class="footer-link" target="_blank">🎫 Ticket</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/produtos" class="footer-link highlight" target="_blank">🛍️ Produtos</a>
+            <span class="footer-divider">|</span>
+            <a href="https://painel.wazzimagiygg.com/" class="footer-link highlight" target="_blank">👤 Sua conta</a>
+        </div>
+        <div class="footer-copyright">© 2026 Bemtevi - Uma rede social livre e colaborativa</div>
+    </div>
+</footer>
+
+<!-- MODAL LOGIN -->
+<div id="login-modal" class="modal">
+    <div class="modal-content" style="max-width: 400px;">
+        <div class="modal-header">
+            <h3><i class="material-icons">login</i> Entrar no Bemtevi</h3>
+            <button class="close-modal" onclick="closeModal('login-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p style="margin-bottom: 20px;">Faça login para postar e interagir</p>
+            <button id="google-login-btn" class="btn-primary" style="width:100%; display:flex; align-items:center; justify-content:center; gap:10px;">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style="width:20px; height:20px;">
+                Entrar com Google
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="https://gspotfverwazzimagiygg.wazzimagiygg.com/bemtevi/script.js"></script>
+
+<script>
+// ============================================
+// MENSAGENS DIRETAS
+// ============================================
+let currentChatUser = null;
+let chatListener = null;
+
+async function loadChats() {
+    if (!currentUser) {
+        document.getElementById('chatList').innerHTML = `
+            <div style="text-align:center; color:#666; padding:40px 20px;">
+                <span class="material-icons" style="font-size:36px; opacity:0.3;">lock</span>
+                <p style="margin-top:8px;">Faça login para ver suas mensagens</p>
+            </div>
+        `;
+        return;
+    }
+    
+    try {
+        const chats = await getChatUsers();
+        const chatList = document.getElementById('chatList');
+        
+        if (chats.length === 0) {
+            chatList.innerHTML = `
+                <div style="text-align:center; color:#666; padding:40px 20px;">
+                    <span class="material-icons" style="font-size:36px; opacity:0.3;">chat</span>
+                    <p style="margin-top:8px;">Nenhuma conversa ainda</p>
+                    <p style="font-size:12px;">Encontre pessoas para conversar!</p>
+                </div>
+            `;
+            return;
+        }
+        
+        chatList.innerHTML = chats.map(chat => `
+            <div class="message-item ${chat.unread ? 'unread' : ''}" onclick="openChat('${chat.userId}', '${chat.name}')">
+                <div class="message-avatar">${chat.name?.charAt(0).toUpperCase() || '?'}</div>
+                <div class="message-info">
+                    <div class="message-name">${escapeHtml(chat.name)}</div>
+                    <div class="message-preview">${escapeHtml(chat.lastMessage || '')}</div>
+                </div>
+                <div class="message-time">${getTimeAgo(chat.lastMessageTime)}</div>
+            </div>
+        `).join('');
+        
+    } catch (error) {
+        console.error('Erro ao carregar chats:', error);
+        document.getElementById('chatList').innerHTML = `
+            <div style="text-align:center; color:#666; padding:20px;">Erro ao carregar conversas</div>
+        `;
+    }
+}
+
+async function openChat(userId, userName) {
+    if (!currentUser) {
+        showToast('Faça login para conversar!');
+        return;
+    }
+    
+    currentChatUser = { userId, name: userName };
+    
+    // Atualizar header
+    document.getElementById('chatHeader').innerHTML = `
+        <div style="display:flex; align-items:center; gap:12px;">
+            <div class="message-avatar" style="width:32px; height:32px; font-size:14px;">${userName?.charAt(0).toUpperCase() || '?'}</div>
+            <span style="color:#fff; font-weight:600;">${escapeHtml(userName)}</span>
+        </div>
+    `;
+    
+    // Mostrar input
+    document.getElementById('chatInput').style.display = 'block';
+    
+    // Carregar mensagens
+    await loadMessages(userId);
+}
+
+async function loadMessages(userId) {
+    const container = document.getElementById('chatMessages');
+    container.innerHTML = '<div class="loading">Carregando mensagens...</div>';
+    
+    // Remover listener anterior
+    if (chatListener) {
+        chatListener();
+        chatListener = null;
+    }
+    
+    try {
+        const messages = await getMessages(userId);
+        
+        if (messages.length === 0) {
+            container.innerHTML = `
+                <div style="text-align:center; color:#666; padding:40px 0;">
+                    <span class="material-icons" style="font-size:36px; opacity:0.3;">chat</span>
+                    <p style="margin-top:8px;">Nenhuma mensagem ainda</p>
+                    <p style="font-size:12px;">Envie uma mensagem para começar!</p>
+                </div>
+            `;
+        } else {
+            renderMessages(messages, container);
+        }
+        
+        // Escutar novas mensagens em tempo real
+        const chatId = [currentUser.uid, userId].sort().join('_');
+        chatListener = db.collection('chats').doc(chatId)
+            .collection('messages')
+            .orderBy('timestamp', 'desc')
+            .limit(50)
+            .onSnapshot((snapshot) => {
+                const newMessages = [];
+                snapshot.forEach(doc => {
+                    newMessages.push({ id: doc.id, ...doc.data() });
+                });
+                renderMessages(newMessages.reverse(), container);
+            }, (error) => console.error('Erro no listener de mensagens:', error));
+            
+    } catch (error) {
+        console.error('Erro ao carregar mensagens:', error);
+        container.innerHTML = `
+            <div style="text-align:center; color:#666; padding:20px;">Erro ao carregar mensagens</div>
+        `;
+    }
+}
+
+function renderMessages(messages, container) {
+    if (messages.length === 0) {
+        container.innerHTML = `
+            <div style="text-align:center; color:#666; padding:40px 0;">
+                <span class="material-icons" style="font-size:36px; opacity:0.3;">chat</span>
+                <p style="margin-top:8px;">Nenhuma mensagem ainda</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = messages.map(msg => `
+        <div class="chat-message ${msg.senderId === currentUser?.uid ? 'own' : ''}">
+            <div class="msg-text">${escapeHtml(msg.message)}</div>
+            <div class="msg-time">${getTimeAgo(msg.timestamp)}</div>
+        </div>
+    `).join('');
+    
+    // Rolar para o final
+    container.scrollTop = container.scrollHeight;
+}
+
+async function sendMessageToChat() {
+    if (!currentUser || !currentChatUser) {
+        showToast('Selecione uma conversa para enviar mensagem.');
+        return;
+    }
+    
+    const input = document.getElementById('messageInput');
+    const message = input?.value?.trim();
+    
+    if (!message) {
+        showToast('Digite uma mensagem.', 'error');
+        return;
+    }
+    
+    const success = await sendMessage(currentChatUser.userId, message);
+    if (success) {
+        input.value = '';
+        await loadMessages(currentChatUser.userId);
+        await loadChats();
+    }
+}
+
+// Permitir enviar com Enter
+document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('messageInput');
+    if (input) {
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendMessageToChat();
+            }
+        });
+    }
+});
+
+// ============================================
+// INICIALIZAÇÃO
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    loadChats();
+});
+
+auth.onAuthStateChanged(async (user) => {
+    if (user) {
+        currentUser = user;
+        await registerUser(user);
+        isBanned = await checkIfUserIsBanned(user);
+        if (isBanned) { 
+            showBannedScreen('Sua conta foi banida.');
+            await auth.signOut(); 
+            updateUI(); 
+            return; 
+        }
+        userKarma = await getUserKarma(user.uid);
+        updateUI();
+        loadChats();
+    } else {
+        currentUser = null;
+        updateUI();
+        loadChats();
+    }
+});
+</script>
+
+</body>
+</html>

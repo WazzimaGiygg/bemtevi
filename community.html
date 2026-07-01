@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comunidade - Bemtevi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <link rel="icon" href="https://wazzimagiygg.com/favicom.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://gspotfverwazzimagiygg.wazzimagiygg.com/bemtevi/style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="header-content">
+        <div class="logo-area-header" onclick="location.href='index.html'">
+            <img src="https://wazzimagiygg.com/favicom.png" alt="Logo">
+            <div>
+                <h1>WazzimaGiygg</h1>
+                <small>Bemtevi</small>
+            </div>
+        </div>
+        <div class="user-info-header" id="userInfo">
+            <div class="user-avatar" id="userAvatar">👤</div>
+            <div>
+                <div class="user-name" id="userName">Carregando...</div>
+                <div class="user-email" id="userEmail">aguarde</div>
+            </div>
+            <span id="userBadge"></span>
+            <button class="btn-logout" id="btnLogout" style="display:none;" onclick="logout()">Sair</button>
+            <button class="btn-login" id="btnLogin" onclick="showLoginModal()">Entrar</button>
+        </div>
+    </div>
+</header>
+
+<div class="beta-badge">🚧 BETA</div>
+
+<!-- CONTEÚDO -->
+<div id="app" style="max-width: 800px; margin: 0 auto; padding: 20px;">
+    <div id="communityContent">
+        <div class="loading">Carregando comunidade...</div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="https://wazzimagiygg.com/donate/" class="footer-link" target="_blank">💝 Doação</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/desktop.html" class="footer-link" target="_blank">🖥️ Desktop</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/LGPD" class="footer-link" target="_blank">🔒 LGPD</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/MarcoCivil" class="footer-link" target="_blank">📜 Marco Civil</a>
+            <span class="footer-divider">|</span>
+            <a href="https://support.wazzimagiygg.com/" class="footer-link" target="_blank">🎫 Ticket</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/produtos" class="footer-link highlight" target="_blank">🛍️ Produtos</a>
+            <span class="footer-divider">|</span>
+            <a href="https://painel.wazzimagiygg.com/" class="footer-link highlight" target="_blank">👤 Sua conta</a>
+        </div>
+        <div class="footer-copyright">© 2026 Bemtevi - Uma rede social livre e colaborativa</div>
+    </div>
+</footer>
+
+<!-- MODAL LOGIN -->
+<div id="login-modal" class="modal">
+    <div class="modal-content" style="max-width: 400px;">
+        <div class="modal-header">
+            <h3><i class="material-icons">login</i> Entrar no Bemtevi</h3>
+            <button class="close-modal" onclick="closeModal('login-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p style="margin-bottom: 20px;">Faça login para postar e interagir</p>
+            <button id="google-login-btn" class="btn-primary" style="width:100%; display:flex; align-items:center; justify-content:center; gap:10px;">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style="width:20px; height:20px;">
+                Entrar com Google
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL COMENTÁRIOS -->
+<div id="comments-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>💬 Comentários</h3>
+            <button class="close-modal" onclick="closeModal('comments-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="comments-container"></div>
+            <textarea id="comment-input" class="comment-input" rows="3" placeholder="Escreva um comentário... (máx. 280 caracteres)" maxlength="280"></textarea>
+            <button class="btn-primary" onclick="sendComment()" style="margin-top:10px; width:100%;">Enviar Comentário</button>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="https://gspotfverwazzimagiygg.wazzimagiygg.com/bemtevi/script.js"></script>
+
+<script>
+// ============================================
+// CARREGAR COMUNIDADE
+// ============================================
+let currentCommunityId = null;
+let communityPosts = [];
+
+function getUrlParams() {
+    const params = new URLSearchParams(window.location.search);
+    return { id: params.get('id') };
+}
+
+async function loadCommunity() {
+    const params = getUrlParams();
+    const communityId = params.id;
+    
+    if (!communityId) {
+        document.getElementById('communityContent').innerHTML = `
+            <div class="profile-error">
+                <span class="material-icons" style="font-size:64px; color:#e94560;">error_outline</span>
+                <h2>Comunidade não encontrada</h2>
+                <button class="btn-primary" onclick="location.href='communities.html'">Voltar para Comunidades</button>
+            </div>
+        `;
+        return;
+    }
+    
+    currentCommunityId = communityId;
+    await renderCommunity(communityId);
+}
+
+async function renderCommunity(communityId) {
+    const container = document.getElementById('communityContent');
+    container.innerHTML = '<div class="loading">Carregando comunidade...</div>';
+    
+    try {
+        const communityDoc = await db.collection('comunidades').doc(communityId).get();
+        if (!communityDoc.exists) {
+            container.innerHTML = `
+                <div class="profile-error">
+                    <span class="material-icons" style="font-size:64px; color:#e94560;">error_outline</span>
+                    <h2>Comunidade não encontrada</h2>
+                    <button class="btn-primary" onclick="location.href='communities.html'">Voltar para Comunidades</button>
+                </div>
+            `;
+            return;
+        }
+        
+        const community = { id: communityDoc.id, ...communityDoc.data() };
+        const isMember = currentUser && (community.members || []).includes(currentUser.uid);
+        const memberCount = community.memberCount || community.members?.length || 0;
+        const postCount = community.postCount || 0;
+        
+        // Buscar posts da comunidade
+        const postsSnapshot = await db.collection('Bemtevi')
+            .where('communityId', '==', communityId)
+            .orderBy('createdAt', 'desc')
+            .limit(30)
+            .get();
+        
+        communityPosts = [];
+        postsSnapshot.forEach(doc => {
+            communityPosts.push({ id: doc.id, ...doc.data() });
+        });
+        
+        let postsHtml = '';
+        if (communityPosts.length === 0) {
+            postsHtml = `
+                <div class="profile-no-posts">
+                    <span class="material-icons" style="font-size:48px; color:#666;">note_add</span>
+                    <p>Nenhuma postagem ainda nesta comunidade</p>
+                    ${isMember ? '<p style="font-size:13px; color:#666;">Seja o primeiro a postar!</p>' : ''}
+                </div>
+            `;
+        } else {
+            postsHtml = communityPosts.map(post => {
+                const postDate = post.createdAt?.toDate() || new Date();
+                const isLiked = currentUser && post.usuariosQueCurtiram?.includes(currentUser.uid) && !isBanned;
+                
+                return `
+                    <div class="post-card" style="border:1px solid #2a2a2a; border-radius:12px; margin-bottom:12px;">
+                        <div class="post-header" onclick="openProfile('${post.userId}', '${post.userNome}')">
+                            <div class="post-avatar-img">${post.userNome?.charAt(0).toUpperCase() || '?'}</div>
+                            <div>
+                                <span class="post-user-name">${escapeHtml(post.userNome)}</span>
+                                <span class="post-user-id">@${post.userId?.substring(0, 8)}</span>
+                                <span class="post-time">• ${getTimeAgo(postDate)}</span>
+                            </div>
+                        </div>
+                        <div class="post-category" style="background:${categoryColors[post.categoria] || '#666'}20; color:${categoryColors[post.categoria] || '#666'}">
+                            ${post.categoria || 'Geral'}
+                        </div>
+                        <div class="post-content">
+                            ${escapeHtml(post.conteudo)}
+                            ${post.link ? `<a href="${post.link}" target="_blank" class="post-link" onclick="event.stopPropagation()">🔗 ${post.link.substring(0, 50)}${post.link.length > 50 ? '...' : ''}</a>` : ''}
+                        </div>
+                        <div class="post-stats">
+                            <span class="stat-action ${isLiked ? 'liked' : ''}" onclick="likePost('${post.id}')">
+                                <span class="material-icons" style="font-size:18px;">${isLiked ? 'favorite' : 'favorite_border'}</span> ${post.likes || 0}
+                            </span>
+                            <span class="stat-action" onclick="openComments('${post.id}', '${post.userId}', '${post.userNome}')">
+                                <span class="material-icons" style="font-size:18px;">chat_bubble_outline</span> ${post.comentarios || 0}
+                            </span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        container.innerHTML = `
+            <div style="background: #1a1a1a; border-radius: 20px; padding: 30px; border: 1px solid #2a2a2a;">
+                <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; font-size: 36px; color: white; font-weight: 700;">
+                        ${community.name?.charAt(0).toUpperCase() || '?'}
+                    </div>
+                    <div style="flex: 1;">
+                        <h1 style="color: white; font-size: 28px;">${escapeHtml(community.name)}</h1>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 8px;">
+                            <span style="color: #888; font-size: 14px;">👥 ${memberCount} membros</span>
+                            <span style="color: #888; font-size: 14px;">📝 ${postCount} posts</span>
+                            <span style="color: #667eea; font-size: 14px;">📂 ${community.category || 'Geral'}</span>
+                        </div>
+                        ${community.description ? `<p style="color: #aaa; margin-top: 12px;">${escapeHtml(community.description)}</p>` : ''}
+                        <div style="margin-top: 16px; display: flex; gap: 10px;">
+                            ${currentUser ? `
+                                <button class="${isMember ? 'btn-danger' : 'btn-primary'}" onclick="joinCommunity('${community.id}')">
+                                    ${isMember ? 'Sair da Comunidade' : 'Entrar na Comunidade'}
+                                </button>
+                            ` : `
+                                <button class="btn-secondary" onclick="showLoginModal()">Entrar para participar</button>
+                            `}
+                            <button class="btn-secondary" onclick="location.href='communities.html'">← Voltar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            ${isMember ? `
+                <div style="background: #1a1a1a; border-radius: 20px; padding: 20px; margin-top: 20px; border: 1px solid #2a2a2a;">
+                    <div style="display: flex; gap: 15px;">
+                        <div class="post-avatar">${currentUser?.displayName?.charAt(0).toUpperCase() || '?'}</div>
+                        <div style="flex: 1;">
+                            <textarea id="communityPostText" class="post-input" rows="2" placeholder="Postar na comunidade... (máx. 127 caracteres)" maxlength="127"></textarea>
+                            <div id="charCounter" class="char-counter">0/127</div>
+                            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                                <input type="text" id="communityPostLink" class="btn-secondary" placeholder="🔗 Link (opcional)" style="flex:1;">
+                                <button class="btn-primary" onclick="submitCommunityPost()">Postar 🚀</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ` : ''}
+            
+            <div style="background: #1a1a1a; border-radius: 20px; padding: 20px; margin-top: 20px; border: 1px solid #2a2a2a;">
+                <h2 style="color: white; margin-bottom: 16px;">📝 Posts da Comunidade</h2>
+                ${postsHtml}
+            </div>
+        `;
+        
+        // Atualizar contador de caracteres
+        const postText = document.getElementById('communityPostText');
+        if (postText) {
+            postText.addEventListener('input', function() {
+                const len = this.value.length;
+                const counter = document.getElementById('charCounter');
+                if (counter) {
+                    counter.innerHTML = `${len}/127`;
+                    counter.className = len > 110 ? 'char-counter warning' : len > 120 ? 'char-counter danger' : 'char-counter';
+                }
+            });
+        }
+        
+    } catch (error) {
+        console.error('Erro ao carregar comunidade:', error);
+        container.innerHTML = `
+            <div class="profile-error">
+                <span class="material-icons" style="font-size:64px; color:#e94560;">error_outline</span>
+                <h2>Erro ao carregar comunidade</h2>
+                <button class="btn-primary" onclick="location.href='communities.html'">Voltar para Comunidades</button>
+            </div>
+        `;
+    }
+}
+
+async function submitCommunityPost() {
+    if (!currentUser || isBanned) {
+        showToast('Faça login para postar!');
+        return;
+    }
+    
+    const text = document.getElementById('communityPostText')?.value;
+    const link = document.getElementById('communityPostLink')?.value;
+    
+    if (!text || text.trim().length === 0) {
+        showToast('Digite algo para postar!', 'error');
+        return;
+    }
+    
+    const success = await createPost(text, link, 'Comunidade', currentCommunityId);
+    if (success) {
+        document.getElementById('communityPostText').value = '';
+        document.getElementById('communityPostLink').value = '';
+        renderCommunity(currentCommunityId);
+    }
+}
+
+// ============================================
+// INICIALIZAÇÃO
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    loadCommunity();
+});
+
+auth.onAuthStateChanged(async (user) => {
+    if (user) {
+        currentUser = user;
+        await registerUser(user);
+        isBanned = await checkIfUserIsBanned(user);
+        if (isBanned) { 
+            showBannedScreen('Sua conta foi banida.');
+            await auth.signOut(); 
+            updateUI(); 
+            return; 
+        }
+        userKarma = await getUserKarma(user.uid);
+        updateUI();
+        if (currentCommunityId) renderCommunity(currentCommunityId);
+    } else {
+        currentUser = null;
+        updateUI();
+        if (currentCommunityId) renderCommunity(currentCommunityId);
+    }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorar - Bemtevi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <link rel="icon" href="https://wazzimagiygg.com/favicom.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="header-content">
+        <div class="logo-area-header" onclick="location.href='index.html'">
+            <img src="https://wazzimagiygg.com/favicom.png" alt="Logo">
+            <div>
+                <h1>WazzimaGiygg</h1>
+                <small>Bemtevi</small>
+            </div>
+        </div>
+        <div class="user-info-header" id="userInfo">
+            <div class="user-avatar" id="userAvatar">👤</div>
+            <div>
+                <div class="user-name" id="userName">Carregando...</div>
+                <div class="user-email" id="userEmail">aguarde</div>
+            </div>
+            <span id="userBadge"></span>
+            <button class="btn-logout" id="btnLogout" style="display:none;" onclick="logout()">Sair</button>
+            <button class="btn-login" id="btnLogin" onclick="showLoginModal()">Entrar</button>
+        </div>
+    </div>
+</header>
+
+<div class="beta-badge">🚧 BETA</div>
+
+<!-- CONTEÚDO -->
+<div id="app" style="max-width: 800px; margin: 0 auto; padding: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1 style="color: white;">🔍 Explorar</h1>
+        <button class="btn-secondary" onclick="location.href='index.html'">← Voltar</button>
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+        <input type="text" id="searchInput" class="modal-input" placeholder="Buscar posts, usuários, comunidades..." 
+               style="padding: 14px 20px; border-radius: 50px;" onkeypress="if(event.key==='Enter') performSearch()">
+    </div>
+    
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+        <button class="btn-secondary" onclick="performSearch('')" id="tabAll" style="background:#667eea; color:white;">Todos</button>
+        <button class="btn-secondary" onclick="performSearch('posts')" id="tabPosts">Posts</button>
+        <button class="btn-secondary" onclick="performSearch('users')" id="tabUsers">Usuários</button>
+        <button class="btn-secondary" onclick="performSearch('communities')" id="tabCommunities">Comunidades</button>
+    </div>
+    
+    <div id="searchResults">
+        <div style="text-align:center; color:#666; padding:40px 0;">
+            <span class="material-icons" style="font-size:48px; opacity:0.3;">search</span>
+            <p style="margin-top:12px;">Pesquise por algo para começar</p>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="https://wazzimagiygg.com/donate/" class="footer-link" target="_blank">💝 Doação</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/desktop.html" class="footer-link" target="_blank">🖥️ Desktop</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/LGPD" class="footer-link" target="_blank">🔒 LGPD</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/MarcoCivil" class="footer-link" target="_blank">📜 Marco Civil</a>
+            <span class="footer-divider">|</span>
+            <a href="https://support.wazzimagiygg.com/" class="footer-link" target="_blank">🎫 Ticket</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/produtos" class="footer-link highlight" target="_blank">🛍️ Produtos</a>
+            <span class="footer-divider">|</span>
+            <a href="https://painel.wazzimagiygg.com/" class="footer-link highlight" target="_blank">👤 Sua conta</a>
+        </div>
+        <div class="footer-copyright">© 2026 Bemtevi - Uma rede social livre e colaborativa</div>
+    </div>
+</footer>
+
+<!-- MODAL LOGIN -->
+<div id="login-modal" class="modal">
+    <div class="modal-content" style="max-width: 400px;">
+        <div class="modal-header">
+            <h3><i class="material-icons">login</i> Entrar no Bemtevi</h3>
+            <button class="close-modal" onclick="closeModal('login-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p style="margin-bottom: 20px;">Faça login para postar e interagir</p>
+            <button id="google-login-btn" class="btn-primary" style="width:100%; display:flex; align-items:center; justify-content:center; gap:10px;">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style="width:20px; height:20px;">
+                Entrar com Google
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="script.js"></script>
+
+<script>
+// ============================================
+// EXPLORAR
+// ============================================
+let currentSearchTab = 'all';
+
+function performSearch(tab) {
+    const searchInput = document.getElementById('searchInput');
+    const query = searchInput?.value?.trim() || '';
+    
+    currentSearchTab = tab || 'all';
+    
+    // Atualizar tabs
+    document.querySelectorAll('[id^="tab"]').forEach(btn => {
+        btn.style.background = 'transparent';
+        btn.style.color = '#e0e0e0';
+    });
+    const activeTab = document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`) || document.getElementById('tabAll');
+    if (activeTab) {
+        activeTab.style.background = '#667eea';
+        activeTab.style.color = 'white';
+    }
+    
+    if (!query && tab !== 'users' && tab !== 'communities') {
+        // Mostrar trending topics
+        showTrending();
+        return;
+    }
+    
+    searchDatabase(query, tab);
+}
+
+function showTrending() {
+    const container = document.getElementById('searchResults');
+    container.innerHTML = '<div class="loading">Carregando trending...</div>';
+    
+    getTrendingTopics(10).then(topics => {
+        if (topics.length === 0) {
+            container.innerHTML = `
+                <div style="text-align:center; color:#666; padding:40px 0;">
+                    <span class="material-icons" style="font-size:48px; opacity:0.3;">trending_up</span>
+                    <p style="margin-top:12px;">Nenhum trending no momento</p>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = `
+            <h3 style="color: white; margin-bottom: 16px;">🔥 Trending Topics</h3>
+            ${topics.map((topic, index) => `
+                <div class="trending-topic" onclick="searchByTopic('${topic.name}')">
+                    <span class="trending-rank">#${index + 1}</span>
+                    <span class="trending-name">${escapeHtml(topic.name)}</span>
+                    <span class="trending-count">${topic.count} posts</span>
+                </div>
+            `).join('')}
+        `;
+    }).catch(() => {
+        container.innerHTML = '<div style="text-align:center; color:#666; padding:20px;">Erro ao carregar trending</div>';
+    });
+}
+
+function searchByTopic(topic) {
+    document.getElementById('searchInput').value = topic;
+    performSearch('posts');
+}
+
+async function searchDatabase(query, tab = 'all') {
+    const container = document.getElementById('searchResults');
+    container.innerHTML = '<div class="loading">Buscando...</div>';
+    
+    try {
+        let results = { posts: [], users: [], communities: [] };
+        const searchLower = query.toLowerCase();
+        
+        // Buscar posts
+        if (tab === 'all' || tab === 'posts') {
+            const postsSnapshot = await db.collection('Bemtevi')
+                .orderBy('createdAt', 'desc')
+                .limit(30)
+                .get();
+            
+            postsSnapshot.forEach(doc => {
+                const post = { id: doc.id, ...doc.data() };
+                const content = (post.conteudo || '').toLowerCase();
+                const name = (post.userNome || '').toLowerCase();
+                if (content.includes(searchLower) || name.includes(searchLower)) {
+                    results.posts.push(post);
+                }
+            });
+        }
+        
+        // Buscar usuários
+        if (tab === 'all' || tab === 'users') {
+            const usersSnapshot = await db.collection('usuarios')
+                .orderBy('karma', 'desc')
+                .limit(20)
+                .get();
+            
+            usersSnapshot.forEach(doc => {
+                const user = { id: doc.id, ...doc.data() };
+                const name = (user.name || '').toLowerCase();
+                const email = (user.email || '').toLowerCase();
+                if (name.includes(searchLower) || email.includes(searchLower)) {
+                    results.users.push(user);
+                }
+            });
+        }
+        
+        // Buscar comunidades
+        if (tab === 'all' || tab === 'communities') {
+            const communitiesSnapshot = await db.collection('comunidades')
+                .orderBy('memberCount', 'desc')
+                .limit(20)
+                .get();
+            
+            communitiesSnapshot.forEach(doc => {
+                const community = { id: doc.id, ...doc.data() };
+                const name = (community.name || '').toLowerCase();
+                const desc = (community.description || '').toLowerCase();
+                if (name.includes(searchLower) || desc.includes(searchLower)) {
+                    results.communities.push(community);
+                }
+            });
+        }
+        
+        renderSearchResults(results, query, tab);
+        
+    } catch (error) {
+        console.error('Erro na busca:', error);
+        container.innerHTML = '<div style="text-align:center; color:#666; padding:20px;">Erro ao realizar busca</div>';
+    }
+}
+
+function renderSearchResults(results, query, tab) {
+    const container = document.getElementById('searchResults');
+    const total = results.posts.length + results.users.length + results.communities.length;
+    
+    if (total === 0) {
+        container.innerHTML = `
+            <div style="text-align:center; color:#666; padding:60px 20px;">
+                <span class="material-icons" style="font-size:48px; opacity:0.3;">search_off</span>
+                <h3 style="color:#fff; margin-top:12px;">Nenhum resultado encontrado</h3>
+                <p style="margin-top:8px;">Tente buscar por "${escapeHtml(query)}" em outra categoria</p>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = `<h3 style="color: white; margin-bottom: 16px;">🔍 Resultados para "${escapeHtml(query)}" (${total})</h3>`;
+    
+    // Posts
+    if (results.posts.length > 0 && (tab === 'all' || tab === 'posts')) {
+        html += `
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: #888; margin-bottom: 12px;">📝 Posts (${results.posts.length})</h4>
+                ${results.posts.slice(0, 10).map(post => `
+                    <div class="post-card" onclick="openProfile('${post.userId}', '${post.userNome}')" style="cursor:pointer;">
+                        <div class="post-content" style="padding-left:0;">
+                            <div style="font-size:13px; color:#888;">${escapeHtml(post.userNome)} • ${getTimeAgo(post.createdAt)}</div>
+                            <div style="font-size:14px; color:#e0e0e0; margin-top:4px;">${escapeHtml(post.conteudo)}</div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+    
+    // Usuários
+    if (results.users.length > 0 && (tab === 'all' || tab === 'users')) {
+        html += `
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: #888; margin-bottom: 12px;">👤 Usuários (${results.users.length})</h4>
+                ${results.users.slice(0, 10).map(user => `
+                    <div class="suggestion-user" onclick="openProfile('${user.id}', '${user.name}')" style="cursor:pointer;">
+                        <div class="suggestion-info">
+                            <div class="suggestion-avatar">${user.name?.charAt(0).toUpperCase() || '?'}</div>
+                            <div>
+                                <div style="font-weight:600; color:#ffffff;">${escapeHtml(user.name)}</div>
+                                <div style="font-size:11px; color:#888888;">${getKarmaLevel(user.karma || 0).emoji} ${user.karma || 0} karma</div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+    
+    // Comunidades
+    if (results.communities.length > 0 && (tab === 'all' || tab === 'communities')) {
+        html += `
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: #888; margin-bottom: 12px;">🏛️ Comunidades (${results.communities.length})</h4>
+                ${results.communities.slice(0, 10).map(community => `
+                    <div class="community-card" onclick="viewCommunity('${community.id}')" style="margin-bottom:10px;">
+                        <div class="community-header">
+                            <div class="community-avatar">${community.name?.charAt(0).toUpperCase() || '?'}</div>
+                            <div>
+                                <div class="community-name">${escapeHtml(community.name)}</div>
+                                <div style="font-size:12px; color:#888;">${community.memberCount || 0} membros</div>
+                            </div>
+                        </div>
+                        ${community.description ? `<div class="community-description">${escapeHtml(community.description)}</div>` : ''}
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+    
+    container.innerHTML = html;
+}
+
+// ============================================
+// INICIALIZAÇÃO
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar se tem query na URL
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q');
+    if (q) {
+        document.getElementById('searchInput').value = q;
+        performSearch('all');
+    } else {
+        showTrending();
+    }
+});
+
+auth.onAuthStateChanged(async (user) => {
+    if (user) {
+        currentUser = user;
+        await registerUser(user);
+        isBanned = await checkIfUserIsBanned(user);
+        if (isBanned) { 
+            showBannedScreen('Sua conta foi banida.');
+            await auth.signOut(); 
+            updateUI(); 
+            return; 
+        }
+        userKarma = await getUserKarma(user.uid);
+        updateUI();
+    } else {
+        currentUser = null;
+        updateUI();
+    }
+});
+</script>
+
+</body>
+</html>

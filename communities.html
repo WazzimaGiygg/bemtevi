@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comunidades - Bemtevi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <link rel="icon" href="https://wazzimagiygg.com/favicom.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://gspotfverwazzimagiygg.wazzimagiygg.com/bemtevi/style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="header-content">
+        <div class="logo-area-header" onclick="location.href='index.html'">
+            <img src="https://wazzimagiygg.com/favicom.png" alt="Logo">
+            <div>
+                <h1>WazzimaGiygg</h1>
+                <small>Bemtevi</small>
+            </div>
+        </div>
+        <div class="user-info-header" id="userInfo">
+            <div class="user-avatar" id="userAvatar">👤</div>
+            <div>
+                <div class="user-name" id="userName">Carregando...</div>
+                <div class="user-email" id="userEmail">aguarde</div>
+            </div>
+            <span id="userBadge"></span>
+            <button class="btn-logout" id="btnLogout" style="display:none;" onclick="logout()">Sair</button>
+            <button class="btn-login" id="btnLogin" onclick="showLoginModal()">Entrar</button>
+        </div>
+    </div>
+</header>
+
+<div class="beta-badge">🚧 BETA</div>
+
+<!-- CONTEÚDO -->
+<div id="app" style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+        <h1 style="color: white;">🏛️ Comunidades</h1>
+        <button class="btn-primary" onclick="showCreateCommunityModal()">➕ Criar Comunidade</button>
+    </div>
+    
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+        <button class="btn-secondary" onclick="loadCommunities('all')" id="filterAll" style="background: #667eea; color:white;">Todos</button>
+        <button class="btn-secondary" onclick="loadCommunities('mine')" id="filterMine">Minhas</button>
+        <button class="btn-secondary" onclick="loadCommunities('popular')" id="filterPopular">Populares</button>
+    </div>
+    
+    <div id="communitiesContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+        <div class="loading">Carregando comunidades...</div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="https://wazzimagiygg.com/donate/" class="footer-link" target="_blank">💝 Doação</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/desktop.html" class="footer-link" target="_blank">🖥️ Desktop</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/LGPD" class="footer-link" target="_blank">🔒 LGPD</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/MarcoCivil" class="footer-link" target="_blank">📜 Marco Civil</a>
+            <span class="footer-divider">|</span>
+            <a href="https://support.wazzimagiygg.com/" class="footer-link" target="_blank">🎫 Ticket</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/produtos" class="footer-link highlight" target="_blank">🛍️ Produtos</a>
+            <span class="footer-divider">|</span>
+            <a href="https://painel.wazzimagiygg.com/" class="footer-link highlight" target="_blank">👤 Sua conta</a>
+        </div>
+        <div class="footer-copyright">© 2026 Bemtevi - Uma rede social livre e colaborativa</div>
+    </div>
+</footer>
+
+<!-- MODAL CRIAR COMUNIDADE -->
+<div id="createCommunityModal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+            <h3>🏛️ Criar Nova Comunidade</h3>
+            <button class="close-modal" onclick="closeModal('createCommunityModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div style="margin-bottom:15px;">
+                <label style="display:block; margin-bottom:5px; color:#aaa; font-size:13px;">Nome da Comunidade *</label>
+                <input type="text" id="communityName" class="modal-input" placeholder="Ex: Tecnologia, Música, Games..." maxlength="50">
+                <div style="font-size:11px; color:#666; margin-top:4px;">Mínimo 3 caracteres, máximo 50</div>
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="display:block; margin-bottom:5px; color:#aaa; font-size:13px;">Descrição</label>
+                <textarea id="communityDescription" class="modal-textarea" placeholder="Descreva o propósito da comunidade..." maxlength="300"></textarea>
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="display:block; margin-bottom:5px; color:#aaa; font-size:13px;">Categoria</label>
+                <select id="communityCategory" class="modal-input">
+                    <option value="Geral">Geral</option>
+                    <option value="Tecnologia">Tecnologia</option>
+                    <option value="Ciência">Ciência</option>
+                    <option value="Arte">Arte</option>
+                    <option value="Música">Música</option>
+                    <option value="Esportes">Esportes</option>
+                    <option value="Games">Games</option>
+                    <option value="Educação">Educação</option>
+                    <option value="Política">Política</option>
+                    <option value="Entretenimento">Entretenimento</option>
+                </select>
+            </div>
+            <button class="btn-primary" onclick="createCommunityFromPage()" style="width:100%;">
+                🚀 Criar Comunidade
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL LOGIN -->
+<div id="login-modal" class="modal">
+    <div class="modal-content" style="max-width: 400px;">
+        <div class="modal-header">
+            <h3><i class="material-icons">login</i> Entrar no Bemtevi</h3>
+            <button class="close-modal" onclick="closeModal('login-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p style="margin-bottom: 20px;">Faça login para postar e interagir</p>
+            <button id="google-login-btn" class="btn-primary" style="width:100%; display:flex; align-items:center; justify-content:center; gap:10px;">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style="width:20px; height:20px;">
+                Entrar com Google
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="https://gspotfverwazzimagiygg.wazzimagiygg.com/bemtevi/script.js"></script>
+
+<script>
+// ============================================
+// CARREGAR COMUNIDADES
+// ============================================
+let currentCommunityFilter = 'all';
+
+async function loadCommunities(filter = 'all') {
+    currentCommunityFilter = filter;
+    const container = document.getElementById('communitiesContainer');
+    if (!container) return;
+    
+    container.innerHTML = '<div class="loading">Carregando comunidades...</div>';
+    
+    // Atualizar botões de filtro
+    document.querySelectorAll('[id^="filter"]').forEach(btn => {
+        btn.style.background = 'transparent';
+        btn.style.color = '#e0e0e0';
+    });
+    const activeBtn = document.getElementById(`filter${filter.charAt(0).toUpperCase() + filter.slice(1)}`);
+    if (activeBtn) {
+        activeBtn.style.background = '#667eea';
+        activeBtn.style.color = 'white';
+    }
+    
+    try {
+        let query = db.collection('comunidades').orderBy('memberCount', 'desc');
+        
+        if (filter === 'mine' && currentUser) {
+            const snapshot = await db.collection('comunidades')
+                .where('members', 'array-contains', currentUser.uid)
+                .get();
+            const communities = [];
+            snapshot.forEach(doc => communities.push({ id: doc.id, ...doc.data() }));
+            renderCommunities(communities, container);
+            return;
+        }
+        
+        const snapshot = await query.limit(30).get();
+        const communities = [];
+        snapshot.forEach(doc => communities.push({ id: doc.id, ...doc.data() }));
+        renderCommunities(communities, container);
+        
+    } catch (error) {
+        console.error('Erro ao carregar comunidades:', error);
+        container.innerHTML = '<div class="loading">Erro ao carregar comunidades. Recarregue a página.</div>';
+    }
+}
+
+function renderCommunities(communities, container) {
+    if (communities.length === 0) {
+        container.innerHTML = `
+            <div style="text-align:center; color:#888; padding:60px 20px; grid-column: 1/-1;">
+                <span class="material-icons" style="font-size:48px; opacity:0.3;">groups</span>
+                <h3 style="color:#fff; margin-top:12px;">Nenhuma comunidade encontrada</h3>
+                <p style="color:#666; margin-top:8px;">Seja o primeiro a criar uma comunidade!</p>
+                <button class="btn-primary" onclick="showCreateCommunityModal()" style="margin-top:16px;">➕ Criar Comunidade</button>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = communities.map(community => {
+        const isMember = currentUser && (community.members || []).includes(currentUser.uid);
+        const memberCount = community.memberCount || community.members?.length || 0;
+        const postCount = community.postCount || 0;
+        
+        return `
+            <div class="community-card" onclick="viewCommunity('${community.id}')">
+                <div class="community-header">
+                    <div class="community-avatar">${community.name?.charAt(0).toUpperCase() || '?'}</div>
+                    <div>
+                        <div class="community-name">${escapeHtml(community.name || 'Sem nome')}</div>
+                        <div style="font-size:12px; color:#888;">${memberCount} membros • ${postCount} posts</div>
+                    </div>
+                </div>
+                ${community.description ? `<div class="community-description">${escapeHtml(community.description)}</div>` : ''}
+                <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">
+                    <span style="font-size:11px; color:#667eea; background:#2a2a2a; padding:2px 10px; border-radius:12px;">${community.category || 'Geral'}</span>
+                    <span style="font-size:11px; color:#888; background:#2a2a2a; padding:2px 10px; border-radius:12px;">👤 ${community.creatorName || 'Criador'}</span>
+                </div>
+                <div class="community-join-btn">
+                    ${currentUser ? `
+                        <button class="${isMember ? 'btn-danger' : 'btn-primary'} btn-sm" onclick="event.stopPropagation(); joinCommunity('${community.id}')">
+                            ${isMember ? 'Sair' : 'Entrar'}
+                        </button>
+                    ` : `
+                        <button class="btn-secondary btn-sm" onclick="event.stopPropagation(); showLoginModal()">Entrar para participar</button>
+                    `}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function viewCommunity(communityId) {
+    window.location.href = `community.html?id=${communityId}`;
+}
+
+function showCreateCommunityModal() {
+    if (!currentUser || isBanned) {
+        showToast('Faça login para criar uma comunidade!');
+        return;
+    }
+    const modal = document.getElementById('createCommunityModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        modal.classList.add('show');
+    }
+}
+
+async function createCommunityFromPage() {
+    const nameInput = document.getElementById('communityName');
+    const descInput = document.getElementById('communityDescription');
+    const catSelect = document.getElementById('communityCategory');
+    
+    const name = nameInput?.value?.trim();
+    const description = descInput?.value?.trim();
+    const category = catSelect?.value || 'Geral';
+    
+    if (!name || name.length < 3) {
+        showToast('O nome da comunidade deve ter pelo menos 3 caracteres.', 'error');
+        nameInput?.focus();
+        return;
+    }
+    
+    const communityId = await createCommunity(name, description, category);
+    if (communityId) {
+        closeModal('createCommunityModal');
+        if (nameInput) nameInput.value = '';
+        if (descInput) descInput.value = '';
+        loadCommunities(currentCommunityFilter);
+    }
+}
+
+// ============================================
+// INICIALIZAÇÃO
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    loadCommunities('all');
+});
+
+auth.onAuthStateChanged(async (user) => {
+    if (user) {
+        currentUser = user;
+        await registerUser(user);
+        isBanned = await checkIfUserIsBanned(user);
+        if (isBanned) { 
+            showBannedScreen('Sua conta foi banida.');
+            await auth.signOut(); 
+            updateUI(); 
+            return; 
+        }
+        userKarma = await getUserKarma(user.uid);
+        updateUI();
+        loadCommunities(currentCommunityFilter);
+    } else {
+        currentUser = null;
+        updateUI();
+        loadCommunities(currentCommunityFilter);
+    }
+});
+</script>
+
+</body>
+</html>
