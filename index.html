@@ -5,6 +5,356 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bemtevi - Rede Social</title>
     
+    <!-- SCRIPT DE DETECÇÃO DE ERROS COM UID (PRIMEIRO A EXECUTAR) -->
+    <script>
+        // ================================================================
+        // SISTEMA DE DETECÇÃO DE ERROS COM UID E REDIRECIONAMENTO
+        // ================================================================
+        (function() {
+            'use strict';
+            
+            // ===== CONFIGURAÇÕES =====
+            const ERROR_URL = 'https://wazzimagiygg.com/generalerror/';
+            const TIMEOUT_MS = 5000;
+            const CHECK_INTERVAL = 500;
+            
+            // ===== GERADOR DE UID =====
+            function generateUID() {
+                const timestamp = Date.now().toString(36);
+                const random = Math.random().toString(36).substring(2, 10);
+                const navInfo = navigator.userAgent
+                    .substring(0, 30)
+                    .replace(/[^a-zA-Z0-9]/g, '')
+                    .toLowerCase()
+                    .substring(0, 10);
+                const screenInfo = `${window.screen.width}x${window.screen.height}`;
+                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+                    .replace(/[^a-zA-Z0-9]/g, '')
+                    .substring(0, 8);
+                
+                return `${timestamp}-${random}-${navInfo}-${screenInfo}-${timezone}`.substring(0, 64);
+            }
+
+            // ===== GERADOR DE UID CURTO PARA URL =====
+            function generateShortUID() {
+                const timestamp = Date.now().toString(36);
+                const random = Math.random().toString(36).substring(2, 6);
+                return `${timestamp}${random}`;
+            }
+
+            // ===== COLETOR DE INFORMAÇÕES DO SISTEMA =====
+            function collectErrorInfo() {
+                const info = {
+                    uid: generateUID(),
+                    shortUid: generateShortUID(),
+                    timestamp: Date.now(),
+                    datetime: new Date().toISOString(),
+                    url: window.location.href,
+                    referrer: document.referrer || 'direct',
+                    userAgent: navigator.userAgent,
+                    platform: navigator.platform,
+                    language: navigator.language,
+                    screenWidth: window.screen.width,
+                    screenHeight: window.screen.height,
+                    windowWidth: window.innerWidth,
+                    windowHeight: window.innerHeight,
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    resources: {
+                        css: { loaded: false, error: null },
+                        js: { loaded: false, error: null },
+                        firebase: { loaded: false, error: null },
+                        fonts: { loaded: false, error: null }
+                    },
+                    errors: [],
+                    failedResources: []
+                };
+                return info;
+            }
+
+            // ===== GERAR URL DE ERRO COM PARÂMETROS =====
+            function generateErrorURL(errorInfo) {
+                const baseURL = ERROR_URL;
+                const params = new URLSearchParams();
+                
+                params.set('uid', errorInfo.uid);
+                params.set('sid', errorInfo.shortUid);
+                params.set('ts', errorInfo.timestamp);
+                params.set('page', 'bemtevi');
+                
+                if (errorInfo.failedResources.length > 0) {
+                    params.set('failed', errorInfo.failedResources.join(','));
+                }
+                
+                const resourceStatus = {};
+                for (const [key, value] of Object.entries(errorInfo.resources)) {
+                    resourceStatus[key] = value.loaded;
+                }
+                params.set('resources', JSON.stringify(resourceStatus));
+                
+                if (errorInfo.errors.length > 0) {
+                    const errorSummary = errorInfo.errors
+                        .slice(0, 5)
+                        .map(e => e.substring(0, 100))
+                        .join('|');
+                    params.set('errors', encodeURIComponent(errorSummary));
+                }
+                
+                const systemInfo = {
+                    ua: navigator.userAgent.substring(0, 80),
+                    scr: `${window.screen.width}x${window.screen.height}`,
+                    tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    lang: navigator.language
+                };
+                params.set('system', JSON.stringify(systemInfo));
+                
+                params.set('origin', encodeURIComponent(window.location.href));
+                
+                return `${baseURL}?${params.toString()}`;
+            }
+
+            // ===== ESTADO =====
+            const errorInfo = collectErrorInfo();
+            let resourcesLoaded = {
+                css: false,
+                js: false
+            };
+            let checkCount = 0;
+            let maxChecks = Math.ceil(TIMEOUT_MS / CHECK_INTERVAL);
+            let redirectExecuted = false;
+            let intervalId = null;
+            let timeoutId = null;
+            
+            // ===== FUNÇÃO PARA REDIRECIONAR COM UID =====
+            function redirectToError() {
+                if (redirectExecuted) return;
+                redirectExecuted = true;
+                
+                if (intervalId) clearInterval(intervalId);
+                if (timeoutId) clearTimeout(timeoutId);
+                
+                if (!resourcesLoaded.css) {
+                    errorInfo.failedResources.push('bemtevi/style.css');
+                    errorInfo.resources.css.loaded = false;
+                    errorInfo.resources.css.error = 'Falha ao carregar CSS';
+                }
+                if (!resourcesLoaded.js) {
+                    errorInfo.failedResources.push('bemtevi/script.js');
+                    errorInfo.resources.js.loaded = false;
+                    errorInfo.resources.js.error = 'Falha ao carregar JavaScript';
+                }
+                
+                const errorURL = generateErrorURL(errorInfo);
+                
+                console.warn('🔴 Recursos críticos não carregaram.');
+                console.log('🆔 UID:', errorInfo.uid);
+                console.log('🔗 Redirecionando para:', errorURL);
+                
+                window.location.href = errorURL;
+            }
+            
+            // ===== FUNÇÃO PARA MARCAR RECURSO COMO CARREGADO =====
+            function markResourceLoaded(type) {
+                if (type === 'css') {
+                    resourcesLoaded.css = true;
+                    errorInfo.resources.css.loaded = true;
+                    console.log('✅ CSS carregado com sucesso');
+                } else if (type === 'js') {
+                    resourcesLoaded.js = true;
+                    errorInfo.resources.js.loaded = true;
+                    console.log('✅ JavaScript carregado com sucesso');
+                }
+                
+                if (resourcesLoaded.css && resourcesLoaded.js) {
+                    console.log('✅ Todos os recursos carregados com sucesso!');
+                    if (intervalId) clearInterval(intervalId);
+                    if (timeoutId) clearTimeout(timeoutId);
+                }
+            }
+            
+            // ===== CAPTURA ERROS DE CARREGAMENTO =====
+            function captureLoadErrors() {
+                window.addEventListener('error', function(e) {
+                    const target = e.target;
+                    let resourceName = '';
+                    
+                    if (target && target.tagName === 'LINK' && target.rel === 'stylesheet') {
+                        resourceName = target.href || 'style.css';
+                        console.error('❌ Erro ao carregar CSS:', resourceName);
+                        errorInfo.errors.push(`CSS Load Error: ${resourceName}`);
+                        errorInfo.failedResources.push(resourceName.split('/').pop() || 'style.css');
+                        redirectToError();
+                    }
+                    
+                    if (target && target.tagName === 'SCRIPT' && target.src) {
+                        resourceName = target.src || 'script.js';
+                        console.error('❌ Erro ao carregar JavaScript:', resourceName);
+                        errorInfo.errors.push(`JS Load Error: ${resourceName}`);
+                        errorInfo.failedResources.push(resourceName.split('/').pop() || 'script.js');
+                        redirectToError();
+                    }
+                }, true);
+            }
+
+            // ===== CAPTURA ERROS NÃO TRATADOS =====
+            function captureUnhandledErrors() {
+                window.addEventListener('unhandledrejection', function(e) {
+                    const errorMsg = e.reason ? String(e.reason) : 'Unknown promise rejection';
+                    console.error('❌ Erro não tratado (Promise):', errorMsg);
+                    errorInfo.errors.push(`Unhandled Rejection: ${errorMsg.substring(0, 100)}`);
+                });
+                
+                const originalError = console.error;
+                console.error = function(...args) {
+                    const errorStr = args.map(a => String(a)).join(' ');
+                    if (errorStr.includes('Failed to load') || 
+                        errorStr.includes('404') || 
+                        errorStr.includes('NetworkError')) {
+                        errorInfo.errors.push(`Console Error: ${errorStr.substring(0, 100)}`);
+                        if (errorStr.includes('.css') || errorStr.includes('style.css')) {
+                            errorInfo.failedResources.push('style.css');
+                        }
+                        if (errorStr.includes('.js') || errorStr.includes('script.js')) {
+                            errorInfo.failedResources.push('script.js');
+                        }
+                    }
+                    originalError.apply(console, args);
+                };
+            }
+            
+            // ===== VERIFICAÇÃO PERIÓDICA =====
+            function checkResources() {
+                checkCount++;
+                
+                if (!resourcesLoaded.css) {
+                    try {
+                        const testElement = document.createElement('div');
+                        testElement.id = 'css-test-element';
+                        testElement.style.display = 'none';
+                        document.body.appendChild(testElement);
+                        
+                        const computedStyle = window.getComputedStyle(testElement);
+                        const hasStyles = computedStyle && computedStyle.length > 0;
+                        
+                        document.body.removeChild(testElement);
+                        
+                        const hasHeader = document.querySelector('.header') !== null;
+                        const hasApp = document.getElementById('app') !== null;
+                        
+                        if (hasHeader || hasApp) {
+                            markResourceLoaded('css');
+                        }
+                    } catch(e) {
+                        console.warn('⚠️ Erro ao verificar CSS:', e.message);
+                        errorInfo.errors.push(`CSS Check Error: ${e.message}`);
+                    }
+                }
+                
+                if (!resourcesLoaded.js) {
+                    const jsFunctions = [
+                        'loadPosts',
+                        'createPost',
+                        'logout',
+                        'showLoginModal',
+                        'loginWithGoogle'
+                    ];
+                    
+                    let allFunctionsExist = true;
+                    for (let i = 0; i < jsFunctions.length; i++) {
+                        if (typeof window[jsFunctions[i]] !== 'function') {
+                            allFunctionsExist = false;
+                            break;
+                        }
+                    }
+                    
+                    if (allFunctionsExist) {
+                        markResourceLoaded('js');
+                    }
+                }
+                
+                if (checkCount >= maxChecks) {
+                    if (!resourcesLoaded.css || !resourcesLoaded.js) {
+                        console.error('❌ Tempo limite excedido. Recursos não carregaram completamente.');
+                        if (!resourcesLoaded.css) {
+                            errorInfo.failedResources.push('style.css (timeout)');
+                            errorInfo.resources.css.loaded = false;
+                            errorInfo.resources.css.error = 'Timeout ao carregar CSS';
+                        }
+                        if (!resourcesLoaded.js) {
+                            errorInfo.failedResources.push('script.js (timeout)');
+                            errorInfo.resources.js.loaded = false;
+                            errorInfo.resources.js.error = 'Timeout ao carregar JavaScript';
+                        }
+                        redirectToError();
+                    }
+                }
+            }
+            
+            // ===== INICIALIZAÇÃO =====
+            function startResourceCheck() {
+                captureLoadErrors();
+                captureUnhandledErrors();
+                
+                setTimeout(checkResources, 100);
+                intervalId = setInterval(checkResources, CHECK_INTERVAL);
+                
+                timeoutId = setTimeout(function() {
+                    if (!resourcesLoaded.css || !resourcesLoaded.js) {
+                        console.error('❌ Timeout final. Recursos não carregaram.');
+                        if (!resourcesLoaded.css) {
+                            errorInfo.failedResources.push('style.css (final timeout)');
+                        }
+                        if (!resourcesLoaded.js) {
+                            errorInfo.failedResources.push('script.js (final timeout)');
+                        }
+                        redirectToError();
+                    }
+                }, TIMEOUT_MS + 1000);
+            }
+            
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', startResourceCheck);
+            } else {
+                startResourceCheck();
+            }
+            
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    if (!resourcesLoaded.css || !resourcesLoaded.js) {
+                        console.error('❌ Recursos não carregaram após o load da página.');
+                        if (!resourcesLoaded.css) {
+                            errorInfo.failedResources.push('style.css (post-load)');
+                        }
+                        if (!resourcesLoaded.js) {
+                            errorInfo.failedResources.push('script.js (post-load)');
+                        }
+                        redirectToError();
+                    }
+                }, 1000);
+            });
+            
+            window.__errorSystem = {
+                getUID: function() { return errorInfo.uid; },
+                getShortUID: function() { return errorInfo.shortUid; },
+                getStatus: function() {
+                    return {
+                        css: resourcesLoaded.css,
+                        js: resourcesLoaded.js,
+                        all: resourcesLoaded.css && resourcesLoaded.js,
+                        failed: errorInfo.failedResources,
+                        errors: errorInfo.errors,
+                        uid: errorInfo.uid
+                    };
+                },
+                getErrorURL: function() {
+                    return generateErrorURL(errorInfo);
+                }
+            };
+            
+            console.log('🔍 Sistema de verificação de recursos iniciado (Bemtevi)');
+            console.log('🆔 UID:', errorInfo.uid);
+        })();
+    </script>
+    
     <!-- Fonts e Icones -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -12,12 +362,485 @@
     
     <!-- Favicon -->
     <link rel="icon" href="https://wazzimagiygg.com/favicom.png" type="image/x-icon">
-    <link rel="stylesheet" href="https://gspotfverwazzimagiygg.wazzimagiygg.com/bemtevi/style.css">
+    
+    <!-- CSS Externo com ONERROR -->
+    <link rel="stylesheet" href="https://gspotfverwazzimagiygg.wazzimagiygg.com/bemtevi/style.css" 
+          onerror="window.location.href=window.__errorSystem ? window.__errorSystem.getErrorURL() : 'https://wazzimagiygg.com/generalerror/'">
+    
+    <style>
+        /* CSS de fallback */
+        body {
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-family: 'Inter', Arial, sans-serif;
+            background: #0d0d0d;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+        }
+        body.loaded {
+            opacity: 1;
+        }
+        
+        #loadingIndicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #0d0d0d;
+            z-index: 9999;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+        #loadingIndicator .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #333;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        #loadingIndicator p {
+            margin-top: 20px;
+            color: #aaa;
+            font-size: 16px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        #loadingIndicator.hidden {
+            display: none;
+        }
+        
+        /* Fallback para o app */
+        #app {
+            min-height: 400px;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .beta-badge {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            z-index: 100;
+            letter-spacing: 0.5px;
+        }
+        .header {
+            background: #1a1a1a;
+            padding: 12px 20px;
+            border-bottom: 1px solid #333;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .logo-area-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .logo-area-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        .logo-area-header h1 {
+            font-size: 20px;
+            color: #667eea;
+            margin: 0;
+        }
+        .logo-area-header small {
+            font-size: 11px;
+            color: #aaa;
+            display: block;
+        }
+        .user-info-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .user-email {
+            font-size: 11px;
+            color: #888;
+        }
+        .btn-logout, .btn-login {
+            background: #333;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .btn-logout:hover, .btn-login:hover {
+            background: #444;
+        }
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            color: #aaa;
+        }
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #ea4335;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 50%;
+            min-width: 18px;
+            text-align: center;
+        }
+        .site-footer {
+            background: #1a1a1a;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #333;
+            margin-top: 40px;
+        }
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 16px;
+            margin-bottom: 12px;
+        }
+        .footer-link {
+            color: #888;
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.2s;
+        }
+        .footer-link:hover {
+            color: #667eea;
+        }
+        .footer-link.highlight {
+            color: #667eea;
+            font-weight: 600;
+        }
+        .footer-divider {
+            color: #333;
+        }
+        .footer-copyright {
+            color: #555;
+            font-size: 12px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid #333;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-header h3 {
+            color: #fff;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .close-modal {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 0 8px;
+        }
+        .close-modal:hover {
+            color: #fff;
+        }
+        .modal-body {
+            color: #ccc;
+        }
+        .modal-input, .modal-textarea {
+            width: 100%;
+            padding: 12px;
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+        }
+        .modal-input:focus, .modal-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .modal-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-primary:hover {
+            background: #5a6fd6;
+            transform: translateY(-1px);
+        }
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+        #toast.show {
+            opacity: 1;
+        }
+        .cookie-consent {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1a1a1a;
+            border-top: 1px solid #333;
+            padding: 20px;
+            z-index: 3000;
+            display: none;
+        }
+        .cookie-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cookie-text {
+            flex: 1;
+            min-width: 280px;
+        }
+        .cookie-text h3 {
+            color: #fff;
+            margin: 0 0 8px 0;
+        }
+        .cookie-text p {
+            color: #aaa;
+            font-size: 13px;
+            margin: 0;
+        }
+        .cookie-text a {
+            color: #667eea;
+        }
+        .cookie-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .cookie-options label {
+            color: #aaa;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .cookie-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .cookie-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .cookie-btn.accept {
+            background: #667eea;
+            color: white;
+        }
+        .cookie-btn.accept:hover {
+            background: #5a6fd6;
+        }
+        .cookie-btn.reject {
+            background: #333;
+            color: #aaa;
+        }
+        .cookie-btn.reject:hover {
+            background: #444;
+        }
+        .cookie-btn.customize {
+            background: transparent;
+            color: #667eea;
+            border: 1px solid #667eea;
+        }
+        .cookie-btn.customize:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+        .banned-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        .banned-box {
+            background: #1a1a1a;
+            padding: 40px;
+            border-radius: 16px;
+            max-width: 400px;
+            text-align: center;
+            border: 1px solid #ea4335;
+        }
+        .banned-box .icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        .banned-box h2 {
+            color: #ea4335;
+            margin: 0 0 12px 0;
+        }
+        .banned-box p {
+            color: #aaa;
+            margin: 8px 0;
+        }
+        .banned-box .ban-details {
+            background: #222;
+            padding: 12px;
+            border-radius: 8px;
+            color: #888;
+            font-size: 13px;
+            margin: 12px 0;
+        }
+        .btn-logout-banned {
+            background: #ea4335;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 12px;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-logout-banned:hover {
+            background: #d33426;
+        }
+        @media (max-width: 600px) {
+            .cookie-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .cookie-buttons {
+                justify-content: center;
+            }
+            .user-info-header .user-email {
+                display: none;
+            }
+            .user-info-header .user-name {
+                font-size: 12px;
+            }
+            .beta-badge {
+                top: 70px;
+                right: 10px;
+                font-size: 10px;
+                padding: 2px 10px;
+            }
+        }
+    </style>
 </head>
 <body>
 
+<!-- INDICADOR DE CARREGAMENTO -->
+<div id="loadingIndicator">
+    <div class="spinner"></div>
+    <p>Carregando Bemtevi...</p>
+</div>
+
 <!-- ===== COOKIE CONSENT BANNER ===== -->
-<div id="cookieConsent" class="cookie-consent">
+<div id="cookieConsent" class="cookie-consent" style="display:none;">
     <div class="cookie-content">
         <div class="cookie-text">
             <h3>🍪 Nós usamos cookies</h3>
@@ -48,7 +871,7 @@
 </div>
 
 <!-- ===== BANNED OVERLAY ===== -->
-<div id="bannedOverlay" class="banned-overlay">
+<div id="bannedOverlay" class="banned-overlay" style="display:none;">
     <div class="banned-box">
         <div class="icon">🚫</div>
         <h2>⚠️ Conta Banida</h2>
@@ -81,15 +904,15 @@
             <div class="notification-bell" id="notificationBell" onclick="toggleNotifications(event)">
                 <span class="material-icons">notifications</span>
                 <span class="notification-badge" id="notifBadge" style="display:none;">0</span>
-                <div class="notification-dropdown" id="notifDropdown">
-                    <div class="notification-dropdown-header">
-                        <h3>🔔 Notificações</h3>
-                        <button onclick="markAllAsRead(event)">Marcar todas como lidas</button>
+                <div class="notification-dropdown" id="notifDropdown" style="display:none; position:absolute; right:0; top:100%; background:#1a1a1a; border:1px solid #333; border-radius:8px; min-width:280px; max-width:320px; padding:12px; z-index:100;">
+                    <div class="notification-dropdown-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <h3 style="margin:0; color:#fff; font-size:14px;">🔔 Notificações</h3>
+                        <button onclick="markAllAsRead(event)" style="background:none; border:none; color:#667eea; cursor:pointer; font-size:12px;">Marcar todas como lidas</button>
                     </div>
-                    <div id="notificationList">
-                        <div class="notification-empty">
-                            <span class="material-icons">notifications_off</span>
-                            <p>Nenhuma notificação</p>
+                    <div id="notificationList" style="max-height:300px; overflow-y:auto;">
+                        <div class="notification-empty" style="text-align:center; color:#666; padding:20px;">
+                            <span class="material-icons" style="font-size:36px;">notifications_off</span>
+                            <p style="margin:8px 0 0 0;">Nenhuma notificação</p>
                         </div>
                     </div>
                 </div>
@@ -135,7 +958,7 @@
 </footer>
 
 <!-- ===== MODAL LOGIN ===== -->
-<div id="login-modal" class="modal">
+<div id="login-modal" class="modal" style="display:none;">
     <div class="modal-content" style="max-width: 400px;">
         <div class="modal-header">
             <h3><i class="material-icons">login</i> Entrar no Bemtevi</h3>
@@ -143,7 +966,7 @@
         </div>
         <div class="modal-body">
             <p style="margin-bottom: 20px;">Faça login para postar e interagir</p>
-            <button id="google-login-btn" class="btn-primary" style="width:100%; display:flex; align-items:center; justify-content:center; gap:10px;">
+            <button id="google-login-btn" class="btn-primary" style="width:100%; display:flex; align-items:center; justify-content:center; gap:10px;" onclick="loginWithGoogle()">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style="width:20px; height:20px;">
                 Entrar com Google
             </button>
@@ -153,7 +976,7 @@
 </div>
 
 <!-- ===== MODAL COMENTÁRIOS ===== -->
-<div id="comments-modal" class="modal">
+<div id="comments-modal" class="modal" style="display:none;">
     <div class="modal-content">
         <div class="modal-header">
             <h3>💬 Comentários</h3>
@@ -161,14 +984,14 @@
         </div>
         <div class="modal-body">
             <div id="comments-container"></div>
-            <textarea id="comment-input" class="comment-input" rows="3" placeholder="Escreva um comentário... (máx. 280 caracteres)" maxlength="280"></textarea>
+            <textarea id="comment-input" class="modal-textarea" rows="3" placeholder="Escreva um comentário... (máx. 280 caracteres)" maxlength="280"></textarea>
             <button class="btn-primary" onclick="sendComment()" style="margin-top:10px; width:100%;">Enviar Comentário</button>
         </div>
     </div>
 </div>
 
 <!-- ===== MODAL CRIAR COMUNIDADE ===== -->
-<div id="createCommunityModal" class="modal">
+<div id="createCommunityModal" class="modal" style="display:none;">
     <div class="modal-content" style="max-width: 500px;">
         <div class="modal-header">
             <h3>🏛️ Criar Nova Comunidade</h3>
@@ -210,8 +1033,70 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-<script src="https://gspotfverwazzimagiygg.wazzimagiygg.com/bemtevi/script.js"></script>
+
+<!-- JavaScript Externo com ONERROR -->
+<script src="https://gspotfverwazzimagiygg.wazzimagiygg.com/bemtevi/script.js" 
+        onerror="window.location.href=window.__errorSystem ? window.__errorSystem.getErrorURL() : 'https://wazzimagiygg.com/generalerror/'">
+</script>
+
+<!-- ===== SCRIPT DE VERIFICAÇÃO ADICIONAL ===== -->
+<script>
+    (function() {
+        'use strict';
+        
+        function hideLoadingIndicator() {
+            const indicator = document.getElementById('loadingIndicator');
+            if (indicator) {
+                indicator.classList.add('hidden');
+                setTimeout(function() {
+                    indicator.style.display = 'none';
+                }, 500);
+            }
+        }
+        
+        function markAsLoaded() {
+            document.body.classList.add('loaded');
+        }
+        
+        function checkContentLoaded() {
+            const app = document.getElementById('app');
+            if (app && app.children.length > 0) {
+                hideLoadingIndicator();
+                markAsLoaded();
+                return true;
+            }
+            
+            setTimeout(function() {
+                if (app && app.children.length > 0) {
+                    hideLoadingIndicator();
+                    markAsLoaded();
+                } else {
+                    if (typeof loadPosts === 'function') {
+                        hideLoadingIndicator();
+                        markAsLoaded();
+                    }
+                }
+            }, 3000);
+            
+            return false;
+        }
+        
+        if (document.readyState === 'complete') {
+            checkContentLoaded();
+        } else {
+            window.addEventListener('load', function() {
+                setTimeout(checkContentLoaded, 1000);
+            });
+        }
+        
+        console.log('🟢 Sistema de verificação de recursos - OK (Bemtevi)');
+        
+        if (window.__errorSystem) {
+            console.log('🆔 UID atual:', window.__errorSystem.getUID());
+            console.log('📊 Status:', window.__errorSystem.getStatus());
+        }
+    })();
+</script>
 
 </body>
 </html>
-<!-- Fim do Código -->
