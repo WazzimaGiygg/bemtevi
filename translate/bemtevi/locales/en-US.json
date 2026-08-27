@@ -1,0 +1,222 @@
+{
+    "app": {
+        "name": "Bemtevi",
+        "title": "Bemtevi - Social Network",
+        "beta": "🚧 BETA",
+        "description": "A free and collaborative social network"
+    },
+    "header": {
+        "brand": "WazzimaGiygg",
+        "subtitle": "Bemtevi",
+        "login": "Login",
+        "logout": "Logout",
+        "profile": "Profile",
+        "visitor": "Visitor",
+        "loading": "Loading..."
+    },
+    "nav": {
+        "forYou": "For You",
+        "myPosts": "My Posts",
+        "explore": "Explore",
+        "communities": "Communities",
+        "messages": "Messages",
+        "createCommunity": "Create Community",
+        "saved": "Saved",
+        "myProfile": "My Profile"
+    },
+    "feed": {
+        "title": "📱 Feed",
+        "myPosts": "My Posts",
+        "tabs": {
+            "forYou": "For You",
+            "latest": "Latest",
+            "myPosts": "My Posts"
+        },
+        "empty": "No posts found!",
+        "loading": "Loading more posts...",
+        "error": "Error loading posts. Reload the page."
+    },
+    "post": {
+        "placeholder": "What's happening? (Max 127 characters)",
+        "button": "Post 🚀",
+        "linkPlaceholder": "🔗 Link (optional)",
+        "charCounter": "0/127",
+        "maxLength": "Text must be at most 127 characters!",
+        "empty": "Write something to post!",
+        "loginRequired": "Login to post!",
+        "banned": "Your account is banned. You cannot post.",
+        "success": "Post published successfully!",
+        "error": "Error posting. Try again.",
+        "deleteConfirm": "Are you sure you want to delete this post?",
+        "deleteSuccess": "Post deleted successfully!",
+        "deleteError": "Error deleting post.",
+        "reportPrompt": "Describe the reason for the report:",
+        "reportSuccess": "Report sent! We will review it.",
+        "reportError": "Error sending report.",
+        "shareCopied": "Link copied to clipboard!",
+        "shareError": "Error copying link.",
+        "saved": "Post saved successfully!",
+        "unsaved": "Post removed from saved"
+    },
+    "actions": {
+        "like": "Like",
+        "unlike": "Unlike",
+        "comment": "Comment",
+        "share": "Share",
+        "save": "Save",
+        "unsave": "Remove from saved",
+        "delete": "Delete",
+        "report": "Report",
+        "follow": "Follow",
+        "unfollow": "Unfollow",
+        "close": "Close"
+    },
+    "comments": {
+        "title": "💬 Comments",
+        "placeholder": "Write a comment... (max 280 characters)",
+        "button": "Send Comment",
+        "empty": "No comments yet. Be the first!",
+        "loading": "Loading comments...",
+        "error": "Error loading comments",
+        "maxLength": "Comment too long! Maximum 280 characters.",
+        "emptyText": "Write a comment!",
+        "success": "Comment sent!",
+        "errorSend": "Error sending comment.",
+        "loginRequired": "Login to comment!",
+        "banned": "Your account is banned. You cannot comment."
+    },
+    "categories": {
+        "Geral": "General",
+        "Tecnologia": "Technology",
+        "Ciência": "Science",
+        "Arte": "Art",
+        "Música": "Music",
+        "Esportes": "Sports",
+        "Games": "Games",
+        "Educação": "Education",
+        "Política": "Politics",
+        "Entretenimento": "Entertainment"
+    },
+    "communities": {
+        "title": "🏛️ Create New Community",
+        "name": "Community Name *",
+        "namePlaceholder": "Ex: Technology, Music, Games...",
+        "nameMin": "Minimum 3 characters, maximum 50",
+        "description": "Description",
+        "descriptionPlaceholder": "Describe the purpose of the community...",
+        "category": "Category",
+        "button": "🚀 Create Community",
+        "success": "Community created successfully!",
+        "error": "Error creating community",
+        "loginRequired": "Login to create a community!",
+        "nameRequired": "Community name must be at least 3 characters.",
+        "members": "members",
+        "posts": "posts",
+        "join": "Join",
+        "leave": "Leave",
+        "joined": "Welcome to the community",
+        "left": "You left the community.",
+        "notFound": "Community not found."
+    },
+    "trending": {
+        "title": "🔥 Trending",
+        "loading": "Loading...",
+        "empty": "No trending topics right now",
+        "error": "Error loading",
+        "posts": "posts"
+    },
+    "suggestions": {
+        "title": "👥 Suggestions",
+        "loading": "Loading...",
+        "empty": "No suggestions at the moment",
+        "error": "Error loading suggestions"
+    },
+    "profile": {
+        "posts": "Posts",
+        "followers": "Followers",
+        "following": "Following",
+        "karma": "karma",
+        "bio": "Bio",
+        "noPosts": "No posts yet",
+        "error": "Error loading profile"
+    },
+    "login": {
+        "title": "Login to Bemtevi",
+        "subtitle": "Login to post and interact",
+        "google": "Login with Google",
+        "description": "Posts up to 127 characters • Comments • Likes",
+        "features": "Communities • Karma • Direct Messages",
+        "welcome": "Welcome!",
+        "button": "🔑 Login with Google",
+        "error": "Login error"
+    },
+    "banned": {
+        "title": "⚠️ Banned Account",
+        "message": "Your account has been permanently banned from Bemtevi.",
+        "reason": "Reason:",
+        "support": "If you believe this is a mistake, please contact support.",
+        "logout": "🚪 Log out"
+    },
+    "notifications": {
+        "title": "🔔 Notifications",
+        "empty": "No notifications",
+        "markAllRead": "Mark all as read",
+        "newLike": "New like",
+        "newComment": "New comment",
+        "newFollower": "New follower",
+        "newLevel": "New Level!",
+        "levelUp": "Congratulations! You reached the level"
+    },
+    "karmaLevels": {
+        "Novato": "Novice",
+        "Iniciante": "Beginner",
+        "Entusiasta": "Enthusiast",
+        "Membro Ativo": "Active Member",
+        "Veterano": "Veteran",
+        "Lendário": "Legendary"
+    },
+    "feeds": {
+        "forYou": "For You",
+        "latest": "Latest",
+        "myPosts": "My Posts"
+    },
+    "time": {
+        "now": "now",
+        "minute": "m",
+        "hour": "h",
+        "day": "d",
+        "week": "w",
+        "month": "mo",
+        "year": "y"
+    },
+    "cookie": {
+        "title": "🍪 We use cookies",
+        "message": "This site uses cookies to improve your experience, analyze traffic and display personalized ads. By continuing to browse, you agree to our ",
+        "privacy": "Privacy Policy",
+        "essential": "🔒 Essential (required)",
+        "analytics": "📊 Data analysis",
+        "advertising": "🎯 Personalized advertising",
+        "acceptAll": "✅ Accept All",
+        "rejectAll": "❌ Reject All",
+        "customize": "⚙️ Customize",
+        "saved": "✅ Your preferences have been saved!",
+        "accepted": "✅ All cookies have been accepted!",
+        "rejected": "ℹ️ Non-essential cookies have been rejected."
+    },
+    "footer": {
+        "donation": "💝 Donation",
+        "desktop": "🖥️ Desktop",
+        "lgpd": "🔒 Privacy Policy",
+        "marcoCivil": "📜 Civil Rights",
+        "ticket": "🎫 Support Ticket",
+        "products": "🛍️ Products",
+        "account": "👤 Your Account",
+        "copyright": "© 2026 Bemtevi - A free and collaborative social network",
+        "slogan": "Όχι, ο Χρόνος não é ο άρχοντας da γνώσης! - WazzimaGiygg"
+    },
+    "errors": {
+        "generic": "An error occurred. Please try again.",
+        "network": "Connection error. Check your internet.",
+        "notFound": "Page not found."
+    }
+}
