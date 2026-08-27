@@ -1,0 +1,222 @@
+{
+    "app": {
+        "name": "Bemtevi",
+        "title": "Bemtevi - Red Social",
+        "beta": "🚧 BETA",
+        "description": "Una red social libre y colaborativa"
+    },
+    "header": {
+        "brand": "WazzimaGiygg",
+        "subtitle": "Bemtevi",
+        "login": "Iniciar sesión",
+        "logout": "Cerrar sesión",
+        "profile": "Perfil",
+        "visitor": "Visitante",
+        "loading": "Cargando..."
+    },
+    "nav": {
+        "forYou": "Para Ti",
+        "myPosts": "Mis Publicaciones",
+        "explore": "Explorar",
+        "communities": "Comunidades",
+        "messages": "Mensajes",
+        "createCommunity": "Crear Comunidad",
+        "saved": "Guardados",
+        "myProfile": "Mi Perfil"
+    },
+    "feed": {
+        "title": "📱 Feed",
+        "myPosts": "Mis Publicaciones",
+        "tabs": {
+            "forYou": "Para Ti",
+            "latest": "Últimas",
+            "myPosts": "Mis Publicaciones"
+        },
+        "empty": "¡No se encontraron publicaciones!",
+        "loading": "Cargando más publicaciones...",
+        "error": "Error al cargar publicaciones. Recarga la página."
+    },
+    "post": {
+        "placeholder": "¿Qué está pasando? (Máx. 127 caracteres)",
+        "button": "Publicar 🚀",
+        "linkPlaceholder": "🔗 Enlace (opcional)",
+        "charCounter": "0/127",
+        "maxLength": "¡El texto debe tener como máximo 127 caracteres!",
+        "empty": "¡Escribe algo para publicar!",
+        "loginRequired": "¡Inicia sesión para publicar!",
+        "banned": "Tu cuenta está baneada. No puedes publicar.",
+        "success": "¡Publicación exitosa!",
+        "error": "Error al publicar. Inténtalo de nuevo.",
+        "deleteConfirm": "¿Estás seguro de que quieres eliminar esta publicación?",
+        "deleteSuccess": "¡Publicación eliminada!",
+        "deleteError": "Error al eliminar publicación.",
+        "reportPrompt": "Describe el motivo de la denuncia:",
+        "reportSuccess": "¡Denuncia enviada! Lo revisaremos.",
+        "reportError": "Error al enviar denuncia.",
+        "shareCopied": "¡Enlace copiado al portapapeles!",
+        "shareError": "Error al copiar enlace.",
+        "saved": "¡Publicación guardada!",
+        "unsaved": "Publicación eliminada de guardados"
+    },
+    "actions": {
+        "like": "Me gusta",
+        "unlike": "Ya no me gusta",
+        "comment": "Comentar",
+        "share": "Compartir",
+        "save": "Guardar",
+        "unsave": "Eliminar de guardados",
+        "delete": "Eliminar",
+        "report": "Denunciar",
+        "follow": "Seguir",
+        "unfollow": "Dejar de seguir",
+        "close": "Cerrar"
+    },
+    "comments": {
+        "title": "💬 Comentarios",
+        "placeholder": "Escribe un comentario... (máx. 280 caracteres)",
+        "button": "Enviar Comentario",
+        "empty": "Todavía no hay comentarios. ¡Sé el primero!",
+        "loading": "Cargando comentarios...",
+        "error": "Error al cargar comentarios",
+        "maxLength": "¡Comentario demasiado largo! Máximo 280 caracteres.",
+        "emptyText": "¡Escribe un comentario!",
+        "success": "¡Comentario enviado!",
+        "errorSend": "Error al enviar comentario.",
+        "loginRequired": "¡Inicia sesión para comentar!",
+        "banned": "Tu cuenta está baneada. No puedes comentar."
+    },
+    "categories": {
+        "Geral": "General",
+        "Tecnologia": "Tecnología",
+        "Ciência": "Ciencia",
+        "Arte": "Arte",
+        "Música": "Música",
+        "Esportes": "Deportes",
+        "Games": "Juegos",
+        "Educação": "Educación",
+        "Política": "Política",
+        "Entretenimento": "Entretenimiento"
+    },
+    "communities": {
+        "title": "🏛️ Crear Nueva Comunidad",
+        "name": "Nombre de la Comunidad *",
+        "namePlaceholder": "Ej: Tecnología, Música, Juegos...",
+        "nameMin": "Mínimo 3 caracteres, máximo 50",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Describe el propósito de la comunidad...",
+        "category": "Categoría",
+        "button": "🚀 Crear Comunidad",
+        "success": "¡Comunidad creada exitosamente!",
+        "error": "Error al crear comunidad",
+        "loginRequired": "¡Inicia sesión para crear una comunidad!",
+        "nameRequired": "El nombre de la comunidad debe tener al menos 3 caracteres.",
+        "members": "miembros",
+        "posts": "publicaciones",
+        "join": "Unirse",
+        "leave": "Salir",
+        "joined": "Bienvenido a la comunidad",
+        "left": "Saliste de la comunidad.",
+        "notFound": "Comunidad no encontrada."
+    },
+    "trending": {
+        "title": "🔥 Tendencias",
+        "loading": "Cargando...",
+        "empty": "Sin tendencias en este momento",
+        "error": "Error al cargar",
+        "posts": "publicaciones"
+    },
+    "suggestions": {
+        "title": "👥 Sugerencias",
+        "loading": "Cargando...",
+        "empty": "Sin sugerencias en este momento",
+        "error": "Error al cargar sugerencias"
+    },
+    "profile": {
+        "posts": "Publicaciones",
+        "followers": "Seguidores",
+        "following": "Siguiendo",
+        "karma": "karma",
+        "bio": "Bio",
+        "noPosts": "Sin publicaciones aún",
+        "error": "Error al cargar perfil"
+    },
+    "login": {
+        "title": "Iniciar sesión en Bemtevi",
+        "subtitle": "Inicia sesión para publicar e interactuar",
+        "google": "Iniciar sesión con Google",
+        "description": "Publicaciones de hasta 127 caracteres • Comentarios • Me gusta",
+        "features": "Comunidades • Karma • Mensajes Directos",
+        "welcome": "¡Bienvenido!",
+        "button": "🔑 Iniciar sesión con Google",
+        "error": "Error al iniciar sesión"
+    },
+    "banned": {
+        "title": "⚠️ Cuenta Baneada",
+        "message": "Tu cuenta ha sido baneada permanentemente de Bemtevi.",
+        "reason": "Motivo:",
+        "support": "Si crees que esto es un error, contacta con soporte.",
+        "logout": "🚪 Cerrar sesión"
+    },
+    "notifications": {
+        "title": "🔔 Notificaciones",
+        "empty": "Sin notificaciones",
+        "markAllRead": "Marcar todas como leídas",
+        "newLike": "Nuevo me gusta",
+        "newComment": "Nuevo comentario",
+        "newFollower": "Nuevo seguidor",
+        "newLevel": "¡Nuevo Nivel!",
+        "levelUp": "¡Felicidades! Alcanzaste el nivel"
+    },
+    "karmaLevels": {
+        "Novato": "Novato",
+        "Iniciante": "Principiante",
+        "Entusiasta": "Entusiasta",
+        "Membro Ativo": "Miembro Activo",
+        "Veterano": "Veterano",
+        "Lendário": "Legendario"
+    },
+    "feeds": {
+        "forYou": "Para Ti",
+        "latest": "Últimas",
+        "myPosts": "Mis Publicaciones"
+    },
+    "time": {
+        "now": "ahora",
+        "minute": "m",
+        "hour": "h",
+        "day": "d",
+        "week": "sem",
+        "month": "mes",
+        "year": "a"
+    },
+    "cookie": {
+        "title": "🍪 Usamos cookies",
+        "message": "Este sitio utiliza cookies para mejorar tu experiencia, analizar tráfico y mostrar anuncios personalizados. Al continuar navegando, aceptas nuestra ",
+        "privacy": "Política de Privacidad",
+        "essential": "🔒 Esenciales (obligatorios)",
+        "analytics": "📊 Análisis de datos",
+        "advertising": "🎯 Publicidad personalizada",
+        "acceptAll": "✅ Aceptar Todas",
+        "rejectAll": "❌ Rechazar Todas",
+        "customize": "⚙️ Personalizar",
+        "saved": "✅ ¡Tus preferencias han sido guardadas!",
+        "accepted": "✅ ¡Todas las cookies han sido aceptadas!",
+        "rejected": "ℹ️ Las cookies no esenciales han sido rechazadas."
+    },
+    "footer": {
+        "donation": "💝 Donación",
+        "desktop": "🖥️ Escritorio",
+        "lgpd": "🔒 Política de Privacidad",
+        "marcoCivil": "📜 Marco Civil",
+        "ticket": "🎫 Ticket de Soporte",
+        "products": "🛍️ Productos",
+        "account": "👤 Tu Cuenta",
+        "copyright": "© 2026 Bemtevi - Una red social libre y colaborativa",
+        "slogan": "Όχι, ο Χρόνος não é ο άρχοντας da γνώσης! - WazzimaGiygg"
+    },
+    "errors": {
+        "generic": "Ocurrió un error. Inténtalo de nuevo.",
+        "network": "Error de conexión. Verifica tu internet.",
+        "notFound": "Página no encontrada."
+    }
+}
