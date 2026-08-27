@@ -13,8 +13,81 @@
     <!-- Favicon -->
     <link rel="icon" href="https://wazzimagiygg.com/favicom.png" type="image/x-icon">
     <link rel="stylesheet" href="https://gspotfverwazzimagiygg.wazzimagiygg.com/bemtevi/style.css">
+    
+    <style>
+        /* Estilos para o seletor de idioma */
+        .language-selector-container {
+            position: fixed;
+            top: 75px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(0,0,0,0.85);
+            border-radius: 30px;
+            padding: 4px 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .language-selector-container select {
+            background: transparent;
+            color: white;
+            border: none;
+            padding: 6px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .language-selector-container select option {
+            background: #1a1a2e;
+            color: white;
+        }
+        .language-selector-container .lang-icon {
+            color: #aaa;
+            font-size: 14px;
+        }
+        @media (max-width: 768px) {
+            .language-selector-container {
+                top: 70px;
+                right: 10px;
+                padding: 3px 8px;
+            }
+            .language-selector-container select {
+                font-size: 11px;
+                padding: 4px 6px;
+            }
+        }
+        @media (max-width: 480px) {
+            .language-selector-container {
+                top: 65px;
+                right: 8px;
+                padding: 2px 6px;
+            }
+            .language-selector-container select {
+                font-size: 10px;
+                padding: 3px 4px;
+                max-width: 80px;
+            }
+            .language-selector-container .lang-icon {
+                font-size: 12px;
+            }
+        }
+    </style>
 </head>
 <body>
+
+<!-- ===== LANGUAGE SELECTOR ===== -->
+<div class="language-selector-container">
+    <span class="lang-icon">🌐</span>
+    <select id="languageSelector" aria-label="Seletor de idioma">
+        <option value="pt-BR">🇧🇷 Português</option>
+        <option value="en-US">🇺🇸 English</option>
+        <option value="es-ES">🇪🇸 Español</option>
+    </select>
+</div>
 
 <!-- ===== COOKIE CONSENT BANNER ===== -->
 <div id="cookieConsent" class="cookie-consent">
@@ -210,9 +283,12 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+<!-- ===== I18N - SISTEMA DE TRADUÇÃO ===== -->
+<script src="/translate/i18n.js"></script>
+
+<!-- ===== SCRIPT PRINCIPAL ===== -->
 <script src="https://gspotfverwazzimagiygg.wazzimagiygg.com/bemtevi/script.js"></script>
 
 </body>
 </html>
-<!-- Fim do Código -->
-<!-- Fim do Código -->
